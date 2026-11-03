@@ -265,3 +265,96 @@ header{view-transition-name:site-header}
 .avatars span{font-size:12px}
 /* QA 3 Nov: roster table filled only 745 of its 1200px card at 1440 (header band stopped mid-card) */
 @media (min-width:601px){.gt-scroll>.gt:has(.gName){display:table;width:100%}}
+
+/* ---------- [guide+group phone] contents menu, stacked tables, Group cards (JS adds data-label / .stack; without JS tables keep scrolling) ---------- */
+/* Guide contents menu: sticky under the header at every width */
+.g-toc{position:sticky;top:var(--header-h);z-index:900;margin:0 0 var(--s-4);padding:var(--s-2) 0;background:var(--stone-50)}
+.g-toc summary{display:flex;align-items:center;gap:var(--s-2);min-height:var(--tap);padding:0 var(--s-4);border:1px solid var(--line-strong);border-radius:var(--r-pill);
+  background:var(--surface);color:var(--ink-900);font:600 var(--fs-14)/1.2 var(--font-body);cursor:pointer;list-style:none;box-shadow:var(--shadow-1)}
+.g-toc summary::-webkit-details-marker{display:none}
+.g-toc summary::after{content:"";flex:none;width:8px;height:8px;margin-left:auto;border:solid currentColor;border-width:0 2px 2px 0;transform:translateY(-2px) rotate(45deg);transition:transform var(--dur) var(--ease)}
+.g-toc details[open] summary::after{transform:translateY(2px) rotate(-135deg)}
+.g-toc summary:hover{background:var(--stone-100)}
+.g-toc-lbl{flex:none}
+.g-toc-cur{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:400;color:var(--ink-600)}
+.g-toc-cur:not(:empty)::before{content:"· "}
+.g-toc ul{position:absolute;left:0;right:0;top:calc(100% - var(--s-1));margin:0;padding:var(--s-2);list-style:none;
+  max-height:min(70vh,calc(100dvh - var(--header-h) - var(--tabbar-h,0px) - 96px));overflow-y:auto;overscroll-behavior:contain;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-2)}
+#guide .g-toc li{margin:0}
+.g-toc a{display:flex;align-items:center;min-height:var(--tap);padding:var(--s-2) var(--s-3);border-radius:var(--r-sm);
+  color:var(--ink-900);font:600 var(--fs-14)/1.3 var(--font-body);text-decoration:none;overflow-wrap:normal}
+.g-toc a.sub{padding-left:var(--s-8);font-weight:400;color:var(--ink-700)}
+.g-toc a.top{color:var(--lake-700)}
+.g-toc a:hover{background:var(--stone-100);color:var(--ink-900)}
+.g-toc a[aria-current="true"]{background:var(--stone-100);box-shadow:inset 3px 0 0 var(--rose-600)}
+#guideInner :is(h2,h3){scroll-margin-top:calc(var(--tap) + var(--s-6))}
+#guideInner :is(h2,h3):focus{outline:none}
+/* the floating tab bar never covers a focused field or a jumped-to heading */
+@media (max-width:800px){html:has(#guide:not([hidden])),html:has(#group:not([hidden])){scroll-padding-bottom:calc(var(--tabbar-h,64px) + var(--s-6) + env(safe-area-inset-bottom))}}
+
+@media (max-width:600px){
+  /* Guide tables: each row becomes a card; each cell shows its column name */
+  #guide table.stack{display:block;overflow:visible;border:0;background:none;border-radius:0}
+  #guide table.stack thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  #guide table.stack tbody{display:block}
+  #guide table.stack tr{display:block;margin:0 0 var(--s-2);padding:var(--s-1) var(--s-4);background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md)}
+  #guide table.stack td{display:flow-root;padding:var(--s-2) 0 var(--s-2) 7.25rem;border-bottom:1px solid var(--line);line-height:1.5}
+  #guide table.stack td:last-child{border-bottom:0}
+  #guide table.stack td:empty{display:none}
+  #guide table.stack td::before{content:attr(data-label);float:left;width:6.5rem;margin:2px 0 0 -7.25rem;
+    font-size:var(--fs-12);font-weight:600;line-height:1.35;letter-spacing:.04em;text-transform:uppercase;color:var(--ink-600)}
+  #guide table.stack-top td{padding-left:0}
+  #guide table.stack-top td::before{float:none;display:block;width:auto;margin:0 0 2px}
+  #guide table:not(.stack) th{white-space:normal;text-transform:none;letter-spacing:0;font-size:var(--fs-14)}
+  #guide table.stack td:first-child{padding-left:0;font-weight:600}
+  #guide table.stack td:first-child::before{float:none;display:block;width:auto;margin:0}
+
+  /* Group tracker, ledger and settlement: one card per row (the roster cards are above) */
+  .gt-scroll:has(.gt td[data-label]){overflow:visible}
+  .gt:has(td[data-label]):not(:has(.gName)){display:block;overflow:visible;border:0;background:none;border-radius:0}
+  .gt:has(td[data-label]):not(:has(.gName)) tbody{display:block}
+  .gt:has(td[data-label]):not(:has(.gName)) tr:first-child{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .gt:has(td[data-label]):not(:has(.gName)) tr:not(:first-child){position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-3) var(--s-2);
+    margin-bottom:var(--s-2);padding:var(--s-3);border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface)}
+  .gt:has(td[data-label]):not(:has(.gName)) td{display:block;min-width:0;padding:0;border:0;background:none;box-shadow:none!important;text-align:left;white-space:normal}
+  .gt:not(:has(.gName)) td[data-label]::before{content:attr(data-label);display:block;margin-bottom:2px;font:400 var(--fs-12)/1.3 var(--font-body);color:var(--ink-600)}
+  .gt:not(:has(.gName)) td input,.gt:not(:has(.gName)) td select{width:100%;min-width:0!important}
+  /* delete button: top-right of the card; the first field leaves room for it */
+  .gt:not(:has(.gName)) td:has(>button){position:absolute;top:var(--s-3);right:var(--s-3)}
+  .gt:not(:has(.gName)) td[data-label]:has(>button)::before{display:none}
+  .gt:not(:has(.gName)) td:has(>button) button{width:var(--tap);height:var(--tap)}
+  .gt:has(.gStatus) td:first-child,.gt:has(.gTotal) td:first-child{grid-column:1/-1;padding-right:calc(var(--tap) + var(--s-2))}
+  .gt:has(.gTotal) tr{grid-auto-flow:row dense}
+  .gt:has(.gStatus) td:nth-child(8),.gt:has(.gTotal) td:is(.split,:nth-child(5),:nth-child(6)){grid-column:1/-1}
+  /* tracker status shows as the card's left edge */
+  .gt tr[class^="st-"]{border-left:6px solid var(--off-fg)!important}
+  .gt tr:is(.st-NotBooked,.st-Notbooked){border-left-color:var(--todo-fg)!important}
+  .gt tr.st-Requested{border-left-color:var(--sun-400)!important}
+  .gt tr:is(.st-Confirmed,.st-Paid){border-left-color:var(--ok-fg)!important}
+  /* ledger split: 44px chips with the traveler's initials */
+  .gt td.split{display:flex!important;flex-wrap:wrap;gap:var(--s-2)}
+  .gt td.split::before{flex-basis:100%;margin:0}
+  .gt td.split label{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:var(--tap);min-height:var(--tap);margin:0;padding:0 var(--s-3);
+    border:1px solid var(--line-strong);border-radius:var(--r-pill);background:var(--surface);font:600 var(--fs-14)/1 var(--font-body);cursor:pointer}
+  .gt td.split label:has(input:checked){background:var(--ok-bg);border-color:var(--ok-fg);color:var(--ok-fg)}
+  .gt td.split label:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:2px}
+  .gt td.split input{width:20px!important;height:20px;margin:0;flex:none}
+  .gt td.pp{align-self:end;min-height:var(--tap);font:600 var(--fs-16)/1.4 var(--font-body)}
+  /* settlement: name + balance on top, the three sums below */
+  #gSettle .gt tr:not(:first-child){grid-template-columns:repeat(3,minmax(0,1fr))}
+  #gSettle .gt td:first-child{grid-column:1/3;align-self:center;font-weight:600}
+  #gSettle .gt td:first-child::before{display:none}
+  #gSettle .gt td:nth-child(5){grid-column:3;grid-row:1;font-weight:600}
+  #gSettle .gt tr.tot{background:var(--stone-100)}
+}
+/* renderG writes "st-Notbooked" for "Not booked"; the redesign's rules only name st-NotBooked */
+tr.st-Notbooked td:first-child{box-shadow:inset 4px 0 0 var(--todo-fg)}
+tr.st-Notbooked .gStatus{background:var(--todo-bg);color:var(--todo-fg);border-color:var(--todo-fg)}
+/* Group number cells and inputs: not the bento's big .num figure */
+.gt .num{margin:0;font:inherit;font-variant-numeric:tabular-nums}
+/* Group action bars: wrapped labels get normal line spacing; recovery choices are one per row */
+@media (max-width:800px){
+  .gbar button,.gbar label.btn{padding:var(--s-2) var(--s-3);line-height:1.25;text-align:center}
+  .g-msg .gbar button{flex-basis:100%}
+}

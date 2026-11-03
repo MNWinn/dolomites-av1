@@ -144,6 +144,17 @@ body:has(#app[hidden]) #bento{display:none}
 }
 @container (min-width:420px){.day-stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
 
+/* ---------- [map-phone] Map tab on phones ---------- */
+.hut-pin{display:grid;place-items:center;width:44px;height:44px}   /* 44px finger target; the icon itself stays 22px */
+@media (max-width:800px){
+  /* the chart drives the map's hover dot, so it sits right under the map instead of below ~1,500px of cards */
+  #prof{order:2;height:240px;padding:var(--s-2) var(--s-3) var(--s-3)}
+  /* cards keep their own height: a stretched row left the short days mostly empty */
+  #side>#days{align-items:flex-start}
+  /* popups fit inside the map (Leaflet autopan keeps 56px clear on top, 44px at the bottom) and scroll instead of being clipped */
+  .leaflet-popup-content{max-height:calc(max(300px,46svh) - 150px);overflow-y:auto;overscroll-behavior:contain}
+}
+
 /* ---------- [motion] scroll-driven, progressive enhancement, never hides content without support ---------- */
 @supports (animation-timeline:scroll()){
   @media (prefers-reduced-motion:no-preference){

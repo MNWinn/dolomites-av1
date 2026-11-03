@@ -48,14 +48,20 @@ if(window.ResizeObserver)new ResizeObserver(()=>{if(mapEl.offsetParent)map.inval
  addEventListener('online',()=>{errs=0;upd()});addEventListener('offline',upd);
  [topo,osm].forEach(l=>l.on('tileerror',()=>{if(!navigator.onLine){errs++;upd()}}));upd();
 })();
-const POP={autoPanPaddingTopLeft:[56,56],autoPanPaddingBottomRight:[56,56],maxWidth:Math.min(320,innerWidth-80)};
+const POP={autoPanPaddingTopLeft:[56,56],autoPanPaddingBottomRight:[56,44],maxWidth:Math.min(320,innerWidth-80)};
 const lines=D.stages.map((s,i)=>L.polyline(s.pts,{color:s.color,weight:5,opacity:.85}).addTo(map).bindTooltip(s.title,{sticky:true}).on('click',()=>select(i)));
 const allB=L.featureGroup(lines).getBounds();map.fitBounds(allB,{padding:[20,20]});
 const HSC={open:'hb-open',nyr:'hb-nyr',unknown:'hb-unk'};const HSI=Object.fromEntries(D.hutstatus.map(h=>[h.id,h]));
 const hb=id=>{const h=HSI[id];return h?`<span class="hb ${HSC[h.status]}" title="${h.aug.replace(/"/g,'&quot;')}">${D.badge[h.status]}</span>`+(h.flag?`<span class="hb ${h.ok?'hb-open':'hb-nyr'}">${h.flag}</span>`:''):''};
-const hutIcon=L.divIcon({className:'',html:'<div class="hut-pin">🏠</div>',iconSize:[22,22],iconAnchor:[11,11]});
+const hutIcon=L.divIcon({className:'',html:'<div class="hut-pin">🏠</div>',iconSize:[44,44],iconAnchor:[22,22]});
 D.huts.forEach(h=>L.marker(h.ll,{icon:hutIcon,title:h.name,alt:h.name}).addTo(map).bindPopup(`<b>${h.name}</b> · ${h.alt}<br>${h.nights}<br>Capacity: ${h.cap}<br>${h.hb}<br>Season: ${h.season}<br>Deposit: ${h.dep}<br>${h.book}<br><a href="${h.url}" target="_blank" rel="noopener">Booking / info page</a>`+(h.hs?`<br><b>2027 booking:</b> ${hb(h.hs)} ${HSI[h.hs].aug} <span class="small">(${HSI[h.hs].src}; checked ${HSI[h.hs].checked})</span>`:''),POP));
-D.pois.forEach(p=>L.circleMarker([p[1],p[2]],{radius:5,color:'#15212b',fillColor:'#fffcf6',fillOpacity:1,weight:2}).addTo(map).bindPopup(p[0]+'<br><span class="small">location: OpenStreetMap (Nominatim)</span>',POP));
+D.pois.forEach(p=>{const html=p[0]+'<br><span class="small">location: OpenStreetMap (Nominatim)</span>';L.circleMarker([p[1],p[2]],{radius:5,color:'#15212b',fillColor:'#fffcf6',fillOpacity:1,weight:2}).addTo(map).bindPopup(html,POP);
+ if(coarse)L.circleMarker([p[1],p[2]],{radius:22,stroke:false,fillOpacity:0}).addTo(map).bindPopup(html,POP)});  // invisible 44px finger target
+/* phone: Leaflet only pans inside the map, so also scroll the page until an opened popup clears the fixed header and bottom tab bar */
+map.on('popupopen',e=>{if(!matchMedia('(max-width:800px)').matches)return;setTimeout(()=>{const c=e.popup.getElement();if(!c||!c.isConnected)return;
+ const b=c.getBoundingClientRect(),hd=document.querySelector('header'),nav=document.querySelector('header nav'),top=(hd?hd.getBoundingClientRect().bottom:0)+8,
+  bot=nav&&getComputedStyle(nav).position==='fixed'?nav.getBoundingClientRect().top-8:innerHeight,dy=b.top<top?b.top-top:b.bottom>bot?Math.min(b.bottom-bot,b.top-top):0;
+ if(dy)scrollBy({top:dy,behavior:reduceMotion?'auto':'smooth'})},300)});
 
 /* ---- Day cards ---- */
 const fmt=n=>n.toLocaleString('en-US');const ft=m=>fmt(Math.round(m*3.281));const mi=k=>(k*0.621371).toFixed(1);
@@ -75,11 +81,13 @@ D.stages.forEach((s,i)=>{const el=document.createElement('div');el.className='da
 /* the sr-only hint read with each card */
 {const h=document.createElement('p');h.id='dayHint';h.className='sr-only';h.textContent='Press Enter to show this day on the map.';days.after(h)}
 let chart=null,hover=L.circleMarker([0,0],{radius:7,color:'#15212b',fillColor:'#f2a65a',fillOpacity:1,weight:3});
-function profile(idx){const sets=(idx===null?D.stages.map((s,i)=>i):[idx]).map(i=>{const s=D.stages[i];return{label:s.title.split(':')[0],data:s.cum.map((c,j)=>({x:c/1000,y:s.ele[j]})),borderColor:s.color,backgroundColor:s.color+'33',fill:idx!==null,pointRadius:0,borderWidth:2,tension:.2,_i:i}});
+function profile(idx){const narrow=(document.getElementById('prof').clientWidth||innerWidth)<600;  // phone: the route name is on the card, so keep the chart's own text short
+ const sets=(idx===null?D.stages.map((s,i)=>i):[idx]).map(i=>{const s=D.stages[i];return{label:narrow?s.title.split(' · ')[0]:s.title.split(':')[0],data:s.cum.map((c,j)=>({x:c/1000,y:s.ele[j]})),borderColor:s.color,backgroundColor:s.color+'33',fill:idx!==null,pointRadius:0,borderWidth:2,tension:.2,_i:i}});
  if(chart)chart.destroy();
  chart=new Chart(document.getElementById('chart'),{type:'line',data:{datasets:sets},options:{maintainAspectRatio:false,animation:false,parsing:false,interaction:{mode:'nearest',intersect:false},
- scales:{x:{type:'linear',title:{display:true,text:'Distance (km)'}},y:{title:{display:true,text:'Elevation (m, EU-DEM)'}}},
- plugins:{title:{display:true,text:idx===null?'Elevation profiles: all days (EST, EU-DEM 25 m)':'Elevation profile: '+D.stages[idx].title+' (EST, EU-DEM 25 m)'},
+ scales:{x:{type:'linear',title:{display:true,text:'Distance (km)'}},y:{title:{display:true,text:narrow?'Elevation (m)':'Elevation (m, EU-DEM)'}}},
+ plugins:{title:{display:true,text:narrow?'Elevation · '+(idx===null?'all '+D.stages.length+' days':D.stages[idx].title.split(':')[0])+' (EST)':idx===null?'Elevation profiles: all days (EST, EU-DEM 25 m)':'Elevation profile: '+D.stages[idx].title+' (EST, EU-DEM 25 m)'},
+ legend:{display:!(narrow&&idx!==null)},
  tooltip:{callbacks:{label:c=>`${c.parsed.y} m (${ft(c.parsed.y)} ft) at ${c.parsed.x.toFixed(2)} km`}}},
  onHover:(e,els)=>{if(els.length){const ds=sets[els[0].datasetIndex];const p=D.stages[ds._i].pts[els[0].index];hover.setLatLng(p).addTo(map)}else hover.remove()}}});
  const cv=document.getElementById('chart');cv.setAttribute('role','img');cv.setAttribute('aria-label',(idx===null?'Elevation profiles of all 4 days':'Elevation profile of '+D.stages[idx].title)+'. Figures are in the day cards.')}

@@ -236,6 +236,34 @@ header{view-transition-name:site-header}
   .print-foot{margin-top:8pt;padding-top:4pt;border-top:1px solid #000;font-size:9pt}
 }
 
+/* ---------- [nav] getting around on a phone: stacking, anchor landings, back to top, "you are here" ---------- */
+/* Leaflet controls sit at z-index 1000 in the root stacking context: keep the header/tab bar and the sticky chips above them */
+header{z-index:1200}
+#side>.daychips{z-index:1050}
+.h-where{display:none}
+.to-top{position:fixed;right:var(--s-6);bottom:var(--s-6);z-index:1150;display:grid;place-items:center;width:var(--tap);height:var(--tap);padding:0;
+  border:1px solid rgba(255,255,255,.28);border-radius:50%;background:rgba(14,23,31,.92);color:#f6f1e8;box-shadow:0 6px 18px -6px rgba(0,0,0,.5);cursor:pointer}
+.to-top[hidden]{display:none}
+.to-top:hover{background:#0e171f}
+.to-top:focus-visible{outline:3px solid var(--sun-400);outline-offset:2px}
+.to-top svg{width:22px;height:22px}
+@media (max-width:800px){
+  :root{--chips-h:calc(var(--tap) + var(--s-3) + var(--s-1))}
+  /* focus and scrollIntoView never park things under the floating tab bar */
+  html{scroll-padding-bottom:calc(var(--tabbar-h) + var(--s-4) + env(safe-area-inset-bottom))}
+  /* targets below the sticky day chips land under the chips, not behind them */
+  #side>#all,#side>#hutStatus,#side>.gpx-all{scroll-margin-top:var(--chips-h)}
+  #side>#days{scroll-margin-top:calc(var(--chips-h) - var(--s-2))}  /* chips sit flush on the header; #days' own top padding is the gap */
+  .to-top{right:var(--s-3);bottom:calc(var(--s-2) + var(--tabbar-h) + var(--s-3) + env(safe-area-inset-bottom))}
+  /* second header line: the guide section you are reading */
+  header h1:has(.h-where:not([hidden])){display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"badge title" "badge where";column-gap:var(--s-2);align-content:center;align-items:center}
+  header h1>.badge{grid-area:badge}
+  header h1>.h-title{grid-area:title}
+  .h-where:not([hidden]){display:block;grid-area:where;margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+    font:500 var(--fs-12)/1.2 var(--font-body);color:var(--stone-100)}
+}
+@media print{.to-top,.h-where{display:none!important}}
+
 /* ---------- [fix] long source URLs in the Full guide widened the phone layout viewport ---------- */
 #guide a,#guide code{overflow-wrap:anywhere}
 /* group tracker controls: 44px tap targets at every width */

@@ -392,3 +392,25 @@ tr.st-Notbooked .gStatus{background:var(--todo-bg);color:var(--todo-fg);border-c
   .gbar button,.gbar label.btn{padding:var(--s-2) var(--s-3);line-height:1.25;text-align:center}
   .g-msg .gbar button{flex-basis:100%}
 }
+
+/* ---------- [arrival] PROPOSED getting-there leg (#arrival, filled by app_av1.js from D.arrival; not a .day card) ---------- */
+.arrival{margin:0 0 var(--s-6);padding:var(--s-4) var(--s-5);border:2px dashed var(--line-strong);border-radius:var(--r-lg);background:var(--surface);min-width:0}
+.arr-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s-2);margin-bottom:var(--s-2)}
+.arr-head h2{margin:0;font-size:var(--fs-20);line-height:1.2}
+.badge--proposed{background:var(--wait-bg);color:var(--wait-fg);border:1px dashed currentColor;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.badge--proposed::before{display:none}
+.arr-lede{margin:0 0 var(--s-3);font-size:var(--fs-14);color:var(--ink-700)}
+.arr-day{padding:var(--s-3) 0;border-top:1px solid var(--line)}
+.arr-day h3{margin:var(--s-1) 0 var(--s-2);font-size:var(--fs-18);line-height:1.25}
+.arr-day .k{font-size:var(--fs-14);color:var(--ink-600);margin:0 0 var(--s-2);line-height:1.5}
+.arr-day .k b{color:var(--ink-900);font-weight:600}
+.arr-stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+.arr-legs{margin:0 0 var(--s-2);padding-left:var(--s-5)}
+.arr-flag{padding:var(--s-2) var(--s-3);border-radius:var(--r-md);background:var(--todo-bg);color:var(--todo-fg)!important}
+.arr-flag b{color:inherit!important}
+.arr-show{width:100%;margin-top:var(--s-2)}
+.vce-pin{font-size:20px;line-height:1;color:#15212b;text-shadow:0 0 3px #fff,0 0 3px #fff}
+@media (max-width:800px){
+  #side>#arrival{order:3;margin:var(--s-4) var(--s-4) var(--s-2);padding:var(--s-4)}
+}
+@media print{.arr-show{display:none!important}.arrival{border:1px dashed #000;break-inside:avoid}}

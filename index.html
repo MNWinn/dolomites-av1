@@ -11,7 +11,7 @@
 <!-- self-hosted, deferred: run in this order after the page is parsed (Leaflet → Chart.js → app.js) -->
 <script defer src="vendor/leaflet/leaflet.js"></script>
 <script defer src="vendor/chart.umd.min.js"></script>
-<script defer src="app.js?v=1c5942da5b"></script>
+<script defer src="app.js?v=390c629fea"></script>
 <link rel="preload" href="fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/fraunces-600-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style id="redesign-css">
@@ -465,6 +465,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <ul class="hs-legend" aria-label="Badge key"><li><span class="badge" data-status="booked">Booked</span></li><li><span class="badge" data-status="pending">Pending</span></li><li><span class="badge" data-status="not-booked">Not booked</span></li><li>= our booking (Group → Booking tracker). Tinted tags = what the hut's site shows.</li></ul>
 <div id="hsBody"></div>
 <details class="hs-toggle"><summary><span class="when-closed">Show all huts (backups and options)</span><span class="when-open">Show only our hut nights</span></summary></details></section>
+<section id="arrival" class="arrival" aria-labelledby="arrTitle"></section>
 <button id="all">Show all 4 days</button>
 <nav class="daychips" aria-label="Jump to a day"><a href="#d0" data-day="0"><i style="--c:var(--stage-1)"></i>Day 1</a><a href="#d1" data-day="1"><i style="--c:var(--stage-2)"></i>Day 2</a><a href="#d2" data-day="2"><i style="--c:var(--stage-3)"></i>Day 3</a><a href="#d3" data-day="3"><i style="--c:var(--stage-4)"></i>Day 4</a></nav>
 <div id="days"></div>
@@ -494,12 +495,12 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </thead>
 <tbody><tr>
 <td>Wed 18 Aug</td>
-<td>Fly US → Venice overnight (e.g. UA321 IAD 17:15 → VCE ≈07:55 next day [S15]; flights not costed)</td>
-<td>plane</td>
+<td><strong>PROPOSED (§3.0):</strong> fly into Venice (VCE). The example UA321 (IAD 17:15 → VCE ≈07:55 next day [S15]) lands Thu 19, so landing on Wed 18 means leaving the US on Tue 17; flights not costed</td>
+<td><strong>TBD</strong> (Venice or on the way north)</td>
 </tr>
 <tr>
 <td>Thu 19 Aug</td>
-<td>Land VCE ≈07:55 → collect 9‑seat van → drive to Cortina (146–168 km, 1 h 50–2 h 34 [S49]) → park → bus 445 + 442 to Braies (§4)</td>
+<td><strong>PROPOSED (§3.0):</strong> collect the van at VCE → drive to the Lago di Braies start area (≈194 km, ≈2 h 36 by car, approx. [S106]); with option (b) the van stops at Cortina (≈148 km, ≈1 h 51 [S106]) → park → bus 445 + 442 to Braies (§4)</td>
 <td><strong>Hotel Pragserhof</strong> (or Rose) near Lago di Braies (§3.2)</td>
 </tr>
 <tr>
@@ -702,6 +703,65 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tbody></table>
 <hr>
 <h2>3. Getting there</h2>
+<h3>3.0 PROPOSED: getting there, Wed 18 – Thu 19 Aug (fly into Venice, drive to the trailhead area)</h3>
+<blockquote>
+<p><strong>Proposed option, not booked</strong> (Matthew, 3 Nov 2026). The hike itself still starts <strong>Fri 20 Aug</strong> at Lago di Braies; the drive is not part of the hike days, totals, elevation chart or GPX files. It is shown on the map as a dashed line from VCE.</p>
+</blockquote>
+<table tabindex="0" aria-label="Guide table 5 (scrolls sideways)">
+<thead>
+<tr>
+<th>Day (2027)</th>
+<th>Plan</th>
+<th>Night</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Wed 18 Aug</td>
+<td>Fly into <strong>Venice Marco Polo (VCE)</strong></td>
+<td><strong>TBD</strong> (Venice or somewhere on the way north; not booked, not costed)</td>
+</tr>
+<tr>
+<td>Thu 19 Aug</td>
+<td>Collect the van at VCE → drive to the <strong>Lago di Braies start area</strong> via A27 · Pieve di Cadore · Cortina · Passo Cimabanche · Dobbiaco</td>
+<td><strong>Hotel Pragserhof</strong>, half board (fallback <strong>Hotel Rose</strong>, Villabassa) (§3.2)</td>
+</tr>
+</tbody></table>
+<p><strong>Drive, approximate</strong> (OSRM demo router, driving profile, OpenStreetMap data, queried 3 Nov 2026 [S106]; car speeds with no traffic or stops, so a loaded van will take longer):</p>
+<table tabindex="0" aria-label="Guide table 6 (scrolls sideways)">
+<thead>
+<tr>
+<th>From VCE terminal to</th>
+<th>Distance</th>
+<th>Drive time</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Lago di Braies (Day 1 start)</td>
+<td>≈193.9 km</td>
+<td>≈2 h 36</td>
+</tr>
+<tr>
+<td>Hotel Pragserhof, St. Veit / San Vito</td>
+<td>≈192.0 km</td>
+<td>≈2 h 34</td>
+</tr>
+<tr>
+<td>Hotel Rose, Villabassa (fallback)</td>
+<td>≈182.8 km</td>
+<td>≈2 h 26</td>
+</tr>
+<tr>
+<td>Cortina, Pontechiesa parking (option b)</td>
+<td>≈148.0 km</td>
+<td>≈1 h 51</td>
+</tr>
+</tbody></table>
+<ul>
+<li><strong>Assumption:</strong> &quot;drive to the city&quot; is read as the <strong>Braies / Villabassa start area</strong> (where the Thu 19 hotels are), not Venice or Cortina.</li>
+<li><strong>Consistent with the plan below:</strong> the van and Pontechiesa parking run <strong>Thu 19 – Mon 23</strong>, and the <strong>bus 442</strong> tickets are for <strong>Thu 19</strong> (Group tab booking tracker; §4). With option (b) the van stops at Cortina on this same road and bus 445 + 442 does the last part; with option (a) it drives all the way.</li>
+<li><strong>⚠️ Seats:</strong> the rented minivan <strong>may seat only 7–8 of the 9</strong>. Then 1–2 people need another seat (a second car, or bus/train; not costed). The tracker and the costs in §6 still assume <strong>one 9‑seat van</strong>.</li>
+<li><strong>Distance check:</strong> OSRM gives ≈194 km to the lake; the hotel&#39;s own &quot;230 km&quot; [S70] is higher, and the option (a) fuel estimate in §3.1 still uses it (so it is on the safe side).</li>
+</ul>
 <h3>3.1 Flight and van</h3>
 <ul>
 <li><strong>Flight (not costed):</strong> UA321 IAD 17:15 → VCE ≈07:55 next day [S15]: depart <strong>Wed 18 Aug</strong>, land <strong>Thu 19 Aug</strong> (an example flight; the group may fly another). Return flight depends on the open question about Mon 23 night (§9).</li>
@@ -711,7 +771,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <li><strong>Fuel EST:</strong> diesel €2.240/L (Italian average, 2 Nov 2026) [S31] × 8–9 L/100 km (<strong>my assumption</strong> for a 9‑seat diesel van). Round trip VCE–Cortina 292–336 km → <strong>€52–68</strong>; VCE–Braies 460 km → <strong>€82–93</strong>.</li>
 </ul>
 <h3>3.2 Night of Thu 19 Aug near Lago di Braies (two options)</h3>
-<table tabindex="0" aria-label="Guide table 5 (scrolls sideways)">
+<table tabindex="0" aria-label="Guide table 7 (scrolls sideways)">
 <thead>
 <tr>
 <td></td>
@@ -767,7 +827,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </ul>
 <h3>4.2 Bus timetables (summer 2026; 2027 not yet published)</h3>
 <p><strong>SAD 445 Cortina ↔ Dobbiaco/Toblach</strong> (valid 14 Jun–12 Dec 2026, daily; fare €6.50 [S45]) [S76]</p>
-<table tabindex="0" aria-label="Guide table 6 (scrolls sideways)">
+<table tabindex="0" aria-label="Guide table 8 (scrolls sideways)">
 <thead>
 <tr>
 <th>Cortina Scuole → Dobbiaco Busbahnhof</th>
@@ -780,7 +840,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tr>
 </tbody></table>
 <p><strong>SAD 442 Dobbiaco ↔ Lago di Braies</strong> (valid 14 Jun–12 Dec 2026; <strong>online reservation and payment required 1 Jul–15 Sep at prags.bz/ticket, €7</strong> [S46]) [S77]</p>
-<table tabindex="0" aria-label="Guide table 7 (scrolls sideways)">
+<table tabindex="0" aria-label="Guide table 9 (scrolls sideways)">
 <thead>
 <tr>
 <th>Dobbiaco Busbahnhof → Lago di Braies (29 min)</th>
@@ -793,7 +853,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tr>
 </tbody></table>
 <p><strong>Dolomiti Bus 52 Cortina ↔ Passo Falzarego</strong> (valid <strong>8 Jun–9 Sep 2026</strong>; fare ≈€3, snippet [S47]) [S78]</p>
-<table tabindex="0" aria-label="Guide table 8 (scrolls sideways)">
+<table tabindex="0" aria-label="Guide table 10 (scrolls sideways)">
 <thead>
 <tr>
 <th>Cortina Scuole → Falzarego (35 min)</th>
@@ -807,7 +867,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tbody></table>
 <p>Request stops include Cinque Torri, Cinque Torri Piazzale, Col Gallina and Cianzopè [S78]. <strong>The Cinque Torri time is not printed</strong>: EST 5–10 min after Falzarego (my estimate from the stop order; the valley‑bound 35‑min run time includes it).</p>
 <h3>4.3 The three options</h3>
-<table tabindex="0" aria-label="Guide table 9 (scrolls sideways)">
+<table tabindex="0" aria-label="Guide table 11 (scrolls sideways)">
 <thead>
 <tr>
 <td></td>
@@ -866,7 +926,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <hr>
 <h2>5. Booking order, deadlines and deposit rules</h2>
 <p>Nothing below has been done. Matthew (or whoever he names in the Group tab) books; I contacted no one. Cancellation dates were counted back from the arrival nights in Python (weekdays checked). Cancellation dates marked ≈ are my day counts from the stated rule.</p>
-<table tabindex="0" aria-label="Guide table 10 (scrolls sideways)">
+<table tabindex="0" aria-label="Guide table 12 (scrolls sideways)">
 <thead>
 <tr>
 <th>#</th>
@@ -961,7 +1021,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <p><strong>Money at risk once 1–3 are booked (EST):</strong> Biella 50% × €760 = €380; Col Gallina 50% × €880 = €440; Fanes 50% × €760 = €380 → <strong>≈€1,200 non‑refundable for 8 (€150 pp); for 9: ≈€1,350</strong> (same €150 pp).</p>
 <h3>5.1 Hut booking status (checked Tue 3 Nov 2026, 00:13–00:36 ET; a few rows from Mon 2 Nov 2026)</h3>
 <p>Read-only checks of public calendars and pages; nothing was booked, held or requested. <strong>Open for 2027</strong> = the hut takes 2027 bookings now; the August column says whether our night was actually free online. Same data as the &quot;Hut booking status&quot; panel in <code>av1.html</code>.</p>
-<table tabindex="0" aria-label="Guide table 11 (scrolls sideways)">
+<table tabindex="0" aria-label="Guide table 13 (scrolls sideways)">
 <thead>
 <tr>
 <th>Hut</th>
@@ -1134,7 +1194,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <hr>
 <h2>6. Cost per person and for the group (2026 prices; flights excluded)</h2>
 <p>Plan = option (b), 20–23 Aug 2027 route (night 3 Col Gallina). <strong>EST</strong> = estimate; method in the notes column. Shared van, fuel, tolls and parking are split ÷ 9.</p>
-<table tabindex="0" aria-label="Guide table 12 (scrolls sideways)">
+<table tabindex="0" aria-label="Guide table 14 (scrolls sideways)">
 <thead>
 <tr>
 <th>Item</th>
@@ -1242,7 +1302,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <p>The <strong>Group</strong> tab in <code>av1.html</code> holds an editable roster, booking tracker and cost ledger with settlement, saved only in the browser (localStorage key <code>av1-group-v3</code>), with CSV/JSON export. Emails are roster data only; nothing is ever sent. Defaults below.</p>
 <!--GROUP_TABLES_START-->
 <p><strong>Roster (defaults)</strong></p>
-<table tabindex="0" aria-label="Guide table 13 (scrolls sideways)">
+<table tabindex="0" aria-label="Guide table 15 (scrolls sideways)">
 <thead>
 <tr>
 <th>#</th>
@@ -1297,7 +1357,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tr>
 </tbody></table>
 <p><strong>Booking tracker (defaults)</strong></p>
-<table tabindex="0" aria-label="Guide table 14 (scrolls sideways)">
+<table tabindex="0" aria-label="Guide table 16 (scrolls sideways)">
 <thead>
 <tr>
 <th>Item</th>
@@ -1392,7 +1452,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tr>
 </tbody></table>
 <p><strong>Cost ledger (defaults, EST 2026 prices, split among all 9, option b)</strong></p>
-<table tabindex="0" aria-label="Guide table 15 (scrolls sideways)">
+<table tabindex="0" aria-label="Guide table 17 (scrolls sideways)">
 <thead>
 <tr>
 <th>Line item</th>
@@ -1523,6 +1583,8 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <li><strong>Guestcard / Guest Pass coverage</strong> of the 442 reservation and the 445 to Cortina (unverified).</li>
 <li><strong>Hut tourist tax</strong> at Biella and Fanes (not published; EST used). Col Gallina €1.50 [S54].</li>
 <li><strong>Valparola → Falzarego walking time</strong> is not published (EST by DIN); the trace and [S61] differ by ≈1 km on this leg.</li>
+<li><strong>PROPOSED arrival (§3.0):</strong> Wed 18 Aug night is <strong>TBD</strong>; landing on Wed 18 needs an earlier flight than the UA321 example (it lands Thu 19) [S15].</li>
+<li><strong>Minivan seats:</strong> the rental may seat only <strong>7–8 of the 9</strong>; the tracker and §6 assume one 9‑seat van.</li>
 </ol>
 <h2>Sources</h2>
 <ul>
@@ -1630,6 +1692,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <li><strong>[S103]</strong> dolomitidasogno.it, trail 441 Falzarego → Averau passes the Col Gallina lift area (≈1 h 30), read 3 Nov 2026</li>
 <li><strong>[S104]</strong> August 2027 availability sweep, 3 Nov 2026 00:13–00:36 ET, read-only: Biella Planyo feed, bookingsuedtirol API (Fanes, Lavarella, Fodara Vedla, Pederü), Lagazuoi calendar, bukly calendars (Col Gallina, Averau, Scotoni); per-night data in <code>aug2027_availability.csv</code></li>
 <li><strong>[S105]</strong> OpenStreetMap nodes 452438203 (Forcella del Lago / Forcela dl Lech, ele 2,486) and 6635588053 (Forcella Averau, ele 2,435), via api.openstreetmap.org, read 3 Nov 2026</li>
+<li><strong>[S106]</strong> OSRM demo router (router.project-osrm.org), driving profile on OpenStreetMap data: Venice Marco Polo terminal (OSM node 2650849490) → Lago di Braies / Hotel Pragserhof / Hotel Rose Villabassa / Pontechiesa Cortina, full route geometry, queried Tue 3 Nov 2026 12:26 ET. Stop locations from OpenStreetMap (Nominatim). Approximate: car speeds, no traffic or stops</li>
 </ul>
 </div></div>
 <div id="group" role="tabpanel" aria-labelledby="bGroup" hidden><div class="inner"><h1 style="margin-top:0">Group manager: 9 travelers</h1>

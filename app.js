@@ -95,14 +95,27 @@ select(null);
 
 /* ---- Tabs (ARIA tabs pattern: roving tabindex, arrows/Home/End) ---- */
 const tabs=[...document.querySelectorAll('[role=tab]')];
-function show(id,focus){tabs.forEach(t=>{const on=t.id===id,p=document.getElementById(t.getAttribute('aria-controls'));
+const tabY={};  // each tab keeps its own scroll position; a tab opened for the first time starts at the top
+function show(id,focus){const prev=tabs.find(t=>t.getAttribute('aria-selected')==='true'),moved=prev&&prev.id!==id;if(moved)tabY[prev.id]=scrollY;
+ tabs.forEach(t=>{const on=t.id===id,p=document.getElementById(t.getAttribute('aria-controls'));
   t.setAttribute('aria-selected',on);t.tabIndex=on?0:-1;t.classList.toggle('on',on);p.style.display=on?(t.id==='bMap'?'':'block'):'none';p.hidden=!on});
- if(focus)document.getElementById(id).focus();
+ if(focus)document.getElementById(id).focus({preventScroll:true});
  if(id==='bMap'){map.invalidateSize({pan:false});if(chart)chart.resize()}
+ if(moved)scrollTo({top:tabY[id]||0,behavior:'instant'});navUpdate();
  if(location.hash!=='#'+id.slice(1).toLowerCase())history.replaceState(null,'',id==='bMap'?location.pathname+location.search:'#'+id.slice(1).toLowerCase())}
-tabs.forEach((t,k)=>{t.addEventListener('click',()=>show(t.id));
+const toTop=()=>scrollTo({top:0,behavior:reduceMotion?'instant':'smooth'});
+/* back-to-top after 1.5 screens; on phones the header also names the guide section in view */
+function navUpdate(){const tt=document.getElementById('toTop'),wh=document.querySelector('[data-where]'),g=document.getElementById('guide');
+ if(tt)tt.hidden=scrollY<innerHeight*1.5;
+ if(!wh)return;let cur=null;
+ if(g&&!g.hidden){const line=document.querySelector('header').getBoundingClientRect().bottom+innerHeight*.3;for(const h of g.querySelectorAll('h2')){if(h.getBoundingClientRect().top<=line)cur=h;else break}}
+ const txt=cur?cur.textContent.trim():'';if(wh.textContent!==txt)wh.textContent=txt;wh.hidden=!txt}
+{let raf=0;addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(()=>{raf=0;navUpdate()})},{passive:true});addEventListener('resize',navUpdate,{passive:true});
+ const tt=document.getElementById('toTop');if(tt)tt.addEventListener('click',()=>{toTop();const a=tabs.find(t=>t.getAttribute('aria-selected')==='true');if(a)a.focus({preventScroll:true})})}
+tabs.forEach((t,k)=>{t.addEventListener('click',()=>{if(t.getAttribute('aria-selected')==='true')toTop();else show(t.id)});
  t.addEventListener('keydown',e=>{const n=tabs.length,m={ArrowRight:(k+1)%n,ArrowLeft:(k-1+n)%n,Home:0,End:n-1}[e.key];if(m===undefined)return;e.preventDefault();show(tabs[m].id,true)})});
 {const h=location.hash.slice(1).toLowerCase();if(h==='guide')show('bGuide');else if(h==='group')show('bGroup')}
+navUpdate();
 
 /* ---- Offline support (sw.js precaches page, scripts, fonts, hero WebP, GPX) ---- */
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(e=>console.warn('SW not registered',e)));

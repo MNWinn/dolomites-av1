@@ -11,7 +11,7 @@
 <!-- self-hosted, deferred: run in this order after the page is parsed (Leaflet → Chart.js → app.js) -->
 <script defer src="vendor/leaflet/leaflet.js"></script>
 <script defer src="vendor/chart.umd.min.js"></script>
-<script defer src="app.js?v=73ac5db67b"></script>
+<script defer src="app.js?v=1c5942da5b"></script>
 <link rel="preload" href="fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/fraunces-600-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style id="redesign-css">
@@ -408,13 +408,14 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </style>
 <style id="upgrades-guard">
 /* upgrades.css re-enables these. If it is missing (e.g. offline before it is precached), the new hooks stay out of sight. */
-#bento,.daychips,.print-only,.tab-ico,[data-mode-toggle]{display:none}
+#bento,.daychips,.print-only,.tab-ico,[data-mode-toggle],.to-top{display:none}
 </style>
 <link rel="stylesheet" href="upgrades.css">
 </head><body>
 <header><h1><span class="badge badge--plan">Main plan</span><span class="h-title">Alta Via 1 north</span><span class="h-sub">Lago di Braies → Cinque Torri · 20–23 Aug 2027</span></h1>
 <button type="button" class="mode-toggle" id="modeToggle" data-mode-toggle hidden aria-label="Display: Sun. Tap for Night."><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><span class="lbl">Sun</span></button>
 <nav role="tablist" aria-label="Views"><button id="bMap" class="on" role="tab" aria-selected="true" aria-controls="app" tabindex="0"><svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2-6-2Zm0 0v14m6-12v14"/></svg>Map &amp; stages</button> <button id="bGuide" role="tab" aria-selected="false" aria-controls="guide" tabindex="-1"><svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M4 5a2 2 0 0 1 2-2h12v16H6a2 2 0 0 0-2 2V5Zm0 16a2 2 0 0 1 2-2h12v2"/></svg>Full guide</button> <button id="bGroup" role="tab" aria-selected="false" aria-controls="group" tabindex="-1"><svg class="tab-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.3 2.7-5.5 6-5.5s6 2.2 6 5.5M16 4.8a3 3 0 0 1 0 6M18 14.6c1.9.6 3 2.4 3 5.4"/></svg>Group</button></nav></header>
+<button type="button" class="to-top" id="toTop" aria-label="Back to top" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
 <main id="content">
 <section class="hero" aria-labelledby="heroTitle">
 <picture class="hero-pic">
@@ -459,7 +460,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </div></section>
 <div id="app" role="tabpanel" aria-labelledby="bMap"><div id="side">
 <div class="print-only print-head"><b>Alta Via 1 north · day sheets</b><span>20–23 Aug 2027<span data-print-date></span></span></div>
-<div class="banner" id="banner"><b>Main plan: Alta Via 1 north, 4 days, 3 hut nights, finish at Cinque Torri.</b> Backup: Palaronda (guide §8, <code>palaronda.html</code>).<br><b>⚠️ Deadlines</b><br>1. <b>Rif. Biella (Fri 20 Aug): 2027 bookings open since 1 Nov 2026</b> (39 places free on 3 Nov; 50% non-refundable deposit). Book first.<br>2. <b>Rif. Col Gallina (Sun 22)</b>: online now, 50% deposit kept on cancellation; backup Rif. Averau.<br>3. <b>Rif. Fanes (Sat 21), 1 night by direct request</b> to the hut; 50% kept, 100% from ≈Mon 16 Aug.<br>4. First-night hotel after huts: Pragserhof free cancel to ≈Thu 29 Jul 2027 (21 days; to be safe Wed 28 Jul).<br>Plan: fly Wed 18 Aug · Braies night Thu 19 · hut nights Fri 20–Sun 22 · walk out Mon 23. Lagazuoi is an optional Day 3 detour or cable car (no night). Van moved ahead to Cortina (option b). Group of 9 (8 named); beds asked for 9. The Group tab lists the 8 named travelers until the 9th is added. <span class="small">Public calendars checked 3 Nov 2026 (guide §5.1).</span></div>
+<div class="banner" id="banner"><b>Main plan: Alta Via 1 north, 4 days, 3 hut nights, finish at Cinque Torri.</b> Backup: Palaronda (guide §8, <code>palaronda.html</code>).<br><b>⚠️ Deadlines</b><br>1. <b>Rif. Biella (Fri 20 Aug): 2027 bookings open since 1 Nov 2026</b> (39 places free on 3 Nov; 50% non-refundable deposit). Book first.<br>2. <b>Rif. Col Gallina (Sun 22)</b>: online now, 50% deposit kept on cancellation; backup Rif. Averau.<br>3. <b>Rif. Fanes (Sat 21), 1 night by direct request</b> to the hut; 50% kept, 100% from ≈Mon 16 Aug.<br>4. First-night hotel after huts: Pragserhof free cancel to ≈Thu 29 Jul 2027 (21 days; to be safe Wed 28 Jul).<br>Plan: fly Wed 18 Aug · Braies night Thu 19 · hut nights Fri 20–Sun 22 · walk out Mon 23. Lagazuoi is an optional Day 3 detour or cable car (no night). Van moved ahead to Cortina (option b). Group of 9, all named; beds asked for 9. <span class="small">Public calendars checked 3 Nov 2026 (guide §5.1).</span></div>
 <section class="banner" id="hutStatus" aria-labelledby="hsTitle"><h2 id="hsTitle">Hut booking status</h2><span class="small">(checked Tue 3 Nov 2026, 00:13–00:36 ET; read-only)</span>
 <ul class="hs-legend" aria-label="Badge key"><li><span class="badge" data-status="booked">Booked</span></li><li><span class="badge" data-status="pending">Pending</span></li><li><span class="badge" data-status="not-booked">Not booked</span></li><li>= our booking (Group → Booking tracker). Tinted tags = what the hut's site shows.</li></ul>
 <div id="hsBody"></div>
@@ -474,9 +475,9 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <p class="small">Map data © OpenStreetMap contributors · Topo tiles © OpenTopoMap (CC-BY-SA) · Elevation: OpenTopoData EU-DEM.</p>
 </div><div id="main"><div id="map"></div><div id="prof"><canvas id="chart"></canvas></div></div></div>
 <div id="guide" role="tabpanel" aria-labelledby="bGuide" hidden><div class="inner" id="guideInner"><h1>MAIN PLAN: Alta Via 1 (north), Lago di Braies → Cinque Torri, 4 days hut to hut, 20–23 Aug 2027</h1>
-<p><strong>Group of 9 (8 named so far; the Group tab lists the 8), beds asked for 9 · Plan prepared 2 Nov 2026; dates and huts changed 3 Nov 2026 (hike Fri 20–Mon 23 Aug 2027; night 3 now Col Gallina) · Nothing has been booked, held, paid or requested.</strong></p>
+<p><strong>Group of 9, all named (the Group tab lists all 9), beds asked for 9 · Plan prepared 2 Nov 2026; dates and huts changed 3 Nov 2026 (hike Fri 20–Mon 23 Aug 2027; night 3 now Col Gallina) · Nothing has been booked, held, paid or requested.</strong></p>
 <p><strong>This is the main hike.</strong> Alta Via 1 north, 3 hut nights (Biella, Fanes, Col Gallina), finishing at Cinque Torri on Mon 23 Aug with no night at Nuvolau. <strong>Lagazuoi is now optional, with no night</strong>: a Day 3 detour on foot or by cable car (§2.2). Rifugio Averau is the backup for night 3. The Palaronda is the <strong>backup</strong> only (§8 and <code>palaronda.html</code>). Days 1–2 use the figures from Matthew&#39;s hut planner [S91]; Days 3–4 use hut and trail sources [S52][S55][S61][S101][S102].</p>
-<p><strong>Group size: 9 people</strong> (Matthew, 3 Nov 2026). Only 8 are named so far, so the Group tab roster and cost ledger still list <strong>8 travelers</strong>; beds and the group cost in §6 are for <strong>9</strong>.</p>
+<p><strong>Group size: 9 people</strong> (Matthew, 3 Nov 2026; the 9th, Dylan, named 3 Nov 2026). The Group tab roster, the cost ledger, beds and the group cost in §6 are all for <strong>9</strong>.</p>
 <p>Conventions: <strong>[Sn]</strong> = source (list at the end). <strong>EST</strong> = my estimate, with the method stated. <strong>TRACE (EST)</strong> = route traced on OpenStreetMap (AV1 relation 177743 for Days 1–2; OSM trails plus 512 m of the SP24 road near Passo Valparola for Days 3–4) with elevation from OpenTopoData EU‑DEM 25 m, sampled every 40 m, counting climbs/drops of 5 m or more. Prices are <strong>2026</strong> unless stated; 2027 prices are mostly not published. EUR→USD at 1.1216 (ECB, 2 Nov 2026) [S32]. Interactive map: <code>av1.html</code> (this guide is also its &quot;Full guide&quot; tab).</p>
 <blockquote>
 <p><strong>Availability note (3 Nov 2026, 00:13–00:36 ET, read-only) [S104].</strong> For 9 people: <strong>Biella</strong> showed 39 free places on Fri 20 Aug; <strong>Fanes</strong> showed 17 beds on Sat 21 Aug, but only 3 can be booked online for 1 night (the rest show only in 2‑night stays), so the 1‑night stay must be asked of the hut directly; <strong>Col Gallina</strong> showed rooms Stanza 10, 5, 6, 7, 8 and 11 free on Sun 22 Aug (≈20–26 beds; beds per room EST); <strong>Averau</strong> (backup) showed 11 beds on Sun 22. <strong>Lagazuoi</strong> still marks all of August–September 2027 not bookable, and Scotoni had nothing free. Full table: §5.1 Hut booking status and the panel in <code>av1.html</code>.</p>
@@ -1132,7 +1133,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <p><strong>What this means:</strong> Biella (night 1) is open with 39 places on Fri 20 Aug. Fanes (night 2) has room on Sat 21 Aug, but a 1‑night stay for 9 must be asked of the hut directly. Col Gallina (night 3) showed ≈20–26 beds on Sun 22 Aug online, with Averau (11 beds) as the backup. Lagazuoi is no longer a night: it is still not bookable online for August 2027 and is now only an optional Day 3 detour or cable car. Fodara Vedla and Pederü each showed 13 beds on Fri 20 Aug as backups for Biella [S104].</p>
 <hr>
 <h2>6. Cost per person and for the group (2026 prices; flights excluded)</h2>
-<p>Plan = option (b), 20–23 Aug 2027 route (night 3 Col Gallina). <strong>EST</strong> = estimate; method in the notes column. Shared van costs are ÷ 8 in the per‑person rows; the group‑of‑9 lines below the table split them ÷ 9.</p>
+<p>Plan = option (b), 20–23 Aug 2027 route (night 3 Col Gallina). <strong>EST</strong> = estimate; method in the notes column. Shared van, fuel, tolls and parking are split ÷ 9.</p>
 <table tabindex="0" aria-label="Guide table 12 (scrolls sideways)">
 <thead>
 <tr>
@@ -1193,60 +1194,46 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>[S66]</td>
 </tr>
 <tr>
-<td>Van, 5 days ÷ 8</td>
-<td>€48.12</td>
-<td><strong>€62.41</strong></td>
-<td>€86.25</td>
+<td>Van, 5 days ÷ 9</td>
+<td>€42.78</td>
+<td><strong>€55.48</strong></td>
+<td>€76.67</td>
 <td>€385 / €499.29 / €690 [S22][S23]</td>
 </tr>
 <tr>
-<td>Fuel ÷ 8</td>
-<td>€6.54</td>
-<td><strong>€7.50</strong></td>
-<td>€8.47</td>
+<td>Fuel ÷ 9</td>
+<td>€5.81</td>
+<td><strong>€6.67</strong></td>
+<td>€7.53</td>
 <td><strong>EST</strong> 292–336 km × 8–9 L/100 km × €2.24/L [S31][S49]</td>
 </tr>
 <tr>
-<td>Tolls ÷ 8</td>
-<td>€2.00</td>
-<td><strong>€3.05</strong></td>
-<td>€3.05</td>
+<td>Tolls ÷ 9</td>
+<td>€1.78</td>
+<td><strong>€2.71</strong></td>
+<td>€2.71</td>
 <td>€8 × 2 [S49] … €12.20 × 2 [S30] (class A)</td>
 </tr>
 <tr>
-<td>Pontechiesa parking ÷ 8</td>
-<td>€11.88</td>
-<td><strong>€11.88</strong></td>
-<td>€11.88</td>
+<td>Pontechiesa parking ÷ 9</td>
+<td>€10.56</td>
+<td><strong>€10.56</strong></td>
+<td>€10.56</td>
 <td>€19 × 5 days [S48]</td>
-</tr>
-<tr>
-<td><strong>Per person (8 sharing the van)</strong></td>
-<td><strong>€499.54</strong></td>
-<td><strong>€527.84 (≈$592)</strong></td>
-<td><strong>€593.64</strong></td>
-<td></td>
-</tr>
-<tr>
-<td>Group of 8 (if only the 8 named travelers go; matches the Group tab ledger)</td>
-<td>€3,996</td>
-<td>€4,222.72 (≈$4,736)</td>
-<td>€4,749</td>
-<td>USD at 1.1216 [S32]</td>
 </tr>
 <tr>
 <td><strong>Per person (9 sharing the van)</strong></td>
 <td><strong>€491.92</strong></td>
 <td><strong>€518.41 (≈$581)</strong></td>
 <td><strong>€581.46</strong></td>
-<td>EST: per‑person items × 9 + shared van, fuel, tolls, parking (€548–877) once, ÷ 9</td>
+<td>EST: per‑person items × 9 + shared van, fuel, tolls, parking (€548–877) once, ÷ 9 (exact; the rounded rows above can add up 1 cent higher)</td>
 </tr>
 <tr>
-<td><strong>Group of 9 (planned size)</strong></td>
+<td><strong>Group of 9</strong></td>
 <td><strong>€4,427</strong></td>
 <td><strong>€4,665.72 (≈$5,233)</strong></td>
 <td><strong>€5,233</strong></td>
-<td>same method, USD at 1.1216 [S32]; the Group tab ledger stays at 8 until the 9th traveler is named</td>
+<td>same method, USD at 1.1216 [S32]; matches the Group tab ledger (€4,665.72, split among all 9)</td>
 </tr>
 </tbody></table>
 <p>Not included: flights; lunches, drinks, showers and snacks at huts; Pederü jeep; optional Lagazuoi cable car (€24 single / €34 return in August [S67]); Mon 23 night and the drive/return to VCE; insurance. <strong>2027 prices are not published</strong> for most items; expect changes.</p>
@@ -1301,6 +1288,11 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <tr>
 <td>8</td>
 <td>Maya Dewier</td>
+<td></td>
+</tr>
+<tr>
+<td>9</td>
+<td>Dylan</td>
 <td></td>
 </tr>
 </tbody></table>
@@ -1399,7 +1391,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>AAA. Required with a US licence in Italy.</td>
 </tr>
 </tbody></table>
-<p><strong>Cost ledger (defaults, EST 2026 prices, split among all 8, option b)</strong></p>
+<p><strong>Cost ledger (defaults, EST 2026 prices, split among all 9, option b)</strong></p>
 <table tabindex="0" aria-label="Guide table 15 (scrolls sideways)">
 <thead>
 <tr>
@@ -1411,93 +1403,93 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tr>
 </thead>
 <tbody><tr>
-<td>First night (Thu 19): Pragserhof HB × 8</td>
-<td>€736.00</td>
+<td>First night (Thu 19): Pragserhof HB × 9</td>
+<td>€828.00</td>
 <td>€92.00</td>
 <td>—</td>
-<td>EST: €92 × 8 (Standard HB, Aug 2026; 1-night price may differ).</td>
+<td>EST: €92 × 9 (Standard HB, Aug 2026; 1-night price may differ).</td>
 </tr>
 <tr>
-<td>Tourist tax, first night × 8</td>
-<td>€28.00</td>
+<td>Tourist tax, first night × 9</td>
+<td>€31.50</td>
 <td>€3.50</td>
 <td>—</td>
-<td>€3.50 × 8 (2026).</td>
+<td>€3.50 × 9 (2026).</td>
 </tr>
 <tr>
-<td>Rifugio Biella HB × 8</td>
-<td>€760.00</td>
+<td>Rifugio Biella HB × 9</td>
+<td>€855.00</td>
 <td>€95.00</td>
 <td>—</td>
-<td>€95 × 8.</td>
+<td>€95 × 9.</td>
 </tr>
 <tr>
-<td>Rifugio Fanes HB × 8</td>
-<td>€760.00</td>
+<td>Rifugio Fanes HB × 9</td>
+<td>€855.00</td>
 <td>€95.00</td>
 <td>—</td>
-<td>€95 × 8 (dorm, 2026).</td>
+<td>€95 × 9 (dorm, 2026).</td>
 </tr>
 <tr>
-<td>Rifugio Col Gallina HB × 8</td>
-<td>€880.00</td>
+<td>Rifugio Col Gallina HB × 9</td>
+<td>€990.00</td>
 <td>€110.00</td>
 <td>—</td>
-<td>€110 × 8 (dorm HB 2026, third-party price list; €130 for a 4-bed dorm with bathroom).</td>
+<td>€110 × 9 (dorm HB 2026, third-party price list; €130 for a 4-bed dorm with bathroom).</td>
 </tr>
 <tr>
 <td>Hut tourist tax (EST)</td>
-<td>€68.00</td>
+<td>€76.50</td>
 <td>€8.50</td>
 <td>—</td>
-<td>(€3.50 × 2 + €1.50) × 8. Col Gallina €1.50 is published; Biella/Fanes not published, EST upper proxy €3.50.</td>
+<td>(€3.50 × 2 + €1.50) × 9. Col Gallina €1.50 is published; Biella/Fanes not published, EST upper proxy €3.50.</td>
 </tr>
 <tr>
-<td>Buses 445 + 442 + 52 × 8</td>
-<td>€132.00</td>
+<td>Buses 445 + 442 + 52 × 9</td>
+<td>€148.50</td>
 <td>€16.50</td>
 <td>—</td>
-<td>(€6.50 + €7 + ≈€3) × 8 (2026).</td>
+<td>(€6.50 + €7 + ≈€3) × 9 (2026).</td>
 </tr>
 <tr>
-<td>Cinque Torri chairlift down × 8</td>
-<td>€180.00</td>
+<td>Cinque Torri chairlift down × 9</td>
+<td>€202.50</td>
 <td>€22.50</td>
 <td>—</td>
-<td>€22.50 × 8 (August 2026, one way).</td>
+<td>€22.50 × 9 (August 2026, one way).</td>
 </tr>
 <tr>
 <td>Van rental, 5 days</td>
 <td>€499.29</td>
-<td>€62.41</td>
+<td>€55.48</td>
 <td>—</td>
 <td>EST: KAYAK typical $112/day × 5 ÷ 1.1216. Range €385–690.</td>
 </tr>
 <tr>
 <td>Fuel (van)</td>
 <td>€60.03</td>
-<td>€7.50</td>
+<td>€6.67</td>
 <td>—</td>
 <td>EST: midpoint €52.33–67.74 (292–336 km, 8–9 L/100 km, diesel €2.24/L).</td>
 </tr>
 <tr>
 <td>Motorway tolls (van)</td>
 <td>€24.40</td>
-<td>€3.05</td>
+<td>€2.71</td>
 <td>—</td>
 <td>A27 €12.20 × 2 (class A; a van may cost more).</td>
 </tr>
 <tr>
 <td>Pontechiesa parking, 5 days</td>
 <td>€95.00</td>
-<td>€11.88</td>
+<td>€10.56</td>
 <td>—</td>
 <td>€19/day × 5 (August 2026).</td>
 </tr>
 <tr>
 <td><strong>Total</strong></td>
-<td><strong>€4,222.72</strong></td>
-<td><strong>€527.84</strong></td>
+<td><strong>€4,665.72</strong></td>
+<td><strong>€518.41</strong></td>
 <td></td>
 <td>flights excluded</td>
 </tr>
@@ -1523,7 +1515,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <li><strong>Bus 52 Cinque Torri stop time</strong> (not printed) and whether the <strong>2027 season</strong> still covers Mon 23 Aug (2026 ran 8 Jun–9 Sep) [S78].</li>
 <li><strong>Fanes 1‑night stay on Sat 21 Aug for 9</strong> — ask the hut directly (email drafted 3 Nov 2026, not sent; only 3 beds bookable online for 1 night on 3 Nov 2026) [S104]. No August nights online at Lavarella.</li>
 <li><strong>Col Gallina 2027 price per person</strong> — €110/€130 are third‑party 2026 figures [S100]; check on the hut&#39;s booking page. Bed counts per room in the bukly calendar are EST [S104].</li>
-<li><strong>Group size 9, only 8 named:</strong> the group is 9 (Matthew, 3 Nov 2026), but the Group tab lists the 8 named travelers; add the 9th with <strong>+ Add traveler</strong> in the Group tab once they are named (saved in this browser only).</li>
+<li><strong>Group size 9, all named:</strong> Dylan (named 3 Nov 2026) is traveler 9 in the Group tab, and the ledger splits among all 9. A browser that saved the old 8-person defaults gets him added on its next visit; a browser with an edited roster shows a notice to add him with <strong>+ Add traveler</strong> (saved in this browser only).</li>
 <li><strong>2027 prices</strong> for huts, lifts, buses and the Braies rule are not yet published.</li>
 <li><strong>Taxi Cortina Sci minivan capacity:</strong> &quot;up to 7&quot; vs &quot;up to 8&quot; on the same page [S75].</li>
 <li><strong>Van toll class</strong> on the A27 (may be above class A) [S30]. A 9‑seat van with 9 people leaves room for only 4–5 bags [S22][S24][S25b].</li>
@@ -1640,12 +1632,12 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <li><strong>[S105]</strong> OpenStreetMap nodes 452438203 (Forcella del Lago / Forcela dl Lech, ele 2,486) and 6635588053 (Forcella Averau, ele 2,435), via api.openstreetmap.org, read 3 Nov 2026</li>
 </ul>
 </div></div>
-<div id="group" role="tabpanel" aria-labelledby="bGroup" hidden><div class="inner"><h1 style="margin-top:0">Group manager: 8 travelers</h1>
+<div id="group" role="tabpanel" aria-labelledby="bGroup" hidden><div class="inner"><h1 style="margin-top:0">Group manager: 9 travelers</h1>
 <p class="sheet-link"><b>Master copy:</b> the group's <a href="https://docs.google.com/spreadsheets/d/1v78iv99E9392KeWAJmQHmmkLEwJbR21O2HbBT-b72qI/edit" target="_blank" rel="noopener">Google Sheet (opens in a new tab)</a> is the source of truth for roster, bookings, deposits and splits. It is private: ask Matthew for access. When this page and the Sheet disagree, the Sheet wins.<br>
 <span class="small">Fallback: edit here, or bring the Sheet in with <b>Import Sheet CSV</b> (in the Sheet: File › Download › CSV for the Roster, Bookings &amp; Deposits and Expenses &amp; Splits tabs, then pick the files together; Balances is never imported).</span></p>
 <p class="small">Everything here is editable and saved only in this browser (localStorage key <code>av1-group-v4</code>). Export CSV or JSON to share with the group. This page books, pays and contacts no one. Ledger defaults are 2026-price estimates.</p>
 <div class="gbar"><b>Export:</b><button id="gCsvR">Roster CSV</button><button id="gCsvT">Tracker CSV</button><button id="gCsvL">Ledger + settlement CSV</button><button id="gJson">All (JSON)</button>
-<label class="btn">Import JSON<input type="file" id="gImport" class="sr-only" accept=".json,application/json"></label><label class="btn">Import Sheet CSV<input type="file" id="gImportCsv" class="sr-only" accept=".csv,text/csv" multiple></label><button id="gReset">Reset to defaults…</button><span class="small" id="gSaved" role="status"></span></div>
+<b>Import:</b><label class="btn">Import JSON<input type="file" id="gImport" class="sr-only" accept=".json,application/json"></label><label class="btn">Import Sheet CSV<input type="file" id="gImportCsv" class="sr-only" accept=".csv,text/csv" multiple></label><button id="gReset">Reset to defaults…</button><span class="small" id="gSaved" role="status"></span></div>
 <div id="gMsg" hidden></div>
 <div id="gBody"></div></div></div>
 </main>

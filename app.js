@@ -523,3 +523,32 @@ if(window.IntersectionObserver){
 /* ---- Print: date stamp on the day sheets ---- */
 function printDate(){const s=' · printed '+new Date().toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});$all('[data-print-date]').forEach(x=>x.textContent=s)}
 printDate();addEventListener('beforeprint',printDate);
+
+/* ---- Phone reading aids for the Guide and Group tabs (display only; Group data is never touched) ---- */
+/* each table cell gets data-label = its column header, so CSS can stack rows into labelled cards on small screens */
+function labelCells(t){const hr=[...t.rows].find(r=>r.querySelector('th'));if(!hr)return[];const hs=[...hr.cells].map(c=>c.textContent.trim());
+ [...t.rows].forEach(r=>{if(r!==hr)[...r.cells].forEach((c,i)=>{if(hs[i]&&c.dataset.label!==hs[i])c.dataset.label=hs[i]})});return hs}
+{const gb=$1('#gBody');if(gb){const lab=()=>$all('table.gt',gb).forEach(labelCells);lab();new MutationObserver(lab).observe(gb,{childList:true,subtree:true})}}
+/* Guide: sticky "Contents" menu built from the h2/h3 headings; shows the section in view. The URL hash stays #guide (it selects the tab). */
+{const gi=$1('#guideInner'),gp=$1('#guide');if(gi&&gp){
+ /* 2-column tables (e.g. timetables whose header row is data) stay tables; long column names go above the value */
+ $all('table',gi).forEach(t=>{const hs=labelCells(t);if(hs.length<3)return;t.classList.add('stack');if(hs.some(h=>h.length>20))t.classList.add('stack-top')});
+ const hd=$all('h2,h3',gi),slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);
+ hd.forEach((h,i)=>{if(!h.id)h.id='g'+i+'-'+slug(h.textContent);h.tabIndex=-1});
+ const cur=el('span',{className:'g-toc-cur'}),sum=el('summary',{},[el('span',{className:'g-toc-lbl',textContent:'Contents'}),cur]);
+ const links=hd.map(h=>el('a',{href:'#'+h.id,textContent:h.textContent,className:h.tagName==='H3'?'sub':''}));
+ const list=el('ul',{},[el('li',{},[el('a',{href:'#guide',className:'top',textContent:'Top of the guide'})]),...links.map(a=>el('li',{},[a]))]);
+ const det=el('details',{},[sum,list]),nav=el('nav',{className:'g-toc','aria-label':'Guide contents'},[det]);
+ const h1=$1('h1',gi);if(h1)h1.after(nav);else gi.prepend(nav);
+ let k=-1,raf=0;
+ const upd=()=>{raf=0;if(gp.hidden)return;const y=nav.getBoundingClientRect().bottom+24;
+  let n=-1;for(let i=0;i<hd.length;i++){if(hd[i].getBoundingClientRect().top<=y)n=i;else break}
+  if(n===k)return;if(k>=0)links[k].removeAttribute('aria-current');k=n;cur.textContent=n<0?'':hd[n].textContent;if(n>=0)links[n].setAttribute('aria-current','true')};
+ addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(upd)},{passive:true});
+ new MutationObserver(()=>requestAnimationFrame(upd)).observe(gp,{attributes:true,attributeFilter:['hidden']});upd();
+ det.addEventListener('toggle',()=>{if(det.open&&k>=0)list.scrollTop=Math.max(0,links[k].parentNode.offsetTop-list.clientHeight/3)});
+ det.addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;e.preventDefault();det.open=false;const b=reduceMotion?'auto':'smooth';
+  if(a.classList.contains('top')){scrollTo({top:0,behavior:b});sum.focus({preventScroll:true});return}
+  const t=document.getElementById(a.hash.slice(1));if(t){t.scrollIntoView({block:'start',behavior:b});t.focus({preventScroll:true})}});
+ det.addEventListener('keydown',e=>{if(e.key==='Escape'&&det.open){det.open=false;sum.focus()}});
+ document.addEventListener('click',e=>{if(det.open&&!nav.contains(e.target))det.open=false})}}

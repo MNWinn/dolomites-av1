@@ -1,0 +1,267 @@
+/* =====================================================================
+   AV1 upgrades — linked stylesheet (precache it next to the page).
+   Loads AFTER the inline redesign/dev styles. CSS + markup hooks only:
+   every JS-filled hook rests in a sensible static state without JS.
+   Blocks: [tabbar+glass] [bento] [follow] [motion] [modes] [vt] [print] [fix]
+   Handoff hooks are listed in redesign/upgrades/landed.md.
+   ===================================================================== */
+
+/* ---------- [tabbar+glass] ---------- */
+/* glass lives on a pseudo-element so header descendants are NOT trapped by
+   backdrop-filter's containing block (the fixed phone tab bar sits inside header) */
+header{isolation:isolate;background:transparent;box-shadow:none}
+header::before{content:"";position:absolute;inset:0;z-index:-1;background:rgba(14,23,31,.92);
+  -webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);
+  border-bottom:1px solid rgba(255,255,255,.08);box-shadow:0 4px 16px rgba(0,0,0,.18)}
+/* map view: the hero slides under the glass bar */
+body:not(:has(#app[hidden])) .hero{margin-top:calc(-1 * var(--header-h));padding-top:var(--header-h)}
+.tab-ico{display:none;width:20px;height:20px;flex:none}
+/* display-mode toggle: ships hidden; JS unhides it ([data-mode-toggle]) */
+.mode-toggle{display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);min-width:var(--tap);padding:0 var(--s-3);margin-left:var(--s-2);flex:none;
+  border:1px solid rgba(255,255,255,.22);border-radius:var(--r-pill);background:rgba(255,255,255,.06);color:var(--stone-50);font:600 var(--fs-14)/1 var(--font-body);cursor:pointer}
+.mode-toggle[hidden]{display:none}
+.mode-toggle:hover{background:rgba(255,255,255,.14)}
+.mode-toggle:focus-visible{outline:3px solid var(--sun-400);outline-offset:2px}
+.mode-toggle svg{width:20px;height:20px;flex:none}
+@media (max-width:800px){
+  /* one header row; the SAME tablist becomes a floating bottom bar (thumb zone, safe-area aware) */
+  :root{--brand-h:56px;--nav-h:0px;--brand-pin:0px;--tabbar-h:64px}
+  header{top:0;flex-wrap:nowrap;align-items:center;gap:var(--s-2);padding:0 var(--s-3)}
+  header h1{width:auto;flex:1;min-width:0}
+  header h1 .h-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .mode-toggle .lbl{display:none}
+  header nav{position:fixed;left:var(--s-3);right:var(--s-3);bottom:calc(var(--s-2) + env(safe-area-inset-bottom));top:auto;z-index:1100;
+    width:auto;height:var(--tabbar-h);margin:0;padding:6px;gap:4px;border-radius:22px;overflow:visible;
+    background:rgba(14,23,31,.94);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);
+    box-shadow:0 10px 30px -10px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.06) inset}
+  header nav button{flex:1 1 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:100%;padding:0 4px;
+    border-radius:16px;font-size:12px;line-height:1.1;white-space:nowrap}
+  .tab-ico{display:block}
+  /* the floating bar never covers the last content */
+  body{padding-bottom:calc(var(--tabbar-h) + var(--s-4) + env(safe-area-inset-bottom))}
+}
+@media (prefers-reduced-transparency:reduce){
+  header::before,header nav{-webkit-backdrop-filter:none;backdrop-filter:none}
+  header::before{background:var(--ink-900)}
+  @media (max-width:800px){header nav{background:var(--ink-900)}}
+}
+
+/* ---------- [bento] trip at a glance (static/empty state until JS fills it) ---------- */
+#bento{display:block;max-width:1400px;margin:0 auto;padding:var(--s-6) var(--s-6) 0}
+body:has(#app[hidden]) #bento{display:none}
+.bento{display:grid;gap:var(--s-3);grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-areas:"count route route route" "count book huts wx"}
+.tile{container-type:inline-size;position:relative;min-width:0;margin:0;padding:var(--s-5);border-radius:var(--r-lg);
+  background:var(--surface);border:1px solid var(--line);box-shadow:var(--shadow-1)}
+.tile h2{margin:0 0 var(--s-2);font:600 var(--fs-12)/1.2 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-600)}
+.tile-empty{margin:var(--s-2) 0 0;font-size:var(--fs-14);color:var(--ink-600)}
+.tile-empty a{font-weight:600}
+[data-bento="countdown"]{grid-area:count;display:flex;flex-direction:column;justify-content:space-between;gap:var(--s-4);
+  background:var(--ink-900);color:var(--stone-50);border-color:var(--ink-900)}
+[data-bento="countdown"] h2{color:var(--stone-100)}
+.big{margin:0;font:600 clamp(3rem,1.6rem + 5cqi,5.5rem)/.95 var(--font-display);font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:#fff}
+.big small{display:block;margin-top:var(--s-2);font:500 var(--fs-16)/1.3 var(--font-body);letter-spacing:0;color:var(--stone-100)}
+[data-bento="countdown"] p:not(.big){margin:0;font-size:var(--fs-14);color:var(--stone-100)}
+[data-bento="route"]{grid-area:route}
+[data-bento="bookings"]{grid-area:book}
+[data-bento="huts"]{grid-area:huts}
+[data-bento="weather"]{grid-area:wx}
+/* route strip: one sparkline per day; the container query picks 4-up or 2x2 */
+.spark-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-2)}
+@container (min-width:560px){.spark-row{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.spark{display:flex;flex-direction:column;gap:2px;min-height:var(--tap);padding:var(--s-2) var(--s-3) var(--s-3);border:1px solid var(--line);border-radius:var(--r-md);
+  background:transparent;color:inherit;font:inherit;text-align:left;cursor:pointer;transition:border-color var(--dur) var(--ease)}
+.spark:hover{border-color:var(--line-strong)}
+.spark[aria-pressed="true"]{border-color:var(--ink-900);box-shadow:0 0 0 1px var(--ink-900)}
+.spark b{font:600 var(--fs-14)/1.2 var(--font-body)}
+.spark span{font-size:var(--fs-12);color:var(--ink-600);font-variant-numeric:tabular-nums}
+.spark svg{display:block;width:100%;height:44px;margin-top:var(--s-1)}
+.spark:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+/* skeleton placeholder (static: no endless shimmer) */
+.skel{min-height:84px;cursor:default;border-style:dashed;
+  background:linear-gradient(180deg,transparent 55%,var(--stone-100) 55%) no-repeat,transparent}
+.skel:hover{border-color:var(--line)}
+/* bookings: segmented bar (JS sets flex-grow on .seg i) */
+.num{margin:0;font:600 var(--fs-32)/1 var(--font-display);font-variant-numeric:tabular-nums}
+.num small{font:500 var(--fs-14)/1 var(--font-body);color:var(--ink-600)}
+.seg{display:flex;height:12px;margin:var(--s-3) 0 var(--s-2);border-radius:var(--r-pill);overflow:hidden;background:var(--stone-100);gap:2px}
+.seg i{display:block;height:100%;flex:0 0 auto}
+.seg .s-booked{background:var(--booked)}.seg .s-pending{background:var(--pending)}.seg .s-not-booked{background:var(--notbooked)}.seg .s-cancelled{background:var(--cancelled)}
+.keylist{display:flex;flex-wrap:wrap;gap:var(--s-1) var(--s-3);margin:0;padding:0;list-style:none;font-size:var(--fs-12);color:var(--ink-700)}
+.keylist li::before{content:"";display:inline-block;width:8px;height:8px;margin-right:6px;border-radius:50%;background:var(--c)}
+.avatars{display:flex;flex-wrap:wrap;margin-top:var(--s-3)}
+.avatars span{display:grid;place-items:center;width:30px;height:30px;margin-right:-6px;border-radius:50%;border:2px solid var(--surface);
+  background:#22607c;color:#fff;font:600 11px/1 var(--font-body)}
+.avatars span:nth-child(3n+2){background:#334452}.avatars span:nth-child(3n){background:#9e2f45}
+/* hut nights list (JS renders li > div > span + b, then a cloned [data-hut-badge]) */
+.hut-nights{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:minmax(0,1fr);gap:var(--s-2)}
+.hut-nights li{display:flex;align-items:center;justify-content:space-between;gap:var(--s-2);font-size:var(--fs-14)}
+.hut-nights li>div{min-width:0;flex:1 1 auto}.hut-nights li .badge{flex:none}
+.hut-nights li b{display:block;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hut-nights li span:first-child{display:block;font-size:var(--fs-12);color:var(--ink-600)}
+[data-bento="weather"] a{display:flex;align-items:center;justify-content:space-between;gap:var(--s-2);min-height:var(--tap);padding:0 var(--s-3);margin-top:var(--s-2);
+  border:1px solid var(--line-strong);border-radius:var(--r-md);color:var(--ink-900);font-weight:600;font-size:var(--fs-14);text-decoration:none}
+[data-bento="weather"] a:hover{background:var(--stone-50)}
+[data-bento="weather"] p{margin:0;font-size:var(--fs-12);color:var(--ink-600)}
+.tile a:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+@media (max-width:1100px){.bento{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"count route" "book huts" "wx wx"}}
+@media (max-width:800px){
+  #bento{padding:var(--s-4) var(--s-4) 0}
+  .bento{grid-template-areas:"count count" "route route" "book book" "huts huts" "wx wx"}
+  [data-bento="countdown"]{flex-direction:row;flex-wrap:wrap;align-items:flex-end}
+  .tile{padding:var(--s-4)}
+}
+
+/* ---------- [follow] the map follows the day ---------- */
+.day-spark{display:block;width:100%;height:40px;margin:var(--s-2) 0 0}   /* JS injects svg.day-spark after each card's h3 */
+.daychips{display:none}
+@media (max-width:800px){
+  /* phone: banner → map → day chips → swipe card row → chart → rest */
+  #main{display:contents}
+  #map{order:2;height:46vh;height:46svh;min-height:300px}
+  #side>.daychips{order:3;position:sticky;top:var(--header-h);z-index:500;display:flex;gap:var(--s-2);margin:0;
+    padding:var(--s-3) var(--s-4) var(--s-1);overflow-x:auto;scrollbar-width:none;background:var(--stone-50)}
+  .daychips::-webkit-scrollbar{display:none}
+  .daychips a{flex:1 0 auto;display:inline-flex;align-items:center;justify-content:center;min-height:var(--tap);padding:0 var(--s-3);
+    border:1px solid var(--line-strong);border-radius:var(--r-pill);background:var(--surface);color:var(--ink-900);
+    font:600 var(--fs-14)/1 var(--font-body);text-decoration:none;white-space:nowrap}
+  .daychips a:hover{background:var(--stone-100);color:var(--ink-900)}
+  .daychips a[aria-current="true"]{background:var(--ink-900);color:var(--stone-50);border-color:var(--ink-900)}
+  .daychips i{display:inline-block;width:8px;height:8px;margin-right:6px;border-radius:50%;background:var(--c)}
+  #side>#days{order:4;display:flex;gap:var(--s-3);margin:0;padding:var(--s-2) var(--s-4) var(--s-4);overflow-x:auto;overscroll-behavior-x:contain;
+    scroll-snap-type:x mandatory;scroll-padding-inline:var(--s-4);scrollbar-width:none}
+  #days::-webkit-scrollbar{display:none}
+  #days .day{flex:0 0 86%;min-width:0;scroll-snap-align:center;scroll-snap-stop:always;margin:0;scroll-margin-top:64px}
+  #prof{order:5;margin:0}
+  #side>#all{order:6}
+  #side>#hutStatus{order:7;margin-top:var(--s-4)}
+  #side>.gpx-all,#side>p.small{order:8}
+}
+/* desktop: cards are a vertical story (JS IntersectionObserver picks the day in the reading band) */
+@media (min-width:801px){
+  #days{container-type:inline-size}
+  #days .day{scroll-margin-top:calc(var(--header-h) + 30vh)}
+}
+@container (min-width:420px){.day-stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+
+/* ---------- [motion] scroll-driven, progressive enhancement, never hides content without support ---------- */
+@supports (animation-timeline:scroll()){
+  @media (prefers-reduced-motion:no-preference){
+    body:not(:has(#app[hidden])) header::before{animation:glass-firm linear both;animation-timeline:scroll(root);animation-range:0 320px}
+    @keyframes glass-firm{from{background:rgba(14,23,31,.7);box-shadow:none}to{background:rgba(14,23,31,.97);box-shadow:0 8px 24px -12px rgba(0,0,0,.5)}}
+    body:not(:has(#app[hidden])) header .h-sub{animation:sub-out linear both;animation-timeline:scroll(root);animation-range:120px 320px}
+    @keyframes sub-out{to{opacity:0;transform:translateY(-4px)}}
+    /* hero: slow zoom tied to scroll, not time */
+    .hero-img{animation:hero-zoom linear both;animation-timeline:scroll(root);animation-range:0 100vh}
+    @keyframes hero-zoom{to{transform:scale(1.12)}}
+  }
+}
+@supports ((animation-timeline:view()) and (animation-range:entry)){
+  @media (prefers-reduced-motion:no-preference) and (min-width:801px){
+    .tile,#days .day{animation:rise linear both;animation-timeline:view();animation-range:entry 0% entry 60%}
+    @keyframes rise{from{transform:translateY(24px)}} /* transform only: text never drops below AA mid-entrance */
+  }
+}
+/* booking-pill pulse: JS adds .is-changed for one beat when a tracker status changes */
+@media (prefers-reduced-motion:no-preference){
+  [data-hut-badge].is-changed{animation:pill-pop .6s var(--ease)}
+  @keyframes pill-pop{0%{transform:scale(.85)}55%{transform:scale(1.08)}100%{transform:scale(1)}}
+}
+
+/* ---------- [modes] Sun = default light design; Night = html[data-mode="night"] (set by JS) ---------- */
+/* glare boost for people who ask the OS for more contrast (no JS) */
+@media (prefers-contrast:more){
+  :root{--ink-700:#141c22;--ink-600:#2a333b;--ink-500:#323b44;--line:#5b6570;--line-strong:#000}
+  .day,.tile,#prof,#hutStatus,.banner{border-width:2px}
+  a{text-decoration-thickness:2px}
+}
+html[data-mode="night"]{color-scheme:dark;--ink-900:#ece6dc;--ink-700:#d3ccc0;--ink-600:#b3bcc4;--ink-500:#a3adb6;--stone-50:#0d151c;--stone-100:#1a2630;--surface:#15212b;
+  --line:#2c3a46;--line-strong:#6b7884;--lake-700:#8cc3de;--rose-700:#f0a3b0;--focus:#f2a65a;
+  --ok-bg:#1d3324;--ok-fg:#9fd8ad;--wait-bg:#3a2d10;--wait-fg:#f5c76b;--todo-bg:#3b1d17;--todo-fg:#f3a796;--off-bg:#26313b;--off-fg:#c4ccd3;
+  --shadow-1:none;--shadow-2:0 8px 24px -8px rgba(0,0,0,.6)}
+html[data-mode="night"] a:hover{color:#f6c6cf}
+/* header and hero stay light-on-dark: scope the light-mode tokens back inside them */
+html[data-mode="night"] header,html[data-mode="night"] .hero{--ink-900:#15212b;--ink-700:#2b3945;--stone-50:#f6f1e8;--stone-100:#ede5d7;--surface:#fffcf6;--line:#d9cfbe}
+html[data-mode="night"] [data-bento="countdown"]{background:#0a1117;border-color:var(--line)}
+html[data-mode="night"] [data-bento="countdown"] h2,html[data-mode="night"] [data-bento="countdown"] p,html[data-mode="night"] .big small{color:#d9d2c5}
+html[data-mode="night"] .big{color:#f6f1e8}
+html[data-mode="night"] .leaflet-tile-pane{filter:brightness(.72) contrast(1.1) saturate(.85)}
+html[data-mode="night"] .day.sel,html[data-mode="night"] .day.is-selected,html[data-mode="night"] .day[aria-current]:not([aria-current="false"]){box-shadow:0 0 0 2px var(--sun-400),var(--shadow-2)}
+html[data-mode="night"] .badge--plan,html[data-mode="night"] [data-status="pending"],html[data-mode="night"] .btn--primary{color:#15212b}
+html[data-mode="night"] .btn--primary,html[data-mode="night"] .btn--primary:hover{background:var(--rose-300);border-color:var(--rose-300)}
+html[data-mode="night"] .daychips a[aria-current="true"]{background:var(--sun-400);color:#15212b;border-color:var(--sun-400)}
+html[data-mode="night"] .spark[aria-pressed="true"]{border-color:var(--sun-400);box-shadow:0 0 0 1px var(--sun-400)}
+html[data-mode="night"] .leaflet-control-attribution{background:rgba(21,33,43,.85)!important;color:#d3ccc0}
+html[data-mode="night"] .leaflet-control-attribution a{color:#8cc3de}
+html[data-mode="night"] .leaflet-control-scale-line{background:rgba(21,33,43,.85);color:#ece6dc;border-color:#d3ccc0}
+
+/* ---------- [vt] View Transitions between tabs (JS wraps show() in document.startViewTransition) ---------- */
+header{view-transition-name:site-header}
+@media (max-width:800px){header nav{view-transition-name:tabbar}}
+::view-transition-old(tabbar){display:none}
+::view-transition-new(tabbar){animation:none}
+@media (prefers-reduced-motion:no-preference){
+  ::view-transition-old(root){animation:vt-out .18s var(--ease) both}
+  ::view-transition-new(root){animation:vt-in .28s var(--ease) both}
+  @keyframes vt-out{to{opacity:0;transform:translateY(-8px)}}
+  @keyframes vt-in{from{opacity:0;transform:translateY(12px)}}
+}
+
+/* ---------- [print] day sheets: compact cards, then hut status; works with zero signal ---------- */
+.print-only{display:none}
+@media print{
+  @page{size:A4;margin:12mm}
+  :root,html[data-mode]{color-scheme:light;--ink-900:#000;--ink-700:#222;--ink-600:#333;--surface:#fff;--stone-50:#fff;--stone-100:#f1f1f1;--line:#999}
+  body{background:#fff;padding:0;font-size:10.5pt}
+  header,.hero,#bento,#map,#prof,#banner,#all,.daychips,.mode-toggle,.gpx-all,.gpx-help,#side>p.small,.day-actions,.hs-legend,.hs-toggle,#guide,#group,.leaflet-control-container,.map-gesture-hint,.map-offline{display:none!important}
+  #app{display:block!important}
+  #main{display:none!important}
+  #side{display:flex!important;flex-direction:column;padding:0}
+  #side>*{order:5;margin-left:0!important;margin-right:0!important}
+  #side>.print-head{order:0}#side>#days{order:1}#side>.print-foot{order:2}#side>#hutStatus{order:3}
+  .print-only{display:block}
+  .print-head{display:flex;justify-content:space-between;align-items:baseline;border-bottom:2px solid #000;padding-bottom:4pt;margin-bottom:8pt}
+  .print-head b{font:600 16pt/1 var(--font-display)}
+  .print-head span{font-size:9pt}
+  #days{display:block!important;overflow:visible!important;padding:0!important}
+  #days .day{break-inside:avoid;box-shadow:none!important;border:1px solid #000;border-left:8px solid;margin:0 0 8pt!important;padding:10pt;
+    font-size:9pt;line-height:1.35;animation:none!important;opacity:1!important;transform:none!important}
+  #days .day h3{font-size:13pt}
+  #days .day p{margin:3pt 0}
+  #days .day-stats{grid-template-columns:repeat(4,minmax(0,1fr))!important;padding:4pt 6pt!important;margin:4pt 0!important}
+  .day a[href^="http"]::after{content:" (" attr(href) ")";font-size:8pt;word-break:break-all}
+  .day-spark{height:34px}
+  #hutStatus{break-before:page;border:1px solid #000}
+  #hsBody tr{display:table-row!important;break-inside:avoid}
+  .print-foot{margin-top:8pt;padding-top:4pt;border-top:1px solid #000;font-size:9pt}
+}
+
+/* ---------- [fix] long source URLs in the Full guide widened the phone layout viewport ---------- */
+#guide a,#guide code{overflow-wrap:anywhere}
+/* group tracker controls: 44px tap targets at every width */
+.gt td button{min-width:44px;min-height:44px}
+.gt select,.gStatus{min-height:44px}
+
+/* Group roster on phones: each traveler becomes a small card (no sideways scroll); 44px targets and 16px inputs kept */
+@media (max-width:600px){
+  .gt-scroll:has(.gName){overflow:visible}
+  .gt:has(.gName){display:block;overflow:visible;border:0;background:none}
+  .gt:has(.gName) tbody{display:block}
+  .gt:has(.gName) tr:first-child{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+  .gt:has(.gName) tr{display:grid;grid-template-columns:2ch minmax(0,1fr) 44px;grid-template-areas:"n name del" ". email email" ". note note";gap:var(--s-2) var(--s-2);align-items:center;padding:var(--s-3);border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface);margin-bottom:var(--s-2)}
+  .gt:has(.gName) td{display:block;padding:0;border:0;min-width:0}
+  .gt:has(.gName) td:nth-child(1){grid-area:n;font-weight:600;color:var(--ink-600);font-variant-numeric:tabular-nums}
+  .gt:has(.gName) td:nth-child(2){grid-area:name}
+  .gt:has(.gName) td:nth-child(3){grid-area:email}
+  .gt:has(.gName) td:nth-child(4){grid-area:note}
+  .gt:has(.gName) td:nth-child(5){grid-area:del;justify-self:end}
+  .gt:has(.gName) td:nth-child(3)::before{content:"Email";display:block;font-size:var(--fs-12);color:var(--ink-600);margin-bottom:2px}
+  .gt:has(.gName) td:nth-child(4)::before{content:"Note";display:block;font-size:var(--fs-12);color:var(--ink-600);margin-bottom:2px}
+  .gt:has(.gName) input{min-width:0;width:100%;min-height:44px}
+  .gt:has(.gName) td button{width:44px;height:44px}
+}
+/* QA 3 Nov: 44px inputs at every width (were 40px on fine pointers); 12px floor for avatar initials (were 11px; template 11px text raised to 12px too) */
+.gt input,.gt select{min-height:44px}
+.avatars span{font-size:12px}
+/* QA 3 Nov: roster table filled only 745 of its 1200px card at 1440 (header band stopped mid-card) */
+@media (min-width:601px){.gt-scroll>.gt:has(.gName){display:table;width:100%}}

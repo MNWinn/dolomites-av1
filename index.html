@@ -11,7 +11,7 @@
 <!-- self-hosted, deferred: run in this order after the page is parsed (Leaflet → Chart.js → app.js) -->
 <script defer src="vendor/leaflet/leaflet.js"></script>
 <script defer src="vendor/chart.umd.min.js"></script>
-<script defer src="app.js?v=914df553d1"></script>
+<script defer src="app.js?v=2be172be41"></script>
 <link rel="preload" href="fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/fraunces-600-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style id="redesign-css">
@@ -460,7 +460,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </div></section>
 <div id="app" role="tabpanel" aria-labelledby="bMap"><div id="side">
 <div class="print-only print-head"><b>Alta Via 1 north · day sheets</b><span>12–15 Aug 2027<span data-print-date></span></span></div>
-<div class="banner" id="banner"><b>Main plan: Alta Via 1 north, 4 days, 3 hut nights, finish at Cinque Torri.</b> Backup: Palaronda (guide §8, <code>palaronda.html</code>).<br><b>⚠️ Sun 15 Aug is Ferragosto: bus 52 from Cinque Torri runs only at 14:20 and 16:20</b> (last chairlift down 17:00; 2026 timetable).<br><b>⚠️ Deadlines</b><br>1. <b>Ücia Lavarella (Fri 13): request submitted, PENDING confirmation</b>; 4-bed + 5-bed dorm with shower/WC, HB, €969.<br>2. <b>Rif. Col Gallina (Sat 14)</b>: Room 3 (5) + 4 beds in Room 5, ≈€1,130; 50% non-refundable.<br>3. <b>Rif. Biella (Thu 12)</b>: rooms Pelmo (6) + Cima Nove (3); 2 bookings (max 8); 50% non-refundable.<br>4. Hotels: Trenker in Braies (Tue 10–Wed 11) free cancellation to ≈26 Jul; Rodes in Ortisei (Sun 15–Mon 16) to ≈15 Jul.<br>Plan: fly Mon 9 overnight · land VCE ≈08:00 Tue 10, drive to Braies · rest Wed 11 · huts Thu 12–Sat 14 · walk out Sun 15, Ortisei · Seceda Mon 16 · fly home Tue 17. <span class="small">Public calendars checked 3 Nov 2026 (guide §5.1).</span></div>
+<div class="banner" id="banner"><b>Main plan: Alta Via 1 north, 4 days, 3 hut nights, finish at Cinque Torri.</b> Backup: Palaronda (guide §8, <code>palaronda.html</code>).<br><b>⚠️ Sun 15 Aug is Ferragosto: bus 52 from Cinque Torri runs only at 14:20 and 16:20</b> (last chairlift down 17:00; 2026 timetable).<br><b>⚠️ Deadlines</b><br>1. <b>Ücia Lavarella (Fri 13): requested 4 Nov 2026, PENDING confirmation</b>; 4-bed + 5-bed dorm with shower/WC, HB, €969.<br>2. <b>Rif. Col Gallina (Sat 14)</b>: Room 3 (5 × €130) + 4 beds in Room 5 (× €120) = €1,130, plus city tax €1.50 pp; 50% non-refundable.<br>3. <b>Rif. Biella (Thu 12)</b>: rooms Pelmo (6) + Cima Nove (3); 2 bookings (max 8); 50% non-refundable.<br>4. Hotels: Trenker in Braies (Tue 10–Wed 11) free cancellation to ≈26 Jul; Rodes in Ortisei (Sun 15–Mon 16) to ≈15 Jul.<br>Plan: fly Mon 9 overnight · land VCE ≈08:00 Tue 10, drive to Braies · rest Wed 11 · huts Thu 12–Sat 14 · walk out Sun 15, Ortisei · Seceda Mon 16 · fly home Tue 17. <span class="small">Public calendars checked 3 Nov 2026 (guide §5.1).</span></div>
 <section class="banner" id="hutStatus" aria-labelledby="hsTitle"><h2 id="hsTitle">Hut booking status</h2><span class="small">(checked Tue 3 Nov 2026, 18:53–18:58 ET; read-only)</span>
 <ul class="hs-legend" aria-label="Badge key"><li><span class="badge" data-status="booked">Booked</span></li><li><span class="badge" data-status="pending">Pending</span></li><li><span class="badge" data-status="not-booked">Not booked</span></li><li>= our booking (Group → Booking tracker). Tinted tags = what the hut's site shows.</li></ul>
 <div id="hsBody"></div>
@@ -471,9 +471,6 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <div id="days"></div>
 <p class="print-only print-foot"><b>Emergency: 112</b> (EU emergency number, works without a SIM). Carry the GPX on your phone too. Check the online page for changes before you go.</p>
 <p class="gpx-all"><a class="btn-gpx" href="gpx/av1_all_days.gpx" download type="application/gpx+xml">Download GPX: all 4 days + huts</a></p>
-<p class="small gpx-help"><b>GPX in a phone app:</b> Organic Maps: download the file, tap it, and choose <i>Open with Organic Maps</i> (Android) or Share › <i>Import with Organic Maps</i> (iOS). It shows on the map and under Bookmarks and Tracks (<a href="https://organicmaps.app/faq/bookmarks/how-to-import/" target="_blank" rel="noopener">help</a>). Download the map for the area too, so it works offline. Gaia GPS: save the file to the phone, then in the app tap Saved › ⋯ (top right) › Import File (<a href="https://help.gaiagps.com/hc/en-us/articles/115003639048-Import-GPX-and-KML-files-into-the-iOS-app" target="_blank" rel="noopener">iOS help</a>, <a href="https://help.gaiagps.com/hc/en-us/articles/115003526267-Import-GPX-and-KML-files-into-the-Android-app" target="_blank" rel="noopener">Android help</a>). Download a map area along the route for offline use.</p>
-<p class="small"><b>SRC</b> = published figures (guide sources) · <span class="est"><b>TRACE (EST)</b></span> = my estimate: route traced on OSM relation 177743 (Alta Via 1), elevation from OpenTopoData EU-DEM 25 m sampled every 40 m, counting climbs and drops of 5 m or more. The DEM smooths summits and over-counts small bumps; plan on SRC.</p>
-<p class="small">Map data © OpenStreetMap contributors · Topo tiles © OpenTopoMap (CC-BY-SA) · Elevation: OpenTopoData EU-DEM.</p>
 </div><div id="main"><div id="map"></div><div id="prof"><canvas id="chart"></canvas></div></div></div>
 <div id="guide" role="tabpanel" aria-labelledby="bGuide" hidden><div class="inner" id="guideInner"><h1>MAIN PLAN: Alta Via 1 (north), Lago di Braies → Cinque Torri, 4 days hut to hut, 12–15 Aug 2027 (trip 9–17 Aug)</h1>
 <p><strong>Group of 9, all named (the Group tab lists all 9), beds asked for 9 · Plan prepared 2 Nov 2026; dates and huts changed 3 Nov 2026 and again 4 Nov 2026 (plan for 9 adults: fly Mon 9 Aug, Braies Tue 10–Wed 11, hike Thu 12–Sun 15 Aug 2027, night 2 at <strong>Ücia Lavarella</strong> instead of Fanes, Ortisei Sun 15–Mon 16, home Tue 17) · Only the Lavarella reservation request has been submitted (<strong>pending</strong>); nothing else is booked, held or paid.</strong></p>
@@ -484,7 +481,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <p><strong>Availability note (Tue 3 Nov 2026, 18:53–18:58 ET, read-only) [S107].</strong> For 9 adults on the new dates: <strong>Biella</strong> showed 38 free places on Thu 12 Aug (€855 HB; max 8 per reservation, so 2 bookings); <strong>Col Gallina</strong> showed 23 shared‑room beds plus private rooms on Sat 14 Aug (per-bed €120–160 HB); <strong>Hotel Trenker</strong> (Braies) fits 9 on Tue 10–Wed 11; <strong>Hotel Rodes</strong> (Ortisei) fits 9 on Sun 15–Mon 16. <strong>Sun 15 Aug is Ferragosto</strong> (Italian national holiday): crowds, lift queues, Sunday buses, holiday traffic (§3.3). Full table: §5.1 Hut booking status and the panel in <code>av1.html</code>.</p>
 </blockquote>
 <blockquote>
-<p><strong>Plan update (Wed 4 Nov 2026, from Matthew) [S108].</strong> Night 2 is <strong>Ücia Lavarella</strong> (a few minutes from Rif. Fanes), not Fanes: 4‑bed dorm + 5‑bed dorm with shower/WC, half board, <strong>€969</strong>; the reservation request is submitted and <strong>awaiting confirmation (pending)</strong>. Biella rooms: <strong>Pelmo (6) + Cima Nove (3)</strong>, HB. Col Gallina: <strong>Room 3 (5 beds) + 4 beds in Room 5</strong>, HB, <strong>≈€1,130</strong>.</p>
+<p><strong>Plan update (Wed 4 Nov 2026, from Matthew) [S108].</strong> Night 2 is <strong>Ücia Lavarella</strong> (a few minutes from Rif. Fanes), not Fanes: 4‑bed dorm + 5‑bed dorm with shower/WC, half board, <strong>€969</strong>; the reservation request is submitted and <strong>awaiting confirmation (pending)</strong>. Biella rooms: <strong>Pelmo (6) + Cima Nove (3)</strong>, HB. Col Gallina: <strong>Room 3 (5 beds × €130) + 4 beds in Room 5 (× €120)</strong>, HB, <strong>€1,130</strong> (booking screen [S110]; city tax €1.50 pp extra).</p>
 </blockquote>
 <blockquote>
 <p><strong>⚠️ Ferragosto, Sun 15 Aug:</strong> bus 52 from Cinque Torri runs <strong>only at 14:20 and 16:20</strong> (2026 Sunday/holiday timetable [S78]); the last chairlift down is 17:00.</p>
@@ -536,7 +533,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tr>
 <tr>
 <td>Mon 16 Aug</td>
-<td><strong>Seceda day</strong> from Ortisei via Col Raiser (lift price TBD)</td>
+<td><strong>Seceda day</strong> via Col Raiser (lift price TBD). ⚠️ The Col Raiser lift is in <strong>Santa Cristina, not Ortisei</strong>: bus 350 or taxi from Ortisei [S109]</td>
 <td><strong>Ortisei</strong></td>
 </tr>
 <tr>
@@ -687,7 +684,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>Price for 9 (LIVE 2027, 3 Nov 2026 [S107])</td>
 <td><strong>€855</strong> HB (€95 pp); rooms <strong>Pelmo (6) + Cima Nove (3)</strong> [S108]</td>
 <td><strong>€969 HB</strong> (plan [S108]): 4‑bed dorm + 5‑bed dorm with shower/WC</td>
-<td><strong>Plan ≈€1,130: Room 3 (5 beds) + 4 beds in Room 5</strong> [S108]. Live per-bed prices [S107]: €1,090 (8 × S5 + 1 × S3) · €1,120 (5 × S5 + 4 × S3) · €1,290 (2 whole rooms). HB per bed; dinner (choice of 3 firsts, 3 mains), bed and breakfast; drinks extra; tourist tax €1.50 pp/day [S54]</td>
+<td><strong>€1,130: Room 3 (5 beds × €130) + Room 5 (4 beds × €120)</strong> (booking screen [S110]). HB per bed; dinner (choice of 3 firsts, 3 mains), bed and breakfast; drinks extra; city tax €1.50 pp/night extra [S54] (counted in the hut tourist tax line, §6)</td>
 </tr>
 <tr>
 <td>Season</td>
@@ -831,7 +828,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <p>Also seen but not recommended: Gasthof Huber, Innerprags — €85 pp HB for 1–2 days, tax €3 (<strong>search snippet, unverified</strong>) [S73]; Hotel Adler, Niederdorf — from €182 pp/day HB, <strong>3‑night minimum</strong> [S74]; Hotel Lago di Braies — dynamic prices, no August figure found; free parking for guests [S70].</p>
 <h3>3.3 After the hike: Ortisei, Sun 15 – Tue 17 Aug (Seceda), and Ferragosto</h3>
 <ul>
-<li><strong>Sun 15 Aug (Day 4):</strong> chair down at Cinque Torri → bus 52 to Cortina → van → <strong>Cortina → Ortisei ≈65 km, ≈1 h 17</strong> free-flow [S107] → Ortisei ≈16:30–17:00 at best. <strong>Mon 16: Seceda day from Ortisei via Col Raiser</strong> (plan [S108]): the Col Raiser gondola starts in Santa Cristina (no time slots; €34 return in 2026), then ≈1 h on foot to the Seceda ridge; last lifts down 17:30 (2026). <strong>Lift price for this route: TBD</strong> (for reference, Ortisei–Furnes–Seceda return was €74 in 2026, €666 for 9). <strong>Tue 17:</strong> Ortisei → VCE ≈202 km, ≈3 h 05 [S107].</li>
+<li><strong>Sun 15 Aug (Day 4):</strong> chair down at Cinque Torri → bus 52 to Cortina → van → <strong>Cortina → Ortisei ≈65 km, ≈1 h 17</strong> free-flow [S107] → Ortisei ≈16:30–17:00 at best. <strong>Mon 16: Seceda day from Ortisei via Col Raiser</strong> (plan [S108]): the Col Raiser gondola starts in Santa Cristina (no time slots; €34 return in 2026), then ≈1 h on foot to the Seceda ridge. <strong>⚠️ Getting to the lift:</strong> the Col Raiser lift is in <strong>Santa Cristina, not Ortisei</strong>, so the group needs a bus or taxi from Ortisei: <strong>bus 350</strong> (Val Gardena line, Ortisei Piazza S. Antonio ↔ Santa Cristina, ≈10 min, about hourly in the 2026 timetable [S109]); last lifts down 17:30 (2026). <strong>Lift price for this route: TBD</strong> (for reference, Ortisei–Furnes–Seceda return was €74 in 2026, €666 for 9). <strong>Tue 17:</strong> Ortisei → VCE ≈202 km, ≈3 h 05 [S107].</li>
 <li><strong>Hotel Rodes, Ortisei (live, 3 Nov 2026 [S107]):</strong> 2 × four-person room + Chalet Carmen single for 2 nights 15–17 Aug: <strong>€2,620 B&amp;B (€145.6 pp/night) · €2,686 HB (€149.2) · €3,322 board code 4</strong>. 30% prepayment; free cancellation to 31 days (refundable until 15 Jul 2027); 40% from 30 to 15 days; 70% from 14 to 8 days; 90% within 7 days; early departure or no-show 90%. Gran Tubla apartments: €4,452 self-catering (3 × 3-person apartments; 50% deposit, kept). Cosmea, Villa Emilia, Smidl: no 9-person fit.</li>
 <li><strong>⚠️ Ferragosto, Sun 15 Aug (Italian national holiday, on a Sunday):</strong> <strong>bus 52 from Cinque Torri runs only at 14:20 and 16:20</strong> (Sunday/holiday timetable; the 12:20 run was weekdays/Sat only in 2026); the last chairlift down is 17:00; expect <strong>queues at the Cinque Torri chairlift and on Seceda</strong> (go up early on Mon 16); <strong>peak holiday traffic</strong> on the passes and on the A22/A27, so allow extra time on Tue 17 for the drive to VCE; Ortisei prices are higher that weekend (Rodes €2,620 for 15–17 Aug vs €2,316.60 for 23–25 Aug, different rooms [S107]).</li>
 </ul>
@@ -974,7 +971,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td><strong>Rif. Col Gallina</strong>, Sat 14 Aug, 9 × HB</td>
 <td>Now; plan: <strong>Room 3 (5 beds) + 4 beds in Room 5</strong> [S108] (beds free Sat 14 on 3 Nov 2026 [S107])</td>
 <td>bukly online calendar [S54]</td>
-<td><strong>50% at booking, non‑refundable</strong> [S54][S107]; ≈€1,130 for 9</td>
+<td><strong>50% at booking, non‑refundable</strong> [S54][S107]; €1,130 for 9 (5 × €130 + 4 × €120 [S110]) + city tax €1.50 pp</td>
 <td>Deposit lost on any cancellation</td>
 </tr>
 <tr>
@@ -1050,7 +1047,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>Chairs and cable car: last down 17:00 [S66][S67]</td>
 </tr>
 </tbody></table>
-<p><strong>Money at risk once 1–3 are booked:</strong> Col Gallina 50% × ≈€1,130 = ≈€565; Biella 50% × €855 = €427.50 → <strong>≈€992.50 non‑refundable for 9 (≈€110.30 pp)</strong>, plus the Lavarella deposit (amount TBD: set by the hut when it confirms; €969 total).</p>
+<p><strong>Money at risk once 1–3 are booked:</strong> Col Gallina 50% × €1,130 = €565; Biella 50% × €855 = €427.50 → <strong>€992.50 non‑refundable for 9 (≈€110.30 pp)</strong>, plus the Lavarella deposit (amount TBD: set by the hut when it confirms; €969 total).</p>
 <h3>5.2 Night 2: Ücia Lavarella instead of Fanes</h3>
 <ul>
 <li><strong>Change (4 Nov 2026) [S108]:</strong> the group no longer books Rif. Fanes (which sold 13–14 Aug only inside 2‑night stays). Night 2 is <strong>Ücia Lavarella</strong>, a few minutes from Fanes on the same plateau: 4‑bed dorm + 5‑bed dorm with shower/WC, half board, <strong>€969</strong> for 9.</li>
@@ -1101,8 +1098,8 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>2027 nights online [S54]</td>
 <td>bukly online calendar</td>
 <td><a target="_blank" rel="noopener" href="https://rifugiocolgallina.bukly.com">https://rifugiocolgallina.bukly.com</a></td>
-<td>Sat 14 Aug: Stanza 5 ×8 (€120), 7 ×6 (€150), 3 ×5 (€130), 10 ×4 (€160) beds HB, plus doubles 6/8 and triple 11; plan: Room 3 (5 beds) + 4 beds in Room 5, HB, ≈€1,130 for 9 [S108]; 50% non-refundable [S107]</td>
-<td>S54, S107</td>
+<td>Sat 14 Aug: Stanza 5 ×8 (€120), 7 ×6 (€150), 3 ×5 (€130), 10 ×4 (€160) beds HB, plus doubles 6/8 and triple 11; plan: Room 3 (5 beds × €130) + 4 beds in Room 5 (× €120), HB, €1,130 for 9 [S110]; 50% non-refundable [S107]</td>
+<td>S54, S107, S110</td>
 <td>3 Nov 2026 18:53–18:58 ET</td>
 </tr>
 <tr>
@@ -1234,7 +1231,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>€125.56</td>
 <td><strong>€125.56</strong></td>
 <td>€125.56</td>
-<td>≈€1,130 for 9 per plan: Room 3 (5 beds) + 4 beds in Room 5 [S108] (live per-bed check gave €1,120 for 5 × S5 + 4 × S3 [S107])</td>
+<td>€1,130 for 9: Room 3 (5 beds × €130) + Room 5 (4 beds × €120), booking screen [S110]; city tax €1.50 is in the hut tax line, not here</td>
 </tr>
 <tr>
 <td>Hut tourist tax</td>
@@ -1406,17 +1403,17 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>—</td>
 <td>—</td>
 <td>—</td>
-<td>bukly online (rifugiocolgallina.bukly.com). 50% at booking, non-refundable. Plan: Room 3 (5 beds) + 4 beds in Room 5, ≈€1,130 [S108].</td>
+<td>bukly online (rifugiocolgallina.bukly.com). 50% at booking, non-refundable. Room 3: 5 beds × €130 + Room 5: 4 beds × €120 = €1,130 HB [S110]; city tax €1.50 pp/night extra (in the hut tourist tax line).</td>
 </tr>
 <tr>
 <td>Ücia Lavarella, hut night 2, 9 × HB (4-bed dorm + 5-bed dorm with shower/WC)</td>
 <td>Fri 13 Aug 2027</td>
-<td>Not booked</td>
+<td>Requested</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
-<td>PENDING: reservation request submitted, awaiting confirmation. €969 HB for 9 [S108].</td>
+<td>Requested 4 Nov 2026: reservation request submitted, awaiting the hut&#39;s confirmation and deposit terms. €969 HB for 9 [S108].</td>
 </tr>
 <tr>
 <td>Braies hotel, nights of Tue 10 + Wed 11, 9 people (Hotel Trenker)</td>
@@ -1543,7 +1540,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>€1,130.00</td>
 <td>€125.56</td>
 <td>—</td>
-<td>≈ Room 3 (5 beds) + 4 beds in Room 5 [S108]. Live per-bed prices [S107] give €1,120 for 5 × Stanza 5 + 4 × Stanza 3.</td>
+<td>Room 3: 5 beds × €130 + Room 5: 4 beds × €120 = €1,130 HB [S110]. City tax (€1.50 pp/night) is not included here; it is in the hut tourist tax line.</td>
 </tr>
 <tr>
 <td>Hut tourist tax (EST)</td>
@@ -1645,7 +1642,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <li><strong>Guestcard / Guest Pass coverage</strong> of the 442 reservation and the 445 to Cortina (unverified).</li>
 <li><strong>Hut tourist tax</strong> at Biella and Lavarella (not published; EST used). Col Gallina €1.50 [S54].</li>
 <li><strong>Valparola → Falzarego walking time</strong> is not published (EST by DIN); the trace and [S61] differ by ≈1 km on this leg.</li>
-<li><strong>Arrival (§3.0):</strong> straight to Braies on Tue 10 (Hotel Trenker, 2 nights), Wed 11 rest day [S108]. <strong>Seceda on Mon 16 &quot;from Ortisei via Col Raiser&quot;:</strong> the Col Raiser gondola starts in Santa Cristina, not Ortisei; route and lift price TBD. The UA321 example (IAD 17:15) lands Tue 10 ≈07:55 if flown Mon 9 [S15].</li>
+<li><strong>Arrival (§3.0):</strong> straight to Braies on Tue 10 (Hotel Trenker, 2 nights), Wed 11 rest day [S108]. <strong>Seceda on Mon 16 &quot;from Ortisei via Col Raiser&quot;:</strong> the Col Raiser gondola starts in Santa Cristina, not Ortisei, so the group takes bus 350 or a taxi from Ortisei [S109]; lift price TBD. The UA321 example (IAD 17:15) lands Tue 10 ≈07:55 if flown Mon 9 [S15].</li>
 <li><strong>Minivan seats:</strong> the rental may seat only <strong>7–8 of the 9</strong>; the tracker and §6 assume one 9‑seat van.</li>
 <li><strong>Ferragosto (Sun 15 Aug):</strong> Sunday/holiday buses, lift queues at Cinque Torri and Seceda, holiday traffic, higher Ortisei prices; the 2027 Braies car rule is not yet published (§3.3).</li>
 </ol>
@@ -1757,7 +1754,9 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <li><strong>[S105]</strong> OpenStreetMap nodes 452438203 (Forcella del Lago / Forcela dl Lech, ele 2,486) and 6635588053 (Forcella Averau, ele 2,435), via api.openstreetmap.org, read 3 Nov 2026</li>
 <li><strong>[S106]</strong> OSRM demo router (router.project-osrm.org), driving profile on OpenStreetMap data: Venice Marco Polo terminal (OSM node 2650849490) → Lago di Braies / Hotel Pragserhof / Hotel Rose Villabassa / Pontechiesa Cortina, full route geometry, queried Tue 3 Nov 2026 12:26 ET. Stop locations from OpenStreetMap (Nominatim). Approximate: car speeds, no traffic or stops</li>
 <li><strong>[S107]</strong> Live read-only sweep for the new dates, Tue 3 Nov 2026 18:53–18:58 ET: Biella Planyo feed (Thu 12 Aug 2027); bookingsuedtirol offers API (Fanes 13308 for 13–15 Aug; Trenker 10367, Steinerhof 11691, Edelweiss 10338 for 10–12 Aug; Rodes 12377, Cosmea 12560, Gran Tubla 10984, Villa Emilia 10348, Smidl 12579 for 15–17 Aug); Fanes terms (EN/IT/DE); rifugiocolgallina.bukly.com (Sat 14 Aug); OSRM demo router drive times (VCE → Braies 193 km / 158 min, VCE → Mestre 12 km, Braies → Cortina 47 km, Cortina → Ortisei 65 km / 77 min, Ortisei → VCE 202 km / 185 min). Nothing booked, held or submitted.</li>
-<li><strong>[S108]</strong> Group plan for 9 adults from Matthew, 4 Nov 2026: trip 9–17 Aug 2027; Hotel Trenker 10–11; Biella rooms Pelmo (6) + Cima Nove (3) HB; Ücia Lavarella 4‑bed + 5‑bed dorms with shower/WC HB €969, request submitted, pending; Col Gallina Room 3 (5) + 4 beds in Room 5 HB ≈€1,130; Hotel Rodes 15–16; Ferragosto bus 52 14:20 and 16:20 only; Seceda Mon 16 via Col Raiser</li>
+<li><strong>[S108]</strong> Group plan for 9 adults from Matthew, 4 Nov 2026: trip 9–17 Aug 2027; Hotel Trenker 10–11; Biella rooms Pelmo (6) + Cima Nove (3) HB; Ücia Lavarella 4‑bed + 5‑bed dorms with shower/WC HB €969, request submitted, pending; Col Gallina Room 3 (5) + 4 beds in Room 5 HB (price: see [S110]); Hotel Rodes 15–16; Ferragosto bus 52 14:20 and 16:20 only; Seceda Mon 16 via Col Raiser</li>
+<li><strong>[S109]</strong> südtirolmobil timetable, line 350 Gröden – Waidbruck – Bozen / Val Gardena – Ponte Gardena – Bolzano (valid from 14 Dec 2025), stops Ortisei Piazza S. Antonio and S. Cristina Municipio/Dosses: <a target="_blank" rel="noopener" href="https://www.suedtirolmobil.info/fileadmin/pdf/2026/350_20251214.pdf">https://www.suedtirolmobil.info/fileadmin/pdf/2026/350_20251214.pdf</a> (checked 4 Nov 2026; the summer 2027 timetable is not out yet).</li>
+<li><strong>[S110]</strong> Rifugio Col Gallina booking screen (bukly), from Matthew, 4 Nov 2026: Room 3, 5 beds × €130 + Room 5, 4 beds × €120 = €1,130 HB for Sat 14 Aug 2027; city tax €1.50 pp/night extra.</li>
 </ul>
 </div></div>
 <div id="group" role="tabpanel" aria-labelledby="bGroup" hidden><div class="inner"><h1 style="margin-top:0">Group manager: 9 travelers</h1>

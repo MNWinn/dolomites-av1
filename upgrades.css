@@ -30,20 +30,34 @@ body:not(:has(#app[hidden])) .hero{margin-top:calc(-1 * var(--header-h));padding
   header h1{width:auto;flex:1;min-width:0}
   header h1 .h-title{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
   .mode-toggle .lbl{display:none}
-  header nav{position:fixed;left:var(--s-3);right:var(--s-3);bottom:calc(var(--s-2) + env(safe-area-inset-bottom));top:auto;z-index:1100;
-    width:auto;height:var(--tabbar-h);margin:0;padding:6px;gap:4px;border-radius:22px;overflow:visible;
-    background:rgba(14,23,31,.94);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);
-    box-shadow:0 10px 30px -10px rgba(0,0,0,.45),0 0 0 1px rgba(255,255,255,.06) inset}
-  header nav button{flex:1 1 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:100%;padding:0 4px;
-    border-radius:16px;font-size:12px;line-height:1.1;white-space:nowrap}
+  /* Liquid Glass pill: frosted, floating, safe-area aware. Opacity is above the .55 sketch so
+     text stays WCAG AA over the dark map/photos (Sun) and over light pages (Night). */
+  header nav{position:fixed;left:var(--s-4);right:var(--s-4);bottom:calc(var(--s-3) + env(safe-area-inset-bottom));top:auto;z-index:1100;
+    width:auto;height:var(--tabbar-h);margin:0;padding:6px;gap:4px;border-radius:999px;overflow:visible;
+    background:rgba(255,255,255,.8);-webkit-backdrop-filter:blur(20px) saturate(180%);backdrop-filter:blur(20px) saturate(180%);
+    border:1px solid rgba(255,255,255,.35);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.6),0 12px 32px -10px rgba(0,0,0,.35),0 2px 8px rgba(0,0,0,.12)}
+  header nav button{flex:1 1 0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;height:100%;min-height:var(--tap);padding:0 4px;
+    border-radius:999px;font-size:12px;line-height:1.1;white-space:nowrap;color:var(--ink-900)}
+  header nav button:not(.on):hover{background:rgba(21,33,43,.08);color:var(--ink-900)}
+  header nav button.on,header nav [role=tab][aria-selected="true"]{background:var(--sun-400);color:var(--ink-900);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 2px 6px rgba(0,0,0,.15)}
+  html[data-mode="night"] header nav{background:rgba(20,30,40,.88);border-color:rgba(255,255,255,.18);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.14),0 12px 32px -10px rgba(0,0,0,.6),0 2px 8px rgba(0,0,0,.3)}
+  html[data-mode="night"] header nav button{color:var(--stone-100)}
+  html[data-mode="night"] header nav button:not(.on):hover{background:rgba(255,255,255,.1);color:#fff}
+  html[data-mode="night"] header nav button.on{color:var(--ink-900)}
+  @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+    header nav{background:var(--stone-50,#faf6ef)}
+    html[data-mode="night"] header nav{background:var(--ink-900)}
+  }
   .tab-ico{display:block}
   /* the floating bar never covers the last content */
-  body{padding-bottom:calc(var(--tabbar-h) + var(--s-4) + env(safe-area-inset-bottom))}
+  body{padding-bottom:calc(var(--tabbar-h) + var(--s-3) + var(--s-5) + env(safe-area-inset-bottom))}
 }
 @media (prefers-reduced-transparency:reduce){
   header::before,header nav{-webkit-backdrop-filter:none;backdrop-filter:none}
   header::before{background:var(--ink-900)}
-  @media (max-width:800px){header nav{background:var(--ink-900)}}
+  @media (max-width:800px){header nav{background:var(--stone-50,#faf6ef)}html[data-mode="night"] header nav{background:var(--ink-900)}}
 }
 
 /* ---------- [bento] trip at a glance (static/empty state until JS fills it) ---------- */
@@ -264,7 +278,7 @@ header{z-index:1200}
   /* targets below the sticky day chips land under the chips, not behind them */
   #side>#all,#side>#hutStatus,#side>.gpx-all{scroll-margin-top:var(--chips-h)}
   #side>#days{scroll-margin-top:calc(var(--chips-h) - var(--s-2))}  /* chips sit flush on the header; #days' own top padding is the gap */
-  .to-top{right:var(--s-3);bottom:calc(var(--s-2) + var(--tabbar-h) + var(--s-3) + env(safe-area-inset-bottom))}
+  .to-top{right:var(--s-4);bottom:calc(var(--s-3) + var(--tabbar-h) + var(--s-3) + env(safe-area-inset-bottom))}
   /* (the guide section in view is named by the sticky Contents bar, see [guide+group phone]; no second header line) */
 }
 @media print{.to-top{display:none!important}}

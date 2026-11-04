@@ -70,11 +70,12 @@ body:has(#app[hidden]) #bento{display:none}
 .tile h2{margin:0 0 var(--s-2);font:600 var(--fs-12)/1.2 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-600)}
 .tile-empty{margin:var(--s-2) 0 0;font-size:var(--fs-14);color:var(--ink-600)}
 .tile-empty a{font-weight:600}
-[data-bento="countdown"]{grid-area:count;display:flex;flex-direction:column;justify-content:space-between;gap:var(--s-4);
+[data-bento="countdown"]{grid-area:count;display:flex;flex-direction:column;justify-content:flex-start;align-items:flex-start;gap:var(--s-3);
   background:var(--ink-900);color:var(--stone-50);border-color:var(--ink-900)}
 [data-bento="countdown"] h2{color:var(--stone-100)}
 .big{margin:0;font:600 clamp(3rem,1.6rem + 5cqi,5.5rem)/.95 var(--font-display);font-variant-numeric:tabular-nums;letter-spacing:-.02em;color:#fff}
-.big small{display:block;margin-top:var(--s-2);font:500 var(--fs-16)/1.3 var(--font-body);letter-spacing:0;color:var(--stone-100)}
+.big{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:var(--s-2)}
+.big small{display:inline;font:500 var(--fs-16)/1.3 var(--font-body);letter-spacing:0;color:var(--stone-100)}
 [data-bento="countdown"] p:not(.big){margin:0;font-size:var(--fs-14);color:var(--stone-100)}
 [data-bento="route"]{grid-area:route}
 [data-bento="bookings"]{grid-area:book}
@@ -122,7 +123,6 @@ body:has(#app[hidden]) #bento{display:none}
 @media (max-width:800px){
   #bento{padding:var(--s-4) var(--s-4) 0}
   .bento{grid-template-areas:"count count" "route route" "book book" "huts huts" "wx wx"}
-  [data-bento="countdown"]{flex-direction:row;flex-wrap:wrap;align-items:flex-end}
   .tile{padding:var(--s-4)}
 }
 
@@ -462,7 +462,6 @@ header{z-index:1200}
 .arr-head h2{margin:0;font-size:var(--fs-20);line-height:1.2}
 .badge--proposed{background:var(--wait-bg);color:var(--wait-fg);border:1px dashed currentColor;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
 .badge--proposed::before{display:none}
-.arr-lede{margin:0 0 var(--s-3);font-size:var(--fs-14);color:var(--ink-700)}
 .arr-day{padding:var(--s-3) 0;border-top:1px solid var(--line)}
 .arr-day h3{margin:var(--s-1) 0 var(--s-2);font-size:var(--fs-18);line-height:1.25}
 .arr-day .k{font-size:var(--fs-14);color:var(--ink-600);margin:0 0 var(--s-2);line-height:1.5}
@@ -539,10 +538,13 @@ header{z-index:1200}
 .day-guide{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--s-1) var(--s-2);margin:calc(-1 * var(--s-1)) 0 var(--s-2);font-size:var(--fs-14);color:var(--ink-700)}
 .day-guide>span:nth-child(2){font-weight:600;color:var(--ink-900)}
 .day-guide-why{flex-basis:100%;color:var(--ink-600)}
-.tile-note{margin:0 0 var(--s-2);color:var(--ink-600)}
-.arr-steps{margin:0 0 var(--s-3);padding-left:1.4em;font-size:var(--fs-14);line-height:1.5;color:var(--ink-700)}
-.arr-steps li{margin:0 0 var(--s-1)}
-.arr-steps b{color:var(--ink-900);font-weight:600;margin-right:var(--s-1)}
+.arr-steps{list-style:none;margin:0 0 var(--s-3);padding:0;font-size:var(--fs-14);line-height:1.4;color:var(--ink-700);position:relative}
+.arr-steps::before{content:"";position:absolute;left:13px;top:12px;bottom:12px;border-left:2px solid var(--line)}
+.arr-steps li{position:relative;display:block;margin:0;padding:4px 0 4px 36px}
+.arr-steps .tl-ico{position:absolute;left:0;top:3px;width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:var(--surface);font-size:16px;line-height:1}
+.arr-steps b{color:var(--ink-900);font-weight:600;white-space:nowrap;margin-right:var(--s-1)}
+.arr-steps .tl-hike{color:var(--ink-600);font-style:italic}
+.arr-steps .tl-hike b{color:var(--ink-600)}
 .arr-more{margin:var(--s-2) 0 var(--s-3)}
 @media print{#hutStatus .hs-other{display:block!important}}
 /* ---------- [guide tidy] one trailing source group per table cell / list item; via points in small text ---------- */
@@ -820,7 +822,6 @@ body:has(#app[hidden]) .glance{display:none}
 .glance li:first-child{border-top:0;padding-top:0}
 .glance .when{font-size:var(--fs-12);font-weight:600;color:var(--ink-600);font-variant-numeric:tabular-nums}
 .glance .badge{justify-self:end;white-space:nowrap}
-.glance .lead{margin:var(--s-3) 0 0;font-size:var(--fs-12);line-height:1.4;color:var(--ink-600)}
 /* 5. one set of figures: guide big, traced estimate small */
 .day-stats dd small{display:block;margin-top:2px}
 .day-stats dd small.trace{color:var(--ink-500)}
@@ -850,7 +851,6 @@ html[data-mode="night"] [fill="#3f5fb5"]{fill:#8aa2e6}
   .glance h2{margin-bottom:var(--s-2);font-size:17px}
   .glance ol{gap:4px}
   .glance li{min-height:0;padding-top:4px;grid-template-columns:62px minmax(0,1fr) auto;gap:6px}
-  .glance .lead{margin-top:var(--s-2)}
 }
 .hero-short{display:none}
 @media (max-width:480px){.hero-short{display:inline}}
@@ -866,3 +866,147 @@ html[data-mode="night"] [fill="#3f5fb5"]{fill:#8aa2e6}
 /* audit8 QA polish: date column = two lines at every width (day, then night) */
 .glance .when b{display:block;font-size:13px;font-weight:600;color:var(--ink-900)}
 .glance .when i{display:block;font-style:normal;font-size:12px;font-weight:400;color:var(--muted,var(--ink-600))}  /* no --muted token in this build: falls back to --ink-600, the existing muted ink */
+
+/* =====================================================================
+   [who-owes] Group tab: "Who owes what" + "Where the money goes" + Costs list
+   Ported from redesign/who-owes/mock/mock.css (costs-list rules left out).
+   New tokens: see ../tokens.json. Everything else reuses the site tokens.
+   ===================================================================== */
+:root{
+  --wo-paid:#2c6a3e;      --wo-paid-ink:#ffffff;      /* paid in full: solid */
+  --wo-dep:#2c6a3e;       --wo-dep-stripe:#e1efdc;    /* deposit paid: bold 45deg stripes */
+  --wo-book:#e1efdc;      --wo-book-mark:#2c6a3e;     /* booked, rest to pay: dots + solid edge */
+  --wo-est:#fbedcc;       --wo-est-mark:#875400;      /* estimate: thin -45deg hatch + dashed edge */
+  --wo-owed-bg:#dcebf3;   --wo-owed-fg:#174c66;       /* "Is owed" pill */
+  --wo-figure:clamp(1.375rem,1.2rem + .6vw,1.75rem);   /* summary figures (Fraunces) */
+}
+html[data-mode="night"]{
+  --wo-paid:#9fd8ad;      --wo-paid-ink:#15212b;
+  --wo-dep:#9fd8ad;       --wo-dep-stripe:#15212b;
+  --wo-book:#1d3324;      --wo-book-mark:#9fd8ad;
+  --wo-est:#3a2d10;       --wo-est-mark:#f5c76b;
+  --wo-owed-bg:#173448;   --wo-owed-fg:#a9d4ea;
+}
+/* shared swatch patterns (legend + bars) */
+.wo-sw{display:inline-block;flex:none;width:28px;height:14px;border-radius:3px;vertical-align:-2px}
+.wo-p-paid{background:var(--wo-paid)}
+.wo-p-dep{background:repeating-linear-gradient(45deg,var(--wo-dep) 0 4px,var(--wo-dep-stripe) 4px 6.5px)}
+.wo-p-book{background:radial-gradient(circle,var(--wo-book-mark) 0 1.3px,transparent 1.8px) 0 0/6px 6px,var(--wo-book);box-shadow:inset 0 0 0 1.5px var(--wo-book-mark)}
+.wo-p-est{background:repeating-linear-gradient(-45deg,var(--wo-est-mark) 0 1px,var(--wo-est) 1px 6px);outline:1.5px dashed var(--wo-est-mark);outline-offset:-1.5px}
+
+/* section card (reuses #gSettle card look) */
+#gSettle.wo{padding:var(--s-5) var(--s-6) var(--s-5)}
+#gSettle.wo>h2{margin:0 0 var(--s-2)}
+.wo-lede{max-width:64ch;margin:0 0 var(--s-4);color:var(--ink-700);font-size:var(--fs-16);line-height:1.5}
+
+/* top summary: one headline figure + one quiet line */
+.wo-top{margin:0 0 var(--s-4)}
+.wo-top-k{margin:0;font:600 var(--fs-12)/1.3 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-600)}
+.wo-fig{display:block;margin:2px 0 var(--s-1);font:600 var(--wo-figure)/1.15 var(--font-display);font-variant-numeric:tabular-nums;color:var(--ink-900)}
+.wo-top-sub{margin:0;font-size:var(--fs-16);line-height:1.5;color:var(--ink-700);font-variant-numeric:tabular-nums}
+.wo-top-sub b{color:var(--ink-900);font-weight:600}
+
+/* one plain line per person; the row is a disclosure, exact cents inside */
+.wo-h3{margin:0 0 var(--s-2);font:600 var(--fs-16)/1.35 var(--font-body);color:var(--ink-900)}
+#gSettle .wo-h3{margin:0 0 var(--s-2);font:600 var(--fs-16)/1.35 var(--font-body);letter-spacing:0;text-transform:none;color:var(--ink-900)}
+.wo-people{list-style:none;margin:0;padding:0;border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface)}
+.wo-people>li{border-bottom:1px solid var(--line);break-inside:avoid}
+.wo-people>li:last-child{border-bottom:0}
+.wo-people details>summary{display:flex!important;align-items:center;gap:var(--s-2);min-height:48px;width:100%;
+  padding:var(--s-2) var(--s-3) var(--s-2) var(--s-4)!important;color:var(--ink-900)!important;font:400 var(--fs-16)/1.35 var(--font-body)!important;border-radius:0!important}
+.wo-people details>summary::before{display:none!important}
+.wo-people details>summary:hover{text-decoration:none!important;background:var(--stone-50)}
+.wo-people details>summary:focus-visible{outline:3px solid var(--focus);outline-offset:-3px}
+.wo-dot{flex:none;width:10px;height:10px;border-radius:50%;background:var(--pending);box-shadow:0 0 0 1px var(--wait-fg)}
+.wo-dot[data-k="owed"]{background:var(--wo-owed-fg);box-shadow:none}
+.wo-dot[data-k="settled"]{background:var(--wo-paid);box-shadow:none}
+.wo-line{flex:1;min-width:0;overflow-wrap:anywhere}
+.wo-line b{font-weight:600}
+.wo-line strong{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.wo-chev{flex:none;width:16px;height:16px;color:var(--ink-600);transition:transform var(--dur) var(--ease)}
+.wo-people details[open] .wo-chev{transform:rotate(180deg)}
+.wo-detail{margin:0;padding:0 var(--s-4) var(--s-3) calc(var(--s-4) + 18px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px var(--s-3);font-size:var(--fs-14);color:var(--ink-700)}
+.wo-detail dt{margin:0}
+.wo-detail dd{margin:0;text-align:right;font-variant-numeric:tabular-nums;color:var(--ink-900);white-space:nowrap}
+.wo-detail .wo-tot{font-weight:700;border-top:1px solid var(--line);padding-top:4px}
+.wo-note{grid-column:1/-1;margin:var(--s-1) 0 0;font-size:var(--fs-12);color:var(--ink-600);line-height:1.45}
+.wo-foot{margin:var(--s-3) 0 0;font-size:var(--fs-14);color:var(--ink-600)}
+.wo-more{margin-top:var(--s-3)}
+
+/* status pills (same .badge shape + dot) */
+.badge[data-status="owed"]{background:var(--wo-owed-bg);color:var(--wo-owed-fg)}
+.badge[data-status="estimate"]{background:var(--wait-bg);color:var(--wait-fg);border:1px dashed currentColor}
+.badge[data-status="noprice"]{background:var(--off-bg);color:var(--off-fg)}
+html[data-mode="night"] .badge[data-status="booked"]{background:var(--wo-paid);color:#15212b}
+
+/* where the money goes: HTML bars (label, amount, stacked fill). No prose. */
+.wo-spend{margin-top:var(--s-8)!important;padding:var(--s-5) var(--s-6);background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg)}
+.wo-spend>h2{margin:0 0 var(--s-2)}
+.wo-legend{list-style:none;margin:0 0 var(--s-4);padding:0;display:flex;flex-wrap:wrap;gap:var(--s-1) var(--s-4);font-size:var(--fs-14);color:var(--ink-700)}
+.wo-legend li{display:flex;align-items:center;gap:6px}
+.wo-legend .wo-sw{width:18px;height:12px}
+.wo-bars{list-style:none;margin:0;padding:0;display:grid;gap:var(--s-3);max-width:720px}
+.wo-bars li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px var(--s-3);align-items:baseline}
+.wo-bars .k{font-weight:600;color:var(--ink-900)}
+.wo-bars .v{font-weight:600;font-variant-numeric:tabular-nums;color:var(--ink-900)}
+.wo-track{grid-column:1/-1;display:flex;height:14px;border-radius:3px;overflow:hidden}
+.wo-track>span{display:block;height:100%;min-width:4px;border-radius:0}
+.wo-track>span+span{border-left:2px solid var(--surface)}
+.wo-tag{display:inline-block;margin:var(--s-4) 0 0;padding:2px 10px;border-radius:999px;background:var(--stone-100);font-size:var(--fs-12);color:var(--ink-700)}
+
+
+/* states */
+.wo-skel{display:block;height:1em;border-radius:6px;background:var(--stone-100);color:transparent!important}
+@media (prefers-reduced-motion:no-preference){.wo-skel{animation:grp-pulse 1.2s ease-in-out infinite}}
+.wo-notice{display:flex;gap:var(--s-3);align-items:flex-start;margin:0 0 var(--s-4);padding:var(--s-3) var(--s-4);border-radius:var(--r-md);border-left:4px solid var(--wait-fg);background:var(--wait-bg);color:var(--ink-900);font-size:var(--fs-14);line-height:1.45}
+.wo-notice--bad{border-left-color:var(--todo-fg);background:var(--todo-bg)}
+.wo-notice svg{flex:none;width:20px;height:20px;margin-top:1px}
+.wo-notice button{min-height:var(--tap);margin-top:var(--s-1)}
+.wo-empty{margin:0;padding:var(--s-4);border:1px dashed var(--line-strong);border-radius:var(--r-md);color:var(--ink-700);font-size:var(--fs-14)}
+
+@media (min-width:1000px){
+  .wo-people{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+  .wo-people>li{border-right:1px solid var(--line)}
+  .wo-people>li:nth-child(3n){border-right:0}
+  .wo-people>li:nth-last-child(-n+3){border-bottom:0}
+}
+@media (max-width:600px){
+  #gSettle.wo,.wo-spend{padding:var(--s-4);border-radius:var(--r-md)}
+  .wo-lede{font-size:var(--fs-14)}
+}
+@media (max-width:374px){ .wo-people details>summary{padding-left:var(--s-3)!important;font-size:var(--fs-15,.9375rem)!important} }
+/* disclosure buttons ("Show all 14 costs", Backup): 44px targets */
+.wo-more>summary,.grp-backup>summary{display:flex;align-items:center;min-height:44px;font-weight:600;color:var(--lake-700,var(--ink-900))}
+/* phone: list sits flush in the section card (no double border) so each sentence gets more width */
+@media (max-width:600px){
+  .wo-people{border:0;border-radius:0;background:transparent;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+  .wo-people details>summary{padding-left:2px!important;padding-right:0!important}
+  .wo-detail{padding-left:20px;padding-right:0}
+}
+.wo-fig .wo-each{font:500 var(--fs-18,1.125rem)/1 var(--font-body);color:var(--ink-700)}
+.wo-people .wo-note{margin:0;padding:0 var(--s-4) var(--s-3) calc(var(--s-4) + 18px)}
+@media (max-width:600px){ .wo-people .wo-note{padding:0 0 var(--s-3) 20px} }
+/* balances: name + verb on the left, exact amount in a right-aligned column */
+.wo-line{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s-3)}
+.wo-line .wo-amt{font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.wo-line .wo-amt.is-owed{color:var(--wo-owed-fg)}
+.wo-line .wo-amt.is-settled{font-weight:600;color:var(--wo-paid)}
+.wo-detail .wo-bal{font-weight:700;border-top:1px solid var(--line);padding-top:4px}
+/* who pays whom: plain list, not interactive */
+.wo-h3+.wo-sub{margin:-4px 0 var(--s-2);font-size:var(--fs-14);color:var(--ink-600)}
+.wo-pay{list-style:none;margin:0;padding:0;display:grid;gap:0;font-variant-numeric:tabular-nums}
+.wo-pay li{display:flex;justify-content:space-between;align-items:baseline;gap:var(--s-3);padding:6px 2px;border-bottom:1px solid var(--line)}
+.wo-pay li:last-child{border-bottom:0}
+.wo-pay .who{min-width:0;overflow-wrap:anywhere}
+.wo-pay .to{display:inline-block;width:16px;height:16px;vertical-align:-3px;margin:0 4px;color:var(--ink-600)}
+.wo-pay .wo-amt{font-weight:700;white-space:nowrap}
+.wo-gap{margin-top:var(--s-5)!important}
+@media (min-width:1000px){ .wo-pay{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:var(--s-6)} .wo-pay li:nth-last-child(2):nth-child(odd){border-bottom:0} }
+.wo-pay li{font-size:var(--fs-14)}
+.wo-pay .to{width:14px;height:14px;margin:0 2px;vertical-align:-2px}
+.wo-legend{gap:var(--s-1) var(--s-3)}
+.wo-legend .wo-sw{width:16px}
+
+.wo-payfold>summary{font-size:var(--fs-16)}
+.wo-payfold[open]>summary{margin-bottom:var(--s-2)}
+.wo-spend .wo-legend,.wo-spend .wo-bars{max-width:720px}

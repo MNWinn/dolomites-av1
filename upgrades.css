@@ -545,3 +545,6 @@ header{z-index:1200}
 .arr-steps b{color:var(--ink-900);font-weight:600;margin-right:var(--s-1)}
 .arr-more{margin:var(--s-2) 0 var(--s-3)}
 @media print{#hutStatus .hs-other{display:block!important}}
+/* ---------- [guide tidy] one trailing source group per table cell / list item; via points in small text ---------- */
+#guide .row-src{font-size:var(--fs-12);color:var(--ink-600);white-space:nowrap;margin-left:.25em}
+#guide small.via{display:block;font-size:var(--fs-12);color:var(--ink-600);line-height:1.4}

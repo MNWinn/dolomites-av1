@@ -11,7 +11,7 @@
 <!-- self-hosted, deferred: run in this order after the page is parsed (Leaflet → Chart.js → app.js) -->
 <script defer src="vendor/leaflet/leaflet.js"></script>
 <script defer src="vendor/chart.umd.min.js"></script>
-<script defer src="app.js?v=5e600c908b"></script>
+<script defer src="app.js?v=38b35c87fa"></script>
 <link rel="preload" href="fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/fraunces-600-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style id="redesign-css">
@@ -182,7 +182,7 @@ body:has(#app[style*="none"]) .hero{display:none}
 /* deadlines banner */
 .banner{position:relative;margin:0 0 var(--s-6);padding:var(--s-4) var(--s-5);font-size:var(--fs-14);line-height:1.6;
   background:var(--wait-bg);border:0;border-left:4px solid var(--sun-400);border-radius:var(--r-md);color:var(--ink-900)}
-.banner b:first-child{display:block;font:600 var(--fs-16)/1.3 var(--font-display);margin-bottom:var(--s-2)}
+.banner>b:first-child{display:block;font:600 var(--fs-16)/1.3 var(--font-display);margin-bottom:var(--s-2)}
 .banner .small{color:var(--ink-700)}
 
 /* day cards (JS-generated .day) */
@@ -389,9 +389,9 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <h2 class="hero-title" id="heroTitle">Lago di Braies <span>→</span> Cinque Torri</h2>
 <p class="hero-dates">Trip 9–17 Aug 2027 · hike 12–15 Aug · 4 days · 3 hut nights</p>
 <ul class="hero-stats">
-<li><b>≈39.1 km</b><span>distance</span></li>
-<li><b>+2,728 m</b><span>total climb</span></li>
-<li><b>2,486 m</b><span>high point · Forcella del Lago</span></li>
+<li><b>≈39.1 km</b><span>distance · guide</span></li>
+<li><b>+2,728 m</b><span>total climb · guide</span></li>
+<li><b>2,486 m</b><span>high point · Forcella del Lago (OSM)</span></li>
 <li><b>≈16–19 h</b><span>walking · guide totals</span></li>
 </ul>
 <div class="hero-cta"><a class="btn btn--primary" href="#days">See the 4 days</a><a class="btn btn--ghost" href="#hutStatus">Hut booking status</a></div>
@@ -402,7 +402,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <section class="tile" data-bento="countdown" aria-labelledby="bxCount"><h2 id="bxCount">Countdown</h2>
 <p class="big"><span data-bento-countdown>20 Aug</span><small data-bento-countdown-label>2027 · start at Lago di Braies</small></p>
 <p>Start: <time data-bento-start datetime="2027-08-12T07:00:00+02:00">Thu 12 Aug 2027</time></p></section>
-<section class="tile" data-bento="route" aria-labelledby="bxRoute"><h2 id="bxRoute">The route</h2>
+<section class="tile" data-bento="route" aria-labelledby="bxRoute"><h2 id="bxRoute">The route</h2><p class="small tile-note">Traced route (estimate): km · climb · top per day. Guide totals are in the header.</p>
 <div class="spark-row" data-bento-sparks aria-busy="true"><span class="spark skel" aria-hidden="true"></span><span class="spark skel" aria-hidden="true"></span><span class="spark skel" aria-hidden="true"></span><span class="spark skel" aria-hidden="true"></span></div>
 <p class="tile-empty" data-bento-empty>Each day's distance and climb profile is on the <a href="#days">day cards</a>.</p></section>
 <section class="tile" data-bento="bookings" aria-labelledby="bxBook"><h2 id="bxBook">Bookings (group tracker)</h2>
@@ -421,9 +421,9 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </div></section>
 <div id="app" role="tabpanel" aria-labelledby="bMap"><div id="side">
 <div class="print-only print-head"><b>Alta Via 1 north · day sheets</b><span>12–15 Aug 2027<span data-print-date></span></span></div>
-<div class="banner" id="banner"><b>Main plan: Alta Via 1 north, 4 days, 3 hut nights, finish at Cinque Torri.</b> Backup: Palaronda (guide §8, <code>palaronda.html</code>).<br><b>⚠️ Sun 15 Aug is Ferragosto: bus 52 from Cinque Torri runs only at 14:20 and 16:20</b> (last chairlift down 17:00; 2026 timetable).<br><b>⚠️ Deadlines</b><br>1. <b>Ücia Lavarella (Fri 13): requested 4 Nov 2026, PENDING confirmation</b>; 4-bed + 5-bed dorm with shower/WC, HB, €969.<br>2. <b>Rif. Col Gallina (Sat 14)</b>: Room 3 (5 × €130) + 4 beds in Room 5 (× €120) = €1,130, plus city tax €1.50 pp; 50% non-refundable.<br>3. <b>Rif. Biella (Thu 12)</b>: rooms Pelmo (6) + Cima Nove (3); 2 bookings (max 8); 50% non-refundable.<br>4. Hotels: Trenker in Braies (Tue 10–Wed 11) free cancellation to ≈26 Jul; Rodes in Ortisei (Sun 15–Mon 16) to ≈15 Jul.<br>Plan: fly Mon 9 overnight · land VCE ≈08:00 Tue 10, drive to Braies · rest Wed 11 · huts Thu 12–Sat 14 · walk out Sun 15, Ortisei · Seceda Mon 16 · fly home Tue 17. <span class="small">Public calendars checked 3 Nov 2026 (guide §5.1).</span></div>
-<section class="banner" id="hutStatus" aria-labelledby="hsTitle"><h2 id="hsTitle">Hut booking status</h2><span class="small">(checked Tue 3 Nov 2026, 18:53–18:58 ET; read-only)</span>
-<ul class="hs-legend" aria-label="Badge key"><li><span class="badge" data-status="booked">Booked</span></li><li><span class="badge" data-status="pending">Pending</span></li><li><span class="badge" data-status="not-booked">Not booked</span></li><li>= our booking (Group → Booking tracker). Tinted tags = what the hut's site shows.</li></ul>
+<div class="banner bn-v2" id="banner"><p class="bn-line"><b>Huts:</b> 1 requested (pending), 2 still to book · <a href="#hutStatus">next steps</a></p><p class="day-flag day-flag--warn"><span aria-hidden="true">⚠️ </span><b>Sun 15 Aug is Ferragosto:</b> bus 52 from Cinque Torri runs only at 14:20 and 16:20 (last chairlift down 17:00; 2026 timetable).</p><p class="bn-line"><b>Hotels</b> (not booked) · free cancellation: Rodes to ≈15 Jul · Trenker to ≈26 Jul</p><details class="g-more"><summary>Plan summary, backup and prices</summary><div><b>Main plan: Alta Via 1 north, 4 days, 3 hut nights, finish at Cinque Torri.</b> Backup: Palaronda (guide §8, <code>palaronda.html</code>).<br><b>⚠️ Deadlines</b><br>1. <b>Ücia Lavarella (Fri 13)</b>: requested 4 Nov 2026; status and price in the hut panel below.<br>2. <b>Rif. Col Gallina (Sat 14)</b>: Room 3 (5 × €130) + 4 beds in Room 5 (× €120) = €1,130, plus city tax €1.50 pp; 50% non-refundable.<br>3. <b>Rif. Biella (Thu 12)</b>: rooms Pelmo (6) + Cima Nove (3); 2 bookings (max 8); 50% non-refundable.<br>4. Hotels: Trenker in Braies (Tue 10–Wed 11) free cancellation to ≈26 Jul; Rodes in Ortisei (Sun 15–Mon 16) to ≈15 Jul.<br>Plan: fly Mon 9 overnight · land VCE ≈08:00 Tue 10, drive to Braies · rest Wed 11 · huts Thu 12–Sat 14 · walk out Sun 15, Ortisei · Seceda Mon 16 · fly home Tue 17. <span class="small">Public calendars checked 3 Nov 2026 (guide §5.1).</span></div></details></div>
+<section class="banner hs-v2" id="hutStatus" aria-labelledby="hsTitle"><h2 id="hsTitle">Hut nights: booked yet?</h2><span class="small">(checked Tue 3 Nov 2026, 18:53–18:58 ET; read-only)</span>
+<details class="g-more hs-key"><summary>What the tags mean</summary><ul class="hs-legend" aria-label="Badge key"><li><span class="badge" data-status="booked">Booked</span></li><li><span class="badge" data-status="pending">Pending</span></li><li><span class="badge" data-status="not-booked">Not booked</span></li><li>= our booking (Group → Booking tracker). Tinted tags = what the hut's site shows.</li></ul></details>
 <div id="hsBody"></div>
 <details class="hs-toggle"><summary><span class="when-closed">Show all huts (backups and options)</span><span class="when-open">Show only our hut nights</span></summary></details></section>
 <section id="arrival" class="arrival" aria-labelledby="arrTitle"></section>
@@ -434,6 +434,14 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <p class="gpx-all"><a class="btn-gpx" href="gpx/av1_all_days.gpx" download type="application/gpx+xml">Download GPX: all 4 days + huts</a></p>
 </div><div id="main"><div id="map"></div><div id="prof"><canvas id="chart"></canvas></div></div></div>
 <div id="guide" role="tabpanel" aria-labelledby="bGuide" hidden><div class="inner" id="guideInner"><h1>MAIN PLAN: Alta Via 1 (north), Lago di Braies → Cinque Torri, 4 days hut to hut, 12–15 Aug 2027 (trip 9–17 Aug)</h1>
+<p class="g-chips"><span>9 adults</span><span>Thu 12 – Sun 15 Aug 2027</span><span>4 days · 3 hut nights</span><span>≈39.1 km · +2,728 / −2,014 m (guide)</span></p>
+
+<p><strong>Status (4 Nov 2026):</strong> only the Ücia Lavarella request is in (<strong>pending</strong>); nothing else is booked, held or paid. Next: book Col Gallina and Biella (§5).</p>
+<blockquote>
+<p><strong>⚠️ Ferragosto, Sun 15 Aug:</strong> bus 52 from Cinque Torri runs <strong>only at 14:20 and 16:20</strong> (2026 Sunday/holiday timetable [S78]); the last chairlift down is 17:00.</p>
+</blockquote>
+<details class="g-more"><summary>Plan history, group size, availability notes and conventions</summary>
+
 <p><strong>Group of 9, all named (the Group tab lists all 9), beds asked for 9 · Plan prepared 2 Nov 2026; dates and huts changed 3 Nov 2026 and again 4 Nov 2026 (plan for 9 adults: fly Mon 9 Aug, Braies Tue 10–Wed 11, hike Thu 12–Sun 15 Aug 2027, night 2 at <strong>Ücia Lavarella</strong> instead of Fanes, Ortisei Sun 15–Mon 16, home Tue 17) · Only the Lavarella reservation request has been submitted (<strong>pending</strong>); nothing else is booked, held or paid.</strong></p>
 <p><strong>This is the main hike.</strong> Alta Via 1 north, 3 hut nights (Biella, Ücia Lavarella, Col Gallina), finishing at Cinque Torri on Sun 15 Aug (Ferragosto) with no night at Nuvolau, then 2 nights in Ortisei (Seceda) and home from Venice on Tue 17 Aug. <strong>Lagazuoi is now optional, with no night</strong>: a Day 3 detour on foot or by cable car (§2.2). The Palaronda is the <strong>backup</strong> only (§8 and <code>palaronda.html</code>). Days 1–2 use the figures from Matthew&#39;s hut planner [S91]; Days 3–4 use hut and trail sources [S52][S55][S61][S101][S102].</p>
 <p><strong>Group size: 9 people</strong> (Matthew, 3 Nov 2026; the 9th, Dylan, named 3 Nov 2026). The Group tab roster, the cost ledger, beds and the group cost in §6 are all for <strong>9</strong>.</p>
@@ -442,11 +450,11 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <p><strong>Availability note (Tue 3 Nov 2026, 18:53–18:58 ET, read-only) [S107].</strong> For 9 adults on the new dates: <strong>Biella</strong> showed 38 free places on Thu 12 Aug (€855 HB; max 8 per reservation, so 2 bookings); <strong>Col Gallina</strong> showed 23 shared‑room beds plus private rooms on Sat 14 Aug (per-bed €120–160 HB); <strong>Hotel Trenker</strong> (Braies) fits 9 on Tue 10–Wed 11; <strong>Hotel Rodes</strong> (Ortisei) fits 9 on Sun 15–Mon 16. <strong>Sun 15 Aug is Ferragosto</strong> (Italian national holiday): crowds, lift queues, Sunday buses, holiday traffic (§3.3). Full table: §5.1 Hut booking status and the panel in <code>av1.html</code>.</p>
 </blockquote>
 <blockquote>
-<p><strong>Plan update (Wed 4 Nov 2026, from Matthew) [S108].</strong> Night 2 is <strong>Ücia Lavarella</strong> (a few minutes from Rif. Fanes), not Fanes: 4‑bed dorm + 5‑bed dorm with shower/WC, half board, <strong>€969</strong>; the reservation request is submitted and <strong>awaiting confirmation (pending)</strong>. Biella rooms: <strong>Pelmo (6) + Cima Nove (3)</strong>, HB. Col Gallina: <strong>Room 3 (5 beds × €130) + 4 beds in Room 5 (× €120)</strong>, HB, <strong>€1,130</strong> (booking screen [S110]; city tax €1.50 pp extra).</p>
+<p><strong>Plan update (Wed 4 Nov 2026, from Matthew) [S108].</strong> Night 2 is <strong>Ücia Lavarella</strong> (a few minutes from Rif. Fanes), not Fanes: 4‑bed dorm + 5‑bed dorm with shower/WC, half board (price and status: §5). Biella rooms: <strong>Pelmo (6) + Cima Nove (3)</strong>, HB. Col Gallina: <strong>Room 3 (5 beds × €130) + 4 beds in Room 5 (× €120)</strong>, HB, <strong>€1,130</strong> (booking screen [S110]; city tax €1.50 pp extra).</p>
 </blockquote>
-<blockquote>
-<p><strong>⚠️ Ferragosto, Sun 15 Aug:</strong> bus 52 from Cinque Torri runs <strong>only at 14:20 and 16:20</strong> (2026 Sunday/holiday timetable [S78]); the last chairlift down is 17:00.</p>
-</blockquote>
+</details>
+
+
 <hr>
 <h2>1. Trip at a glance</h2>
 <table tabindex="0" aria-label="Guide table 1 (scrolls sideways)">
@@ -480,7 +488,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <tr>
 <td>Fri 13 Aug</td>
 <td><strong>Day 2</strong> Biella → Sennes → Pederü → Ücia Lavarella</td>
-<td><strong>Ücia Lavarella</strong> (hut night 2; request submitted, <strong>pending</strong>)</td>
+<td><strong>Ücia Lavarella</strong> (hut night 2)</td>
 </tr>
 <tr>
 <td>Sat 14 Aug</td>
@@ -489,7 +497,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tr>
 <tr>
 <td>Sun 15 Aug (Ferragosto)</td>
-<td><strong>Day 4</strong> Col Gallina → Averau → Scoiattoli (Cinque Torri) → chairlift down → bus 52 to Cortina (<strong>Ferragosto: 14:20 or 16:20 only</strong>) → van → <strong>drive to Ortisei</strong> (≈65 km, ≈1 h 17 [S107])</td>
+<td><strong>Day 4</strong> Col Gallina → Averau → Scoiattoli (Cinque Torri) → chairlift down → bus 52 to Cortina (Ferragosto times: see the top box) → van → <strong>drive to Ortisei</strong> (≈65 km, ≈1 h 17 [S107])</td>
 <td><strong>Ortisei</strong> (Hotel Rodes fits 9 [S107]; §3.3)</td>
 </tr>
 <tr>
@@ -503,11 +511,14 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>—</td>
 </tr>
 </tbody></table>
-<p><strong>Three hut nights:</strong> Biella, Ücia Lavarella (pending), Col Gallina. <strong>No night at Lagazuoi or Nuvolau:</strong> both are optional viewpoints (§2.2).</p>
+<p><strong>Three hut nights:</strong> Biella, Ücia Lavarella, Col Gallina. <strong>No night at Lagazuoi or Nuvolau:</strong> both are optional viewpoints (§2.2).</p>
 <h2>2. The hike, day by day</h2>
+<details class="g-more"><summary>Why this split (Biella, Lavarella, Col Gallina)</summary>
+
 <p><strong>Main plan split:</strong> Braies → Biella → Ücia Lavarella → Col Gallina → Cinque Torri (night 2 moved from Fanes to Lavarella on 4 Nov 2026 [S108]; the two huts are a few minutes apart). Many guides put night 1 at <strong>Sennes</strong> instead of Biella (e.g. dolomites-guide.com [S37], Alpenventures [S38]); Biella is 3 km earlier on the same trail, which makes Day 1 short (good on arrival day +1) and Day 2 longer. Night 3 moved from Lagazuoi (not bookable online for August 2027 [S104]) to <strong>Col Gallina</strong>, just below Passo Falzarego. That makes Day 3 longer in distance but lower, and Day 4 short.</p>
+</details>
+
 <h3>2.1 Summary table</h3>
-<p><strong>Planning figures:</strong> Days 1–2 come from <strong>Matthew&#39;s hut planner</strong> [S91]. Day 3 adds up published legs: Fanes → Scotoni [S52], Scotoni → Valparola [S52][S101], Valparola → Falzarego [S61], and the trace for the last 0.8 km to Col Gallina. Day 4 comes from [S55]. Other guides and my OSM/EU‑DEM trace are shown for comparison; differences are explained below the table.</p>
 <table tabindex="0" aria-label="Guide table 2 (scrolls sideways)">
 <thead>
 <tr>
@@ -533,7 +544,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td><strong>12.9 km</strong> to Fanes [S91]; trace to Lavarella 13.3 km</td>
 <td><strong>+546 / −814 m</strong> [S91] (to Fanes)</td>
 <td><strong>5.1–6.1 h</strong> [S91]</td>
-<td>Ücia Lavarella (≈50 beds [S62]); request submitted, <strong>pending</strong></td>
+<td>Ücia Lavarella (≈50 beds [S62])</td>
 </tr>
 <tr>
 <td>3 · Sat 14</td>
@@ -560,6 +571,10 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>3 hut nights</td>
 </tr>
 </tbody></table>
+<p><strong>Plan Day 3 as a 7–8 h day door to door with stops.</strong></p>
+<details class="g-more"><summary>Where the figures come from, totals check, other guides and our GPS trace</summary>
+
+<p><strong>Planning figures:</strong> Days 1–2 come from <strong>Matthew&#39;s hut planner</strong> [S91]. Day 3 adds up published legs: Fanes → Scotoni [S52], Scotoni → Valparola [S52][S101], Valparola → Falzarego [S61], and the trace for the last 0.8 km to Col Gallina. Day 4 comes from [S55]. Other guides and my OSM/EU‑DEM trace are shown for comparison; differences are explained below the table.</p>
 <p>Totals are sums of the rows above. Check: Braies 1,494 m [Wikidata, S90] + 2,728 − 2,014 = 2,208 m, 47 m below the Cinque Torri finish (chair top ≈2,255 m [S66]); the gap is mostly the unpublished descent/ascent on Day 4. The Day 3 hut times (3 h 10, 1 h 20) are signpost-style times from the huts and are faster than DIN on the trace (7 h 26): <strong>plan Day 3 as a 7–8 h day door to door with stops</strong> (my advice).</p>
 <p><strong>Comparison with other sources and the trace</strong></p>
 <table tabindex="0" aria-label="Guide table 3 (scrolls sideways)">
@@ -609,23 +624,41 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tr>
 </tbody></table>
 <p>TRACE notes: Days 1–2 traced on OSM (AV1 relation 177743); Day 2 end and Day 3 start re-routed to Ücia Lavarella on OSM paths (4 Nov 2026); Days 3–4 routed on OSM paths (Overpass, 3 Nov 2026) Fanes → Scotoni → Valparola → Falzarego → Col Gallina and Col Gallina → Averau → Scoiattoli, with a ×5 penalty on roads; elevation OpenTopoData EU‑DEM 25 m [S83]. DIN 33466 times (EST): 4 km/h on the flat, 300 m/h up, 500 m/h down, total = larger + half the smaller, no breaks. <strong>Use the planning figures for planning; use the trace for the map and GPX.</strong></p>
+</details>
+
 <h3>2.2 Day notes</h3>
-<ul>
-<li><strong>Day 1 (Thu 12).</strong> Start at the north shore of Lago di Braies, follow the west shore, then trail 1 up the Val di Foresta/Ofen to the Forcella Sora Forno saddle and the hut: 5.0 km, +891 m, 3.7–4.7 h [S91]. Short day; you can start after lunch if needed. Bus 442 from St. Veit (first‑night hotel area) to the lake: ≈6 min (timetable offsets [S77]).</li>
-<li><strong>Day 2 (Fri 13).</strong> Easy plateau to Sennes (≈3 km [S60]), descent to Pederü (lunch stop; low point ≈1,540 m), then the old military road/trail up to the Fanes plateau and <strong>Ücia Lavarella</strong> (a few minutes before Rif. Fanes): 12.9 km to Fanes, 5.1–6.1 h [S91]; the trace to Lavarella is 13.3 km, +696/−973 m (DEM, EST). altavia1dolomites.com calls this the easiest stage [S64]. <strong>Option:</strong> the Pederü manager&#39;s off‑road vehicle to the Fanes plateau saves the ≈500 m climb [S64] (price not found).</li>
-<li><strong>Day 3 (Sat 14). Longest day: ≈16.9 km from Lavarella (≈0.5 km to Rif. Fanes first), +979 / −955 m, ≈5¼–6 h by hut times (7 h 26 DIN on the trace, EST).</strong> Passo Limo, <strong>Malga Fanes Grande</strong> (food only, no beds [S91]), up to <strong>Forcella del Lago</strong> (2,486 m [S105], the hike&#39;s high point), then down to <strong>Rifugio Scotoni</strong> (9.8 km, +560/−640 m, 3 h 10 [S52]) for lunch. Then trail 18B up to <strong>Passo Valparola</strong> (3.3 km, +360/−170 m [S52]; 1 h 20 [S101]), along to <strong>Passo Falzarego</strong> (2.47 km, +59 m [S61]; time not published, ≈30–40 min EST by DIN) and down to <strong>Rifugio Col Gallina</strong> (trace 0.82 km, −39 m, 15 min DIN; 50 min per [S102]). <strong>Pacing (my advice, not sourced):</strong> leave Lavarella ≈08:00 → Scotoni ≈11:30 → Col Gallina ≈14:30–15:00 with ≈1 h of stops; check-in is 15:00–17:00 and dinner 19:00 [S54].<ul>
-<li><strong>Optional Lagazuoi (no night).</strong> (a) <strong>On foot:</strong> follow the old AV1 line from Forcella del Lago up to Rif. Lagazuoi (Fanes → Lagazuoi 14.5 km, +1,168/−504 m, 7.2–8.2 h [S91]) and ride the <strong>cable car down</strong> to Falzarego (€24 single in August 2026, last down 17:00 [S67]), then 0.8 km to Col Gallina. Only for a strong group with a ≈07:00 start: 8.2 h + stops is past the last car. Walking down instead is ≈3.2 km, +70/−720 m, ≈2 h (trace DIN, EST), arriving after the 17:00 check-in window [S54]. (b) <strong>Cable car up and back</strong> from Passo Falzarego after the main Day 3 (€34 return in August 2026; last up 16:40, last down 17:00 [S67]). Lagazuoi itself is not bookable for August 2027 [S104].</li>
-</ul>
-</li>
-<li><strong>Day 4 (Sun 15). Short finish at Cinque Torri; no night at Nuvolau.</strong> From Col Gallina join trail 441 near the Col Gallina lifts (Falzarego → Averau 3.8 km, +312 m, 1 h 45 [S55]), over Forcella Averau (2,435 m [S105]) to <strong>Rif. Averau</strong>, then down to <strong>Rif. Scoiattoli</strong> (1 km, 188 m, 30 min [S55]). <strong>Optional viewpoint:</strong> Nuvolau summit hut (2,574 m [S91]) from Averau, ≈1.6 km and ±152 m return, <strong>≈1 h</strong> (EST: DIN 33466, trail taken as 1.3 × the 0.62 km straight line, Averau 2,420 m DEM). <strong>Chairlift and bus (EST):</strong> breakfast 07:00 [S54], leave 08:00 + 2 h 15 + ≈45 min breaks → Scoiattoli ≈11:00 (≈12:00 with Nuvolau), well inside the <strong>17:00 last run</strong> of the <strong>Cinque Torri chairlift</strong> Scoiattoli → Bai de Dones (1,889 m), €22.50 one way in August (season 6 Jun–11 Oct 2026) [S66]. Bus 52 from the Cinque Torri stop to Cortina: <strong>⚠️ Sun 15 Aug is a Sunday and Ferragosto: bus 52 runs only at 14:20 and 16:20</strong> (the 12:20 run is weekdays/Sat only in 2026) from Falzarego, Cinque Torri EST +5–10 min (§4.2). Expect chairlift queues on Ferragosto. Then the van from Cortina to Ortisei, Hotel Rodes (§3.3).</li>
-</ul>
+<p><strong>Day 1 · Thu 12 · Braies → Rif. Biella</strong> · 5.0 km · +891 / −57 m · 3.7–4.7 h · short arrival-week day</p>
+<details class="g-more g-more--inline"><summary>Route notes</summary>
+
+<p><strong>Day 1 (Thu 12).</strong> Start at the north shore of Lago di Braies, follow the west shore, then trail 1 up the Val di Foresta/Ofen to the Forcella Sora Forno saddle and the hut: 5.0 km, +891 m, 3.7–4.7 h [S91]. Short day; you can start after lunch if needed. Bus 442 from St. Veit (first‑night hotel area) to the lake: ≈6 min (timetable offsets [S77]).</p>
+</details>
+
+<p><strong>Day 2 · Fri 13 · Biella → Pederü → Ücia Lavarella</strong> · 12.9 km · +546 / −814 m · 5.1–6.1 h</p>
+<details class="g-more g-more--inline"><summary>Route notes</summary>
+
+<p><strong>Day 2 (Fri 13).</strong> Easy plateau to Sennes (≈3 km [S60]), descent to Pederü (lunch stop; low point ≈1,540 m), then the old military road/trail up to the Fanes plateau and <strong>Ücia Lavarella</strong> (a few minutes before Rif. Fanes): 12.9 km to Fanes, 5.1–6.1 h [S91]; the trace to Lavarella is 13.3 km, +696/−973 m (DEM, EST). altavia1dolomites.com calls this the easiest stage [S64]. <strong>Option:</strong> the Pederü manager&#39;s off‑road vehicle to the Fanes plateau saves the ≈500 m climb [S64] (price not found).</p>
+</details>
+
+<p><strong>Day 3 · Sat 14 · Lavarella → Scotoni → Falzarego → Col Gallina</strong> · ≈16.9 km · +979 / −955 m · ⚠️ longest day: plan 7–8 h door to door</p>
+<details class="g-more g-more--inline"><summary>Route notes</summary>
+
+<p><strong>Day 3 (Sat 14). Longest day: ≈16.9 km from Lavarella (≈0.5 km to Rif. Fanes first), +979 / −955 m, ≈5¼–6 h by hut times (7 h 26 DIN on the trace, EST).</strong> Passo Limo, <strong>Malga Fanes Grande</strong> (food only, no beds [S91]), up to <strong>Forcella del Lago</strong> (2,486 m [S105], the hike&#39;s high point), then down to <strong>Rifugio Scotoni</strong> (9.8 km, +560/−640 m, 3 h 10 [S52]) for lunch. Then trail 18B up to <strong>Passo Valparola</strong> (3.3 km, +360/−170 m [S52]; 1 h 20 [S101]), along to <strong>Passo Falzarego</strong> (2.47 km, +59 m [S61]; time not published, ≈30–40 min EST by DIN) and down to <strong>Rifugio Col Gallina</strong> (trace 0.82 km, −39 m, 15 min DIN; 50 min per [S102]). <strong>Pacing (my advice, not sourced):</strong> leave Lavarella ≈08:00 → Scotoni ≈11:30 → Col Gallina ≈14:30–15:00 with ≈1 h of stops; check-in is 15:00–17:00 and dinner 19:00 [S54].
+<strong>Optional Lagazuoi (no night).</strong> (a) <strong>On foot:</strong> follow the old AV1 line from Forcella del Lago up to Rif. Lagazuoi (Fanes → Lagazuoi 14.5 km, +1,168/−504 m, 7.2–8.2 h [S91]) and ride the <strong>cable car down</strong> to Falzarego (€24 single in August 2026, last down 17:00 [S67]), then 0.8 km to Col Gallina. Only for a strong group with a ≈07:00 start: 8.2 h + stops is past the last car. Walking down instead is ≈3.2 km, +70/−720 m, ≈2 h (trace DIN, EST), arriving after the 17:00 check-in window [S54]. (b) <strong>Cable car up and back</strong> from Passo Falzarego after the main Day 3 (€34 return in August 2026; last up 16:40, last down 17:00 [S67]). Lagazuoi itself is not bookable for August 2027 [S104].</p>
+</details>
+
+<p><strong>Day 4 · Sun 15 · Col Gallina → Averau → Cinque Torri</strong> · ≈4.8 km · ⚠️ Ferragosto: bus 52 only 14:20 / 16:20; last chair 17:00</p>
+<details class="g-more g-more--inline"><summary>Route notes</summary>
+
+<p><strong>Day 4 (Sun 15). Short finish at Cinque Torri; no night at Nuvolau.</strong> From Col Gallina join trail 441 near the Col Gallina lifts (Falzarego → Averau 3.8 km, +312 m, 1 h 45 [S55]), over Forcella Averau (2,435 m [S105]) to <strong>Rif. Averau</strong>, then down to <strong>Rif. Scoiattoli</strong> (1 km, 188 m, 30 min [S55]). <strong>Optional viewpoint:</strong> Nuvolau summit hut (2,574 m [S91]) from Averau, ≈1.6 km and ±152 m return, <strong>≈1 h</strong> (EST: DIN 33466, trail taken as 1.3 × the 0.62 km straight line, Averau 2,420 m DEM). <strong>Chairlift and bus (EST):</strong> breakfast 07:00 [S54], leave 08:00 + 2 h 15 + ≈45 min breaks → Scoiattoli ≈11:00 (≈12:00 with Nuvolau), well inside the <strong>17:00 last run</strong> of the <strong>Cinque Torri chairlift</strong> Scoiattoli → Bai de Dones (1,889 m), €22.50 one way in August (season 6 Jun–11 Oct 2026) [S66]. Bus 52 from the Cinque Torri stop to Cortina: <strong>⚠️ Sun 15 Aug is a Sunday and Ferragosto: bus 52 runs only at 14:20 and 16:20</strong> (the 12:20 run is weekdays/Sat only in 2026) from Falzarego, Cinque Torri EST +5–10 min (§4.2). Expect chairlift queues on Ferragosto. Then the van from Cortina to Ortisei, Hotel Rodes (§3.3).</p>
+</details>
+
 <h3>2.3 Huts</h3>
 <table tabindex="0" aria-label="Guide table 4 (scrolls sideways)">
 <thead>
 <tr>
 <td></td>
 <th><strong>Rifugio Biella</strong> (night 1, Thu 12)</th>
-<th><strong>Ücia Lavarella</strong> (night 2, Fri 13; <strong>pending</strong>)</th>
+<th><strong>Ücia Lavarella</strong> (night 2, Fri 13)</th>
 <th><strong>Rifugio Col Gallina</strong> (night 3, Sat 14)</th>
 </tr>
 </thead>
@@ -644,7 +677,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <tr>
 <td>Price for 9 (LIVE 2027, 3 Nov 2026 [S107])</td>
 <td><strong>€855</strong> HB (€95 pp); rooms <strong>Pelmo (6) + Cima Nove (3)</strong> [S108]</td>
-<td><strong>€969 HB</strong> (plan [S108]): 4‑bed dorm + 5‑bed dorm with shower/WC</td>
+<td>HB (price: §5 [S108]): 4‑bed dorm + 5‑bed dorm with shower/WC</td>
 <td><strong>€1,130: Room 3 (5 beds × €130) + Room 5 (4 beds × €120)</strong> (booking screen [S110]). HB per bed; dinner (choice of 3 firsts, 3 mains), bed and breakfast; drinks extra; city tax €1.50 pp/night extra [S54] (counted in the hut tourist tax line, §6)</td>
 </tr>
 <tr>
@@ -668,13 +701,16 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <tr>
 <td>Notes for 9</td>
 <td>38 places free Thu 12 [S107] (rooms of 8, 8, 7, 6, 6, 3)</td>
-<td><strong>Pending</strong>: until the hut confirms, Fri 13 has no confirmed bed. Rif. Fanes is a few minutes away (passed early on Day 3)</td>
+<td>Rif. Fanes is a few minutes away (passed early on Day 3)</td>
 <td>Beds free Sat 14: Stanza 5 ×8, 7 ×6, 3 ×5, 10 ×4, plus doubles 6/8 (€380) and triple 11 (€570) [S107]. Check-in 15:00–17:00, dinner 19:00, breakfast 07:00 [S54]. Bus 52 has a Col Gallina request stop [S78]</td>
 </tr>
 </tbody></table>
 <hr>
 <h2>3. Getting there</h2>
 <h3>3.0 Getting there, Mon 9 – Wed 11 Aug (fly into Venice, drive to Braies, rest day)</h3>
+<p>Fly Mon 9 → land VCE ≈08:00 Tue 10 → van ≈2 h 36 to Braies · rest Wed 11 · ⚠️ the van may seat only 7–8 of 9.</p>
+<details class="g-more g-more--inline"><summary>Details</summary>
+
 <blockquote>
 <p><strong>The plan for 9 adults</strong> (Matthew, 4 Nov 2026 [S108]); flights, van and Braies hotel not booked yet. The hike starts <strong>Thu 12 Aug</strong> at Lago di Braies; the drive is not part of the hike days, totals, elevation chart or GPX files. It is shown on the map as a dashed line from VCE.</p>
 </blockquote>
@@ -737,7 +773,12 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <li><strong>⚠️ Seats:</strong> the rented minivan <strong>may seat only 7–8 of the 9</strong>. Then 1–2 people need another seat (a second car, or bus/train; not costed). The tracker and the costs in §6 still assume <strong>one 9‑seat van</strong>.</li>
 <li><strong>Distance check:</strong> OSRM gives ≈194 km to the lake; the hotel&#39;s own &quot;230 km&quot; [S70] is higher, and the option (a) fuel estimate in §3.1 still uses it (so it is on the safe side).</li>
 </ul>
+</details>
+
 <h3>3.1 Flight and van</h3>
+<p>Example flight UA321 IAD → VCE; one 9‑seat van; <strong>every driver needs an IDP</strong>.</p>
+<details class="g-more g-more--inline"><summary>Details</summary>
+
 <ul>
 <li><strong>Flight (not costed):</strong> UA321 IAD 17:15 → VCE ≈07:55 next day [S15]: depart <strong>Mon 9 Aug</strong>, land <strong>Tue 10 Aug</strong> (an example flight; the group may fly another). <strong>Return: Tue 17 Aug from VCE</strong>, afternoon or evening (Ortisei → VCE ≈3 h 05 free-flow [S107]; not checked).</li>
 <li><strong>One 9‑seat van</strong> (Transit / Vivaro / Vito / Trafic class) from VCE: KAYAK.it Venice €77/day for a Transit minibus, Venice van average €138/day in July [S22]; KAYAK.com VCE vans &quot;typically $112/day&quot; [S23]; Cars‑Scanner 9‑seaters from €75–84/day [S24]. <strong>EST 8 days (Tue 10–Tue 17): €616–1,104, mid €799</strong> ($112 × 8 ÷ 1.1216). Listed with 9 seats (driver included, so 9 people fit with one of them driving; my reading) + <strong>4–5 bags</strong> [S22][S24][S25b] → bring trekking packs plus small duffels; extra bags stay in the van.</li>
@@ -745,7 +786,12 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <li><strong>Drive VCE → Cortina:</strong> 146–168 km, 1 h 50–2 h 34 [S49]. A27 Venezia–Belluno toll <strong>€12.20</strong> (car class A; a van may be a higher class) [S30]. <strong>VCE → Lago di Braies:</strong> Hotel Lago di Braies gives Venice <strong>230 km</strong> [S70].</li>
 <li><strong>Fuel EST:</strong> diesel €2.240/L (Italian average, 2 Nov 2026) [S31] × 8–9 L/100 km (<strong>my assumption</strong> for a 9‑seat diesel van). Round trip VCE–Cortina 292–336 km → <strong>€52–68</strong>; VCE–Braies 460 km → <strong>€82–93</strong>. <strong>New route (option b):</strong> VCE → Braies 193 + Braies → Cortina 47 + Cortina → Ortisei 65 + Ortisei → VCE 202 ≈ <strong>507 km → €91–102</strong> [S107].</li>
 </ul>
+</details>
+
 <h3>3.2 Nights of Tue 10 and Wed 11 Aug near Lago di Braies</h3>
+<p>Hotel Trenker, Braies (live 2027 price for 9); Pragserhof / Rose as alternatives.</p>
+<details class="g-more g-more--inline"><summary>Details</summary>
+
 <p><strong>Live check, Tue 3 Nov 2026, 18:53–18:58 ET [S107]:</strong> <strong>Hotel Trenker</strong> (Braies; bookingsuedtirol engine) is the only Braies hotel with 2027 prices loaded that fits 9: <strong>3 × &quot;Arnika&quot; room (3 people each)</strong>. <strong>2 nights Tue 10–Thu 12: €3,192 B&amp;B / €3,376.80 HB</strong> (€177.3 / €187.6 pp/night); <strong>Wed 11 only: €1,596 B&amp;B / €1,688.40 HB</strong>. 30% prepayment; free cancellation to 15 days before arrival (refundable until 26 Jul 2027 for the 10th, 27 Jul for the 11th); 30% from 14 to 4 days; 100% within 3 days; early departure or no-show 100% of the missing days. Hotel Steinerhof and Hotel Edelweiss: no 2027 offers loaded yet. Hotel Lago di Braies: own engine, not checked. Gasthof Huber, Hotel Hohe Gaisl: request forms only. Pragserhof and Rose (below): no checkable engine, so only their 2026 prices are known.</p>
 <table tabindex="0" aria-label="Guide table 7 (scrolls sideways)">
 <thead>
@@ -787,15 +833,34 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tr>
 </tbody></table>
 <p>Also seen but not recommended: Gasthof Huber, Innerprags — €85 pp HB for 1–2 days, tax €3 (<strong>search snippet, unverified</strong>) [S73]; Hotel Adler, Niederdorf — from €182 pp/day HB, <strong>3‑night minimum</strong> [S74]; Hotel Lago di Braies — dynamic prices, no August figure found; free parking for guests [S70].</p>
+</details>
+
 <h3>3.3 After the hike: Ortisei, Sun 15 – Tue 17 Aug (Seceda), and Ferragosto</h3>
+<p>Hotel Rodes, Ortisei, Sun 15–Tue 17 · Seceda Mon 16 via Col Raiser (Santa Cristina).</p>
+<details class="g-more g-more--inline"><summary>Details</summary>
+
 <ul>
 <li><strong>Sun 15 Aug (Day 4):</strong> chair down at Cinque Torri → bus 52 to Cortina → van → <strong>Cortina → Ortisei ≈65 km, ≈1 h 17</strong> free-flow [S107] → Ortisei ≈16:30–17:00 at best. <strong>Mon 16: Seceda day from Ortisei via Col Raiser</strong> (plan [S108]): the Col Raiser gondola starts in Santa Cristina (no time slots; €34 return in 2026), then ≈1 h on foot to the Seceda ridge. <strong>⚠️ Getting to the lift:</strong> the Col Raiser lift is in <strong>Santa Cristina, not Ortisei</strong>, so the group needs a bus or taxi from Ortisei: <strong>bus 350</strong> (Val Gardena line, Ortisei Piazza S. Antonio ↔ Santa Cristina, ≈10 min, about hourly in the 2026 timetable [S109]); last lifts down 17:30 (2026). <strong>Lift price for this route: TBD</strong> (for reference, Ortisei–Furnes–Seceda return was €74 in 2026, €666 for 9). <strong>Tue 17:</strong> Ortisei → VCE ≈202 km, ≈3 h 05 [S107].</li>
 <li><strong>Hotel Rodes, Ortisei (live, 3 Nov 2026 [S107]):</strong> 2 × four-person room + Chalet Carmen single for 2 nights 15–17 Aug: <strong>€2,620 B&amp;B (€145.6 pp/night) · €2,686 HB (€149.2) · €3,322 board code 4</strong>. 30% prepayment; free cancellation to 31 days (refundable until 15 Jul 2027); 40% from 30 to 15 days; 70% from 14 to 8 days; 90% within 7 days; early departure or no-show 90%. Gran Tubla apartments: €4,452 self-catering (3 × 3-person apartments; 50% deposit, kept). Cosmea, Villa Emilia, Smidl: no 9-person fit.</li>
 <li><strong>⚠️ Ferragosto, Sun 15 Aug (Italian national holiday, on a Sunday):</strong> <strong>bus 52 from Cinque Torri runs only at 14:20 and 16:20</strong> (Sunday/holiday timetable; the 12:20 run was weekdays/Sat only in 2026); the last chairlift down is 17:00; expect <strong>queues at the Cinque Torri chairlift and on Seceda</strong> (go up early on Mon 16); <strong>peak holiday traffic</strong> on the passes and on the A22/A27, so allow extra time on Tue 17 for the drive to VCE; Ortisei prices are higher that weekend (Rodes €2,620 for 15–17 Aug vs €2,316.60 for 23–25 Aug, different rooms [S107]).</li>
 </ul>
+</details>
+
 <hr>
 <h2>4. Van logistics: three options, with August timetables</h2>
+<h3>4.4 Recommendation: (b) move the van to Cortina on Wednesday 11 Aug</h3>
+<ul>
+<li><strong>The finish day stays short.</strong> Sunday ends 35 minutes from the van (bus 52), instead of three buses back to Braies, and the van then goes on to Ortisei.</li>
+<li><strong>Luggage waits at the finish</strong> and nobody drives the narrow Braies valley under the 09–16 rule.</li>
+<li><strong>Cost is ≈€50–100 more</strong> than (a) (≈€1,160–1,170 vs ≈€1,060–1,120 for the group of 9, EST; mostly Cortina parking), and the van is already on the way to Ortisei on Sun 15.</li>
+<li><strong>Wednesday timing is easy:</strong> the group is already at Braies (arrived Tue 10); the driver(s) take the van to Cortina (≈47 min [S107]) and come back on bus 445 <strong>13:05</strong> (or 15:05) + 442. The others rest.</li>
+<li><strong>Fallback:</strong> if the 13:05/15:05 chain is missed, the Taxi Cortina Sci minivan Cortina → Braies is <strong>€170</strong> [S75].</li>
+<li>Before booking, confirm the <strong>Cinque Torri bus stop time</strong> and the <strong>Sunday/holiday timetable of line 52 on Sun 15 Aug 2027</strong> (2026 timetable 8 Jun–9 Sep [S78]); the 2026 12:20 run from Falzarego is weekdays/Saturdays only (Ferragosto times above).</li>
+</ul>
 <h3>4.1 The facts that drive the choice</h3>
+<p>Braies car rule 09–16 · Cortina parking €19/day · last Cinque Torri chair 17:00.</p>
+<details class="g-more g-more--inline"><summary>Details</summary>
+
 <ul>
 <li><strong>Braies car rule (2026):</strong> 1 Jul–15 Sep, <strong>09:00–16:00</strong>, driving to Lago di Braies needs an online reservation/permit; free access before 9 and after 16 if spaces are free; <strong>guests of valley hotels are exempt</strong> (show the confirmation) [S68]. Combined ticket €44 (transit, guaranteed spot, €22 voucher) [S68]. 2027 rules not yet published.</li>
 <li><strong>Braies parking (indicative, &quot;Stand 10/2026&quot;):</strong> P2 (800 m from the lake) car max €10/day; P3 (300 m) €18/day; P4 (100 m) €45/24 h or €20/3 h; P1 (5.5 km) summer only [S69]. My reading of the PDF is uncertain: treat as indicative.</li>
@@ -807,7 +872,12 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </ul>
 </li>
 </ul>
+</details>
+
 <h3>4.2 Bus timetables (summer 2026; 2027 not yet published)</h3>
+<p>SAD 445, SAD 442 (reserve online, €7) and bus 52 (Ferragosto times: §3.3).</p>
+<details class="g-more g-more--inline"><summary>Details</summary>
+
 <p><strong>SAD 445 Cortina ↔ Dobbiaco/Toblach</strong> (valid 14 Jun–12 Dec 2026, daily; fare €6.50 [S45]) [S76]</p>
 <table tabindex="0" aria-label="Guide table 8 (scrolls sideways)">
 <thead>
@@ -848,7 +918,12 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tr>
 </tbody></table>
 <p>Request stops include Cinque Torri, Cinque Torri Piazzale, Col Gallina and Cianzopè [S78]. <strong>The Cinque Torri time is not printed</strong>: EST 5–10 min after Falzarego (my estimate from the stop order; the valley‑bound 35‑min run time includes it).</p>
+</details>
+
 <h3>4.3 The three options</h3>
+<p>(a) van at Braies, (b) van to Cortina (recommended), (c) private shuttle.</p>
+<details class="g-more g-more--inline"><summary>Details</summary>
+
 <table tabindex="0" aria-label="Guide table 11 (scrolls sideways)">
 <thead>
 <tr>
@@ -896,16 +971,9 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tr>
 </tbody></table>
 <p>Fares: 445 €6.50 [S45] + 442 €7 [S46] + 52 ≈€3 [S47] = €16.50 pp. The Pragserhof Guestcard / Rose Guest Pass may cover the South Tyrol buses [S71][S72] (whether it covers 442 reservations and the 445 to Cortina is unverified).</p>
-<h3>4.4 Recommendation: (b) move the van to Cortina on Wednesday 11 Aug</h3>
-<ul>
-<li><strong>The finish day stays short.</strong> Sunday ends 35 minutes from the van (bus 52), instead of three buses back to Braies, and the van then goes on to Ortisei.</li>
-<li><strong>Luggage waits at the finish</strong> and nobody drives the narrow Braies valley under the 09–16 rule.</li>
-<li><strong>Cost is ≈€50–100 more</strong> than (a) (≈€1,160–1,170 vs ≈€1,060–1,120 for the group of 9, EST; mostly Cortina parking), and the van is already on the way to Ortisei on Sun 15.</li>
-<li><strong>Wednesday timing is easy:</strong> the group is already at Braies (arrived Tue 10); the driver(s) take the van to Cortina (≈47 min [S107]) and come back on bus 445 <strong>13:05</strong> (or 15:05) + 442. The others rest.</li>
-<li><strong>Fallback:</strong> if the 13:05/15:05 chain is missed, the Taxi Cortina Sci minivan Cortina → Braies is <strong>€170</strong> [S75].</li>
-<li>Before booking, confirm the <strong>Cinque Torri bus stop time</strong> and the <strong>Sunday/holiday timetable of line 52 on Sun 15 Aug 2027</strong> (2026 timetable 8 Jun–9 Sep [S78]); the 2026 12:20 run from Falzarego is weekdays/Saturdays only, so on Ferragosto Sunday plan on 14:20 or 16:20.</li>
-</ul>
-<hr>
+</details>
+---
+
 <h2>5. Booking order, deadlines and deposit rules</h2>
 <p>Only the Ücia Lavarella request (row 1) has been submitted; nothing else below has been done. Matthew (or whoever he names in the Group tab) books; I contacted no one. Cancellation dates were counted back from the arrival nights in Python (weekdays checked). Cancellation dates marked ≈ are my day counts from the stated rule.</p>
 <table tabindex="0" aria-label="Guide table 12 (scrolls sideways)">
@@ -1002,19 +1070,16 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <tr>
 <td>11</td>
 <td>Cinque Torri chairlift, buses 445/52, Seceda lift; optional Lagazuoi cable car</td>
-<td>On the day (<strong>Sun 15 is Ferragosto: bus 52 only 14:20 / 16:20</strong>)</td>
+<td>On the day (Sun 15 is Ferragosto: bus 52 times at the top)</td>
 <td>Ticket office / on board</td>
 <td>€22.50 (Aug) [S66]; €6.50 [S45]; ≈€3 [S47]; Seceda via Col Raiser: price TBD (2026: Col Raiser €34 return, Ortisei–Seceda €74); Lagazuoi €24 single / €34 return (Aug) [S67]</td>
 <td>Chairs and cable car: last down 17:00 [S66][S67]</td>
 </tr>
 </tbody></table>
-<p><strong>Money at risk once 1–3 are booked:</strong> Col Gallina 50% × €1,130 = €565; Biella 50% × €855 = €427.50 → <strong>€992.50 non‑refundable for 9 (≈€110.30 pp)</strong>, plus the Lavarella deposit (amount TBD: set by the hut when it confirms; €969 total).</p>
-<h3>5.2 Night 2: Ücia Lavarella instead of Fanes</h3>
-<ul>
-<li><strong>Change (4 Nov 2026) [S108]:</strong> the group no longer books Rif. Fanes (which sold 13–14 Aug only inside 2‑night stays). Night 2 is <strong>Ücia Lavarella</strong>, a few minutes from Fanes on the same plateau: 4‑bed dorm + 5‑bed dorm with shower/WC, half board, <strong>€969</strong> for 9.</li>
-<li><strong>Status: pending.</strong> The reservation request is submitted and awaiting the hut&#39;s confirmation. Until it confirms, Fri 13 has no confirmed bed.</li>
-</ul>
+<p><strong>Money at risk once 1–3 are booked:</strong> Col Gallina 50% × €1,130 = €565; Biella 50% × €855 = €427.50 → <strong>€992.50 non‑refundable for 9 (≈€110.30 pp)</strong>, plus the Lavarella deposit (amount TBD: set by the hut when it confirms).</p>
 <h3>5.1 Hut booking status (checked Tue 3 Nov 2026, 18:53–18:58 ET for our nights; other rows from earlier checks)</h3>
+<details class="g-more"><summary>Hut status table (same as the Map tab panel)</summary>
+
 <p>Read-only checks of public calendars and pages; nothing was booked or held (the Lavarella request of 4 Nov 2026 was submitted by the group [S108]). <strong>Open for 2027</strong> = the hut takes 2027 bookings now; the August column says whether our night was actually free online. Same data as the &quot;Hut booking status&quot; panel in <code>av1.html</code>.</p>
 <table tabindex="0" aria-label="Guide table 13 (scrolls sideways)">
 <thead>
@@ -1152,9 +1217,19 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>2 Nov 2026</td>
 </tr>
 </tbody></table>
-<p><strong>What this means:</strong> Biella (night 1, Thu 12) is open with 38 places (plan: Pelmo + Cima Nove). Ücia Lavarella (night 2, Fri 13): request submitted, <strong>pending</strong> confirmation [S108]. Col Gallina (night 3, Sat 14) showed 23 shared‑room beds plus private rooms online. Lagazuoi is not a night: it is only an optional Day 3 detour or cable car. Averau, Scotoni and Cinque Torri were not rechecked for the new dates.</p>
+<p><strong>What this means:</strong> Biella (night 1, Thu 12) is open with 38 places (plan: Pelmo + Cima Nove). Ücia Lavarella (night 2, Fri 13): see row 1 [S108]. Col Gallina (night 3, Sat 14) showed 23 shared‑room beds plus private rooms online. Lagazuoi is not a night: it is only an optional Day 3 detour or cable car. Averau, Scotoni and Cinque Torri were not rechecked for the new dates.</p>
+</details>
+
+<h3>5.2 Night 2: Ücia Lavarella instead of Fanes</h3>
+<ul>
+<li><strong>Change (4 Nov 2026) [S108]:</strong> the group no longer books Rif. Fanes (which sold 13–14 Aug only inside 2‑night stays). Night 2 is <strong>Ücia Lavarella</strong>, a few minutes from Fanes on the same plateau: 4‑bed dorm + 5‑bed dorm with shower/WC, half board (price: row 1).</li>
+</ul>
 <hr>
 <h2>6. Cost per person and for the group (live 2027 prices where checked on 3 Nov 2026, plan prices of 4 Nov 2026 [S108], else 2026; flights excluded)</h2>
+<p class="g-chips"><span>€1,169.12 pp (≈$1,311)</span><span>Group €10,522.12</span><span>Range €1,112–1,274 pp</span><span>Flights not included</span></p>
+
+<details class="g-more"><summary>Line by line (low / main / high) and what is not included</summary>
+
 <p>Plan = option (b), 12–15 Aug 2027 hike, 2 Braies nights before and 2 Ortisei nights after. <strong>EST</strong> = estimate; method in the basis column. Shared van, fuel, tolls and parking are split ÷ 9.</p>
 <table tabindex="0" aria-label="Guide table 14 (scrolls sideways)">
 <thead>
@@ -1273,9 +1348,14 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tr>
 </tbody></table>
 <p>Not included: flights; lunches, drinks, showers and snacks at huts; Pederü jeep; optional Lagazuoi cable car (€24 single / €34 return in August [S67]); Ortisei tourist tax; insurance. Seceda lifts (TBD). Lifts, buses, van and fuel are 2026 or estimates.</p>
-<hr>
+</details>
+---
+
 <h2>7. Group manager (defaults)</h2>
-<p>The <strong>Group</strong> tab in <code>av1.html</code> holds an editable roster, booking tracker and cost ledger with settlement, saved only in the browser (localStorage key <code>av1-group-v3</code>), with CSV/JSON export. Emails are roster data only; nothing is ever sent. Defaults below.</p>
+<p>The <strong>Group</strong> tab shows the group&#39;s Google Sheet (the source of truth): roster, bookings &amp; deposits, expenses &amp; splits and balances. It is read-only: edit the Sheet, then tap <strong>Refresh</strong>.</p>
+<details class="g-more"><summary>Default tables (as built)</summary>
+
+<p>The tab reads the Sheet&#39;s Roster, Bookings &amp; Deposits, Expenses &amp; Splits and Balances tabs as CSV (no sign-in). It keeps the last good copy in this browser (localStorage key <code>av1-group-sheet-cache</code>) and shows it, or these defaults, until the Sheet loads or when it can&#39;t. Nothing is edited or saved back, and nothing is ever sent. <strong>Download backup</strong> saves one CSV. Older editable saves (<code>av1-group-v4</code>/<code>-v3</code>/…) stay untouched and are not read. Emails come only from the Sheet at runtime; the defaults below carry none in the public copy.</p>
 <!--GROUP_TABLES_START-->
 <p><strong>Roster (defaults)</strong></p>
 <table tabindex="0" aria-label="Guide table 15 (scrolls sideways)">
@@ -1576,8 +1656,15 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tbody></table>
 <!--GROUP_TABLES_END-->
 
-<hr>
+
+
+</details>
+---
+
 <h2>8. Backup plan: Palaronda Trek (condensed)</h2>
+<p>Use only if the AV1 hut bookings fail · 35.7 km · 4 days from San Martino di Castrozza · Rosetta requests open <strong>Thu 12 Nov 2026</strong>.</p>
+<details class="g-more"><summary>Route, huts and costs</summary>
+
 <p><strong>The Alta Via 1 above is the main plan.</strong> Use the Palaronda only if the AV1 hut bookings fail. Full detail and its own map: <code>palaronda.html</code> (and <code>guide_palaronda.md</code>).</p>
 <ul>
 <li><strong>Route:</strong> loop from San Martino di Castrozza (SMdC): Rosetta → Pradidali → Treviso → back over Passo Canali to Rosetta, then lift down. <strong>35.7 km, +3,160 / −2,054 m</strong> (official) [S2]; grade EE [S6].</li>
@@ -1586,14 +1673,18 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <li><strong>Why it is the backup:</strong> loop (van stays in SMdC), refundable deposits, and booking not yet open → a real chance of beds. <strong>Cost ≈€371–454 pp (EST, van, first night €40–70 stand‑in)</strong> vs ≈€500–594 here.</li>
 <li><strong>Same dates work:</strong> fly Mon 9, SMdC nights Tue 10–Wed 11, hut nights Thu 12–Sat 14, walk out Sun 15 (Ferragosto). Palaronda prices and the cost line above are from the old 1‑night/van‑5‑day plan.</li>
 </ul>
-<hr>
+</details>
+---
+
 <h2>9. Open questions</h2>
+<details class="g-more"><summary>17 open questions</summary>
+
 <ol>
 <li><strong>Sun 15 – Tue 17 Aug: Ortisei and the flight home.</strong> Option (b) leaves the group in Cortina with the van by ≈15:00–17:00 on Sun 15 (bus 52 at 14:20 or 16:20 from Falzarego on a Sunday), then Cortina → Ortisei ≈1 h 17 [S107]; Hotel Rodes fits 9 (§3.3). Return flight Tue 17 from VCE not chosen (Ortisei → VCE ≈3 h 05).</li>
 <li><strong>Braies hotel for Tue 10–Wed 11:</strong> Trenker priced live [S107]; Pragserhof and Rose 2027 prices not loaded (no checkable engine), and Pragserhof serves <strong>no dinner on Wednesdays</strong> (Wed 11) [S71].</li>
 <li><strong>Van at the hotel</strong> for 4 nights — only matters for option (a).</li>
 <li><strong>Bus 52 Cinque Torri stop time</strong> (not printed) and the <strong>Sunday/Ferragosto timetable on Sun 15 Aug 2027</strong> (2026: 12:20 weekdays/Sat only; season 8 Jun–9 Sep) [S78].</li>
-<li><strong>Ücia Lavarella (night 2, Fri 13) is PENDING:</strong> request submitted 4 Nov 2026, awaiting the hut&#39;s confirmation and deposit terms; €969 HB for 9 [S108]. Fallback if refused: Rif. Fanes (sold 13–14 Aug only in 2‑night stays on 3 Nov 2026 [S107]).</li>
+<li><strong>Ücia Lavarella (night 2, Fri 13) is PENDING:</strong> request submitted 4 Nov 2026, awaiting the hut&#39;s confirmation and deposit terms [S108]. Fallback if refused: Rif. Fanes (sold 13–14 Aug only in 2‑night stays on 3 Nov 2026 [S107]).</li>
 <li><strong>Col Gallina 2027 prices</strong> read live per bed on 3 Nov 2026 (€120–160) [S107]; bed counts per room come from the bukly calendar.</li>
 <li><strong>Group size 9, all named:</strong> Dylan (named 3 Nov 2026) is traveler 9 in the Group tab, and the ledger splits among all 9. A browser that saved the old 8-person defaults gets him added on its next visit; a browser with an edited roster shows a notice to add him with <strong>+ Add traveler</strong> (saved in this browser only).</li>
 <li><strong>2027 prices</strong> for huts, lifts, buses and the Braies rule are not yet published.</li>
@@ -1607,7 +1698,11 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <li><strong>Minivan seats:</strong> the rental may seat only <strong>7–8 of the 9</strong>; the tracker and §6 assume one 9‑seat van.</li>
 <li><strong>Ferragosto (Sun 15 Aug):</strong> Sunday/holiday buses, lift queues at Cinque Torri and Seceda, holiday traffic, higher Ortisei prices; the 2027 Braies car rule is not yet published (§3.3).</li>
 </ol>
+</details>
+
 <h2>Sources</h2>
+<details class="g-more"><summary>All sources [S1]–[S108]</summary>
+
 <ul>
 <li><strong>[S1]</strong> Self Guided Dolomites, Palaronda package page (tourist tax ≈€1.50/night): <a target="_blank" rel="noopener" href="https://www.selfguideddolomites.com/service-page/palaronda-trek-selfguided">https://www.selfguideddolomites.com/service-page/palaronda-trek-selfguided</a></li>
 <li><strong>[S2]</strong> Official Palaronda Trek (APT San Martino di Castrozza): <a target="_blank" rel="noopener" href="https://www.palarondatrek.com/tour-palaronda-trekking-dolomiti/palaronda-trek/">https://www.palarondatrek.com/tour-palaronda-trekking-dolomiti/palaronda-trek/</a></li>
@@ -1719,6 +1814,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <li><strong>[S109]</strong> südtirolmobil timetable, line 350 Gröden – Waidbruck – Bozen / Val Gardena – Ponte Gardena – Bolzano (valid from 14 Dec 2025), stops Ortisei Piazza S. Antonio and S. Cristina Municipio/Dosses: <a target="_blank" rel="noopener" href="https://www.suedtirolmobil.info/fileadmin/pdf/2026/350_20251214.pdf">https://www.suedtirolmobil.info/fileadmin/pdf/2026/350_20251214.pdf</a> (checked 4 Nov 2026; the summer 2027 timetable is not out yet).</li>
 <li><strong>[S110]</strong> Rifugio Col Gallina booking screen (bukly), from Matthew, 4 Nov 2026: Room 3, 5 beds × €130 + Room 5, 4 beds × €120 = €1,130 HB for Sat 14 Aug 2027; city tax €1.50 pp/night extra.</li>
 </ul>
+</details>
 </div></div>
 <div id="group" role="tabpanel" aria-labelledby="bGroup" hidden><div class="inner grp">
 <div class="grp-head"><h1>Group: 9 travelers</h1>

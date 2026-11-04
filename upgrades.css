@@ -210,7 +210,7 @@ html[data-mode="night"] header,html[data-mode="night"] .hero{--ink-900:#15212b;-
 html[data-mode="night"] [data-bento="countdown"]{background:#0a1117;border-color:var(--line)}
 html[data-mode="night"] [data-bento="countdown"] h2,html[data-mode="night"] [data-bento="countdown"] p,html[data-mode="night"] .big small{color:#d9d2c5}
 html[data-mode="night"] .big{color:#f6f1e8}
-html[data-mode="night"] .leaflet-tile-pane{filter:brightness(.72) contrast(1.1) saturate(.85)}
+html[data-mode="night"] .leaflet-tile-pane{filter:brightness(.85) contrast(1.05) saturate(.8)}  /* audit fix 7: .72 hid the trail lines and labels */
 html[data-mode="night"] .day.sel,html[data-mode="night"] .day.is-selected,html[data-mode="night"] .day[aria-current]:not([aria-current="false"]){box-shadow:0 0 0 2px var(--sun-400),var(--shadow-2)}
 html[data-mode="night"] .badge--plan,html[data-mode="night"] [data-status="pending"],html[data-mode="night"] .btn--primary{color:#15212b}
 html[data-mode="night"] .btn--primary,html[data-mode="night"] .btn--primary:hover{background:var(--rose-300);border-color:var(--rose-300)}
@@ -789,3 +789,80 @@ html:has(#guide:not([hidden])){scroll-padding-top:0}
 #guide .gv-dchip-s{font-size:.8125rem;line-height:1.35}
 #guide .gv-dchip-s>span{white-space:nowrap}
 @media (min-width:1440px){#guide .gv-glance{max-width:72rem}}
+
+/* ==== Audit top-8 (site-audit/audit.md, 4 Nov 2026) ==== */
+/* 1. glass tab bar: <header> carried view-transition-name, which makes it a Backdrop Root, so the nav's blur saw nothing behind it */
+@media (max-width:800px){
+  header{view-transition-name:none}
+  header h1{view-transition-name:site-header}
+  header nav{background:rgba(255,252,246,.86)}
+  html[data-mode="night"] header nav{background:rgba(20,30,40,.9)}
+  /* 6. app.js moves #map and #prof into #side (after the banner) so tab order = reading order; they stay full-bleed */
+  #side>#map{margin-left:0;margin-right:0}
+}
+/* 3. "Where we sleep": the four nights on the first screen, under a shorter phone hero */
+@media (max-width:700px){
+  .hero{min-height:auto}
+  .hero-body{padding:var(--s-8) var(--s-4) var(--s-6)}
+  .hero .eyebrow{display:none}            /* repeats the header: "Main plan · Alta Via 1 north" */
+  .hero-dates{margin-top:var(--s-2)}
+  .hero-stats{gap:var(--s-3) var(--s-4);margin-top:var(--s-4)}
+  .hero-stats span{text-transform:none;letter-spacing:0;font-size:var(--fs-12)}
+  .hero-cta{margin-top:var(--s-4)}
+}
+.glance{max-width:1400px;margin:var(--s-6) auto 0;padding:var(--s-4) var(--s-5);background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-1)}
+@media (min-width:801px){.glance{margin-left:max(var(--s-6),calc((100% - 1400px)/2 + var(--s-6)));margin-right:max(var(--s-6),calc((100% - 1400px)/2 + var(--s-6)))}}
+@media (max-width:800px){.glance{margin:var(--s-4) var(--s-4) 0;padding:var(--s-4)}}
+body:has(#app[hidden]) .glance{display:none}
+.glance h2{margin:0 0 var(--s-3);font:600 18px/1.2 var(--font-display,Fraunces,serif);color:var(--ink-900)}
+.glance ol{list-style:none;margin:0;padding:0;display:grid;gap:var(--s-2)}
+.glance li{display:grid;grid-template-columns:76px minmax(0,1fr) auto;align-items:center;gap:var(--s-2);min-height:var(--tap);border-top:1px solid var(--line);padding-top:var(--s-2);font-size:var(--fs-14);line-height:1.35;color:var(--ink-900)}
+.glance li:first-child{border-top:0;padding-top:0}
+.glance .when{font-size:var(--fs-12);font-weight:600;color:var(--ink-600);font-variant-numeric:tabular-nums}
+.glance .badge{justify-self:end;white-space:nowrap}
+.glance .lead{margin:var(--s-3) 0 0;font-size:var(--fs-12);line-height:1.4;color:var(--ink-600)}
+/* 5. one set of figures: guide big, traced estimate small */
+.day-stats dd small{display:block;margin-top:2px}
+.day-stats dd small.trace{color:var(--ink-500)}
+.spark .spark-guide{color:var(--ink-900);font-weight:600}
+.spark .spark-guide small{font-weight:400;color:var(--ink-600)}
+.spark small.trace{font-size:var(--fs-12);color:var(--ink-500);font-variant-numeric:tabular-nums}
+/* 7. night: the ✈ pin inherited light ink; stage 1 + 3 lines fell under 3:1 on night surfaces. Leaflet and the sparklines write the
+      stage colour as an SVG attribute, so match on it (CSS beats presentation attributes); the chart reads --stage-N in app.js */
+html[data-mode="night"] .leaflet-marker-icon{color:var(--ink-900)}
+html[data-mode="night"]{--stage-1:#e5607a;--stage-3:#8aa2e6}
+html[data-mode="night"] [stroke="#c8324f"]{stroke:#e5607a}
+html[data-mode="night"] [stroke="#3f5fb5"]{stroke:#8aa2e6}
+html[data-mode="night"] [fill="#c8324f"]{fill:#e5607a}
+html[data-mode="night"] [fill="#3f5fb5"]{fill:#8aa2e6}
+
+/* ==== audit8 QA fixes (4 Nov 2026) ==== */
+/* 1. phones: four sleep rows + lead line clear the bottom tab bar on a 360/390x800 first screen */
+@media (max-width:480px){
+  .hero-body{padding-top:12px}
+  .hero-dates{margin-top:8px}
+  .hero-stats{gap:12px var(--s-4);margin-top:12px}
+  .hero-long{display:none}                 /* "high point · OSM"; Forcella del Lago stays in the tile, Day 3 card and guide */
+  .hero-cta{margin-top:12px;margin-bottom:12px}
+  .hero-body{padding-bottom:var(--s-4)}
+  /* still 40-60px short after the steps above (the 56svh cap does not bind: the hero is already ≈425px < 448px), so tighten the card too */
+  .glance{margin-top:var(--s-3);padding:var(--s-3) var(--s-4)}
+  .glance h2{margin-bottom:var(--s-2);font-size:17px}
+  .glance ol{gap:4px}
+  .glance li{min-height:0;padding-top:4px;grid-template-columns:62px minmax(0,1fr) auto;gap:6px}
+  .glance .lead{margin-top:var(--s-2)}
+}
+.hero-short{display:none}
+@media (max-width:480px){.hero-short{display:inline}}
+/* 2. sleep rows: elevation never wraps alone; the pill keeps its natural width */
+.glance .nm{min-width:0}
+.glance .nw{white-space:nowrap}
+.glance .badge{flex:none;white-space:nowrap}
+/* 3. warning icon (same path as the guide's gv-warn), replaces the emoji */
+.day-flag .flag-ico{width:18px;height:18px;flex:none;vertical-align:-3px;margin-right:4px;color:currentColor}
+/* 4. phone: no back-to-top on the Map tab either (it sat on day-card summaries); the tab bar + chips are the way back */
+@media (max-width:800px){body:has(#app:not([hidden])) .to-top{display:none!important}}
+
+/* audit8 QA polish: date column = two lines at every width (day, then night) */
+.glance .when b{display:block;font-size:13px;font-weight:600;color:var(--ink-900)}
+.glance .when i{display:block;font-style:normal;font-size:12px;font-weight:400;color:var(--muted,var(--ink-600))}  /* no --muted token in this build: falls back to --ink-600, the existing muted ink */

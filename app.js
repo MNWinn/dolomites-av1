@@ -156,171 +156,43 @@ navUpdate();
 if('serviceWorker' in navigator&&/^https?:$/.test(location.protocol))addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(e=>console.warn('SW not registered',e)));
 
 /* ---- Group manager (group_av1.js) ---- */
-// ---- Group manager: roster, booking tracker, cost ledger, settlement ----
-// Storage: localStorage 'av1-group-v4' (schema v:4, 1–20 travelers). Older keys av1-group-v3 / -v2 / -v1 are migrated on first load and left in place.
-// Every save also refreshes 'av1-group-v4-lastgood'; unreadable saved data is never silently replaced (see recovery banner).
-// Travelers are referred to by roster position (0-based index as a string) in bookedBy / depositBy / paidBy, and split[] has one entry per traveler.
-const GKEY='av1-group-v4', GVER=4, GOOD=GKEY+'-lastgood', BAD=GKEY+'-damaged', OLDKEYS=['av1-group-v3','av1-group-v2','av1-group-v1'];
+// ---- Group tab: a read-only view of the group's Google Sheet (the source of truth) ----
+// Data flow: draw at once from the last good Sheet copy (localStorage 'av1-group-sheet-cache') or, failing that, the built-in
+// defaults (window.GROUP, no emails); then fetch the Roster, Bookings & Deposits, Expenses & Splits and Balances tabs in parallel
+// as CSV (gviz endpoint, no sign-in; the Sheet is shared "anyone with the link can view") and redraw. Emails arrive only at runtime.
+// Older editable saves (av1-group-v4 / -v3 / -v2 / -v1, -lastgood, -damaged) are left in localStorage untouched and are not read.
+// Travelers are referred to by roster position (0-based index as a string) in bookedBy / depositBy / paidBy; split[] has one entry per traveler.
+const SHEET_ID='1v78iv99E9392KeWAJmQHmmkLEwJbR21O2HbBT-b72qI', SHEET_EDIT='https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/edit';
+const SHEET_TABS={roster:'Roster',bookings:'Bookings & Deposits',expenses:'Expenses & Splits',balances:'Balances'};
+const sheetURL=tab=>'https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:csv&sheet='+encodeURIComponent(tab);
+const CKEY='av1-group-sheet-cache', CVER=1, FETCH_MS=15000;
 const STATUSES=['Not booked','Requested','Confirmed','Paid','Cancelled'], MAXT=20;
-/* v3 and older defaults planned hut night 3 at Lagazuoi. An untouched copy of that default row is replaced by the current Col Gallina default on migration. */
-const OLD_LAG={item:'Rifugio Lagazuoi, hut night 3, 8 × dorm + dinner',variants:[
- {date:'Tue 24 Aug 2027',notes:'rifugiolagazuoi.com. 50% deposit never refunded; 100% within 3 days / no-show. 2 Nov 2026: Tue 24 Aug shown not bookable online.'},
- {date:'Wed 25 Aug 2027',notes:'rifugiolagazuoi.com. 50% deposit never refunded; 100% within 3 days / no-show.'}]};
-const NEW_N3=/^Rifugio Col Gallina, hut night 3/;
-/* Defaults written for a group of 8 (saved v3/v4 data). An untouched row whose item text is exactly one of these gets the current default text (group of 9). */
-const OLD_ITEMS=[['Rifugio Biella, hut night 1, 8 × HB',/^Rifugio Biella, hut night 1,/],['Rifugio Col Gallina, hut night 3, 8 × HB',/^Rifugio Col Gallina, hut night 3,/],
- ['Rifugio Fanes, hut night 2, 8 × HB (1 night)',/^Ücia Lavarella, hut night 2,/],['Rifugio Fanes (or Lavarella), hut night 2, 8 × HB',/^Ücia Lavarella, hut night 2,/],
- ['First-night hotel near Braies, 8 people',/^Braies hotel,/],['Bus 442 tickets Dobbiaco → Braies × 8',/^Bus 442 tickets Dobbiaco → Braies/]];
-/* Ledger defaults written for a group of 8 (saved v3/v4 data): [item, total, notes, the current default it becomes]. Used only when Dylan is added to an untouched 8-person roster. */
-const OLD_LEDGER=[['First night (Thu 19): Pragserhof HB × 8','736.00','EST: €92 × 8 (Standard HB, Aug 2026; 1-night price may differ).',/^First night .*Pragserhof HB/],
- ['First night: Pragserhof HB × 8','736.00','EST: €92 × 8 (Standard HB, Aug 2026; 1-night price may differ).',/^First night .*Pragserhof HB/],
- ['Tourist tax, first night × 8','28.00','€3.50 × 8 (2026).',/^Tourist tax, first night/],['Rifugio Biella HB × 8','760.00','€95 × 8.',/^Rifugio Biella HB/],
- ['Rifugio Fanes HB × 8','760.00','€95 × 8 (dorm, 2026).',/^Ücia Lavarella HB/],
- ['Rifugio Col Gallina HB × 8','880.00','€110 × 8 (dorm HB 2026, third-party price list; €130 for a 4-bed dorm with bathroom).',/^Rifugio Col Gallina HB/],
- ['Hut tourist tax (EST)','68.00','(€3.50 × 2 + €1.50) × 8. Col Gallina €1.50 is published; Biella/Fanes not published, EST upper proxy €3.50.',/^Hut tourist tax/],
- ['Buses 445 + 442 + 52 × 8','132.00','(€6.50 + €7 + ≈€3) × 8 (2026).',/^Buses 445/],['Cinque Torri chairlift down × 8','180.00','€22.50 × 8 (August 2026, one way).',/^Cinque Torri chairlift down/]];
-const NINTH='Dylan', NINTH_NOTED=GKEY+'-ninth-noted';
 const clone=o=>JSON.parse(JSON.stringify(o));
 const isObj=o=>o!==null&&typeof o==='object'&&!Array.isArray(o);
 const S=v=>v==null?'':(typeof v==='string'?v:(typeof v==='number'||typeof v==='boolean')?String(v):null);
+const plural=n=>n+' traveler'+(n===1?'':'s');
 
-/* normalize(raw) -> {state, errors[], notes[]}. Row-by-row checks; state is only returned when it is safe to render. */
-function normalize(raw,from){const errors=[],notes=[],E=m=>{if(errors.length<40)errors.push(m)};
- if(!isObj(raw))return{errors:['The file is not a Group export (expected a JSON object with roster, tracker and ledger).'],notes};
- const v=raw.v??raw.version??(from==='av1-group-v1'?1:undefined); // tolerate a v1 save without a version number
- if(![1,2,3,4].includes(v))return{errors:[`Unknown schema version ${JSON.stringify(v)}. This page reads av1-group v1 to v4.`],notes};
- if(v<4)notes.push(`Migrated from schema v${v}${from?' ('+from+')':''}. The plan dates changed on 3 Nov 2026 (now: fly Mon 9, Braies Tue 10 – Wed 11, huts Thu 12 – Sat 14 with night 2 at Ücia Lavarella, out Sun 15, Ortisei Sun 15 – Mon 16, home Tue 17 Aug 2027): check the tracker dates.`);
- const out={v:GVER,roster:[],tracker:[],ledger:[]};
- if(Array.isArray(raw.mig))out.mig=raw.mig.filter(x=>typeof x==='string').slice(0,20); // one-time migration markers
+/* normalize(raw) -> {state, errors[]}: shape checks only (roster 1–20, statuses, traveler numbers, amounts ≥ 0, one split flag per traveler). */
+function normalize(raw){const errors=[],E=m=>{if(errors.length<40)errors.push(m)};
+ if(!isObj(raw))return{errors:['Not Group data (expected roster, tracker and ledger).']};
+ const out={v:4,roster:[],tracker:[],ledger:[]};
  const str=(o,k,where)=>{const s=S(o[k]);if(s===null){E(`${where}: “${k}” must be text.`);return''}return s};
- let NT=0; // roster size of this candidate, set once the roster is read
- const person=(o,k,where)=>{const s=str(o,k,where).trim();if(s==='')return'';if(!/^\d+$/.test(s)||+s>=NT){E(`${where}: “${k}” must be a traveler number 0–${NT-1} or empty (got ${JSON.stringify(o[k])}).`);return''}return String(+s)};
- const money=(o,k,where)=>{const s=str(o,k,where).trim();if(s==='')return'';const n=Number(s);if(!isFinite(n)||n<0){E(`${where}: “${k}” must be an amount ≥ 0 (got ${JSON.stringify(o[k])}).`);return''}return s};
- if(!Array.isArray(raw.roster))E('Roster is missing or not a list.');
- else if(raw.roster.length<1||raw.roster.length>MAXT||(v<4&&raw.roster.length!==8))E(`Roster has ${raw.roster.length} travelers; it must have ${v<4?'exactly 8 in schema v'+v:'1 to '+MAXT}.`);
+ let NT=0;
+ const person=(o,k,where)=>{const s=str(o,k,where).trim();if(s==='')return'';if(!/^\d+$/.test(s)||+s>=NT){E(`${where}: “${k}” must be a traveler number 0–${NT-1} or empty.`);return''}return String(+s)};
+ const money=(o,k,where)=>{const s=str(o,k,where).trim();if(s==='')return'';const n=Number(s);if(!isFinite(n)||n<0){E(`${where}: “${k}” must be an amount ≥ 0.`);return''}return s};
+ if(!Array.isArray(raw.roster)||raw.roster.length<1||raw.roster.length>MAXT)E(`Roster must have 1 to ${MAXT} travelers.`);
  else raw.roster.forEach((r,i)=>{const w=`Roster #${i+1}`;if(!isObj(r)){E(w+': not an object.');return}out.roster.push({name:str(r,'name',w),email:str(r,'email',w),note:str(r,'note',w)})});
- NT=out.roster.length;if(!NT)return{errors,notes};
- if(!Array.isArray(raw.tracker))E('Booking tracker is missing or not a list.');
+ NT=out.roster.length;if(!NT)return{errors};
+ if(!Array.isArray(raw.tracker))E('Booking tracker is missing.');
  else raw.tracker.forEach((r,i)=>{const w=`Tracker row ${i+1}`;if(!isObj(r)){E(w+': not an object.');return}
   const st=S(r.status)===''?'Not booked':S(r.status);if(!STATUSES.includes(st))E(`${w}: status ${JSON.stringify(r.status)} is not one of ${STATUSES.join(' / ')}.`);
   out.tracker.push({item:str(r,'item',w),date:str(r,'date',w),status:STATUSES.includes(st)?st:'Not booked',bookedBy:person(r,'bookedBy',w),conf:str(r,'conf',w),deposit:money(r,'deposit',w),depositBy:person(r,'depositBy',w),notes:str(r,'notes',w)})});
- if(!Array.isArray(raw.ledger))E('Cost ledger is missing or not a list.');
+ if(!Array.isArray(raw.ledger))E('Cost ledger is missing.');
  else raw.ledger.forEach((r,i)=>{const w=`Ledger line ${i+1}`;if(!isObj(r)){E(w+': not an object.');return}
-  let sp=r.split;if(!Array.isArray(sp)||sp.length!==NT||!sp.every(b=>typeof b==='boolean')){E(`${w}: “split” must be a list of ${NT} true/false values (one per traveler).`);sp=Array(NT).fill(true)}
+  let sp=r.split;if(!Array.isArray(sp)||sp.length!==NT||!sp.every(b=>typeof b==='boolean')){E(`${w}: “split” must be ${NT} true/false values.`);sp=Array(NT).fill(true)}
   out.ledger.push({item:str(r,'item',w),total:money(r,'total',w),split:sp.slice(),paidBy:person(r,'paidBy',w),notes:str(r,'notes',w)})});
- if(!errors.length&&v<4)migrateN3(out,notes);
- const renamed=errors.length?0:migrateItems(out,notes), added=errors.length?false:migrateRoster(out,notes);
- const replanned=errors.length?0:migratePlan(out,notes);
- const lav=errors.length?0:migrateLav(out,notes);
- return errors.length?{errors,notes}:{state:out,errors,notes,renamed:renamed+replanned+lav,added}}
+ return errors.length?{errors}:{state:out,errors}}
 window.normalizeGroup=normalize;
-/* Aug 9 plan (4 Nov 2026): night 2 moves from Rif. Fanes to Ücia Lavarella and the dates/prices change. A saved row that is still an exact old default
-   (item, date or total, and notes unchanged; tracker row with no booking details; ledger line split among all with no payer) takes the current default text.
-   Old defaults are matched by FNV-1a hashes of the originally published build and the unpublished 12–15 Aug build. Edited rows are kept, with a notice. Idempotent. */
-const fnv=s=>{let x=0x811c9dc5;for(const c of s){x^=c.codePointAt(0);x=Math.imul(x,0x01000193)>>>0}return x.toString(36)};
-const OLD_PLAN_T=new Set(["19ma3e5","3cia4e","ayoqds","19xpa06","16jh6nv","25lkqk","fl2ufl","cstrjk","vvd954","1s0ks8u","mnt3pj","9oazho","h0fwez","swzjij","1p4i5qe","19awm"]),OLD_PLAN_L=new Set(["stbqgr","eyc7ni","162yqa1","10q49im","jd03qx","ktruty","myq4yg","311oz3","14l1x3o","1cz6xj2","od3bp5","wxb7uv","12mc3s8","193fvda","xygjen","1hre531","7gudhj","18ziz2x","1xmkt9l","5452cd","1b2d1jv","1f2mxar","1z0gwuy"]);
-const PLAN_T=[[/^Rifugio Biella, hut night 1/,/^Rifugio Biella, hut night 1/],[/^Rifugio Col Gallina, hut night 3/,/^Rifugio Col Gallina, hut night 3/],[/^Rifugio Fanes, hut night 2/,/^Ücia Lavarella, hut night 2/],
- [/^(First-night hotel near Braies|Braies hotel)/,/^Braies hotel/],[/^Ortisei hotel/,/^Ortisei hotel/],[/^9-seat van/,/^9-seat van/],[/^Pontechiesa multi-day/,/^Pontechiesa multi-day/],[/^Bus 442/,/^Bus 442/],[/^International Driving/,/^International Driving/]];
-const PLAN_L=[[/^First night/,/Trenker/],[/^Tourist tax, first/,/^Tourist tax, first/],[/^Rifugio Biella HB/,/^Rifugio Biella HB/],[/^Rifugio Fanes HB/,/^Ücia Lavarella HB/],[/^Rifugio Col Gallina HB/,/^Rifugio Col Gallina HB/],
- [/^Hut tourist tax/,/^Hut tourist tax/],[/^Ortisei, Hotel Rodes/,/^Ortisei, Hotel Rodes/],[/^Seceda/,/^Seceda/],[/^Buses 445/,/^Buses 445/],[/^Cinque Torri chairlift/,/^Cinque Torri chairlift/],[/^Van rental/,/^Van rental/],[/^Fuel/,/^Fuel/],[/^Motorway tolls/,/^Motorway tolls/],[/^Pontechiesa parking/,/^Pontechiesa parking/]];
-function migratePlan(st,notes){let n=0;const left=[],D=GROUP.tracker||[],DL=GROUP.ledger||[];
- st.tracker.forEach((r,i)=>{const m=PLAN_T.find(x=>x[0].test(r.item));if(!m)return;const nw=D.find(x=>m[1].test(x.item));if(!nw||(nw.item===r.item&&nw.date===r.date&&nw.notes===r.notes))return;
-  const old=OLD_PLAN_T.has(fnv([r.item,r.date,r.notes].join('|'))),free=r.status==='Not booked'&&!r.bookedBy&&!r.conf&&!r.deposit&&!r.depositBy;
-  if(old&&free){Object.assign(r,{item:nw.item,date:nw.date,notes:nw.notes});n++;notes.push(`Tracker row ${i+1} is now “${nw.item}” (${nw.date}).`)}
-  else if(/Fanes/.test(r.item))left.push(`Tracker row ${i+1} “${r.item.slice(0,60)}” was edited, so it was left as is: hut night 2 is now Ücia Lavarella (Fri 13 Aug 2027, pending).`)});
- st.ledger.forEach((r,i)=>{const m=PLAN_L.find(x=>x[0].test(r.item));if(!m)return;const nw=DL.find(x=>m[1].test(x.item));if(!nw||(nw.item===r.item&&nw.total===r.total&&nw.notes===r.notes))return;
-  const old=OLD_PLAN_L.has(fnv([r.item,r.total,r.notes].join('|'))),free=r.split.every(Boolean)&&r.paidBy==='';
-  if(old&&free){const was=r.total;Object.assign(r,{item:nw.item,total:nw.total,notes:nw.notes});n++;notes.push(`Ledger line ${i+1} is now “${nw.item}” (${nw.total?'€'+nw.total:'price TBD'}; was €${was}).`)}
-  else if(/Fanes/.test(r.item))left.push(`Ledger line ${i+1} “${r.item.slice(0,60)}” was edited, so its amount is unchanged: hut night 2 is now Ücia Lavarella (€969, pending).`)});
- const miss=D.filter(x=>!st.tracker.some(r=>r.item===x.item)).map(x=>x.item.split(',')[0].split(' (')[0]);
- if(n)notes.unshift('The plan changed (4 Nov 2026): fly Mon 9, Braies Tue 10 – Wed 11, huts Thu 12 – Sat 14 (night 2 now Ücia Lavarella, pending), out Sun 15, Ortisei Sun 15 – Mon 16, home Tue 17 Aug 2027. Untouched default rows were updated:');
- if(n&&miss.length)notes.push('Not in your saved tracker (add them if you want them): '+miss.join(' · ')+'.');
- notes.push(...left);return n}
-
-/* Tweaks (4 Nov 2026, after the 7cb7e8c build): Ücia Lavarella was requested that morning, so its default status is now 'Requested'.
-   Only a row still at the old default ('Not booked', no booked-by / confirmation / deposit / payer) changes; a status a user set is never overwritten.
-   Rows whose notes are still exactly the 7cb7e8c default text also take the new notes (Col Gallina price source). Idempotent. */
-const LAVMIG='lav-requested-2026-11-04';if(typeof GROUP==='object'&&GROUP)GROUP.mig=[LAVMIG]; // fresh state counts as already migrated
-const OLD_7CB={"Ücia Lavarella, hut night 2":"PENDING: reservation request submitted, awaiting confirmation. €969 HB for 9 [S108].",
- "Rifugio Col Gallina, hut night 3":"bukly online (rifugiocolgallina.bukly.com). 50% at booking, non-refundable. Plan: Room 3 (5 beds) + 4 beds in Room 5, ≈€1,130 [S108]."};
-const OLD_7CB_L={"Rifugio Col Gallina HB × 9":"≈ Room 3 (5 beds) + 4 beds in Room 5 [S108]. Live per-bed prices [S107] give €1,120 for 5 × Stanza 5 + 4 × Stanza 3."};
-function migrateLav(st,notes){let n=0;const once=!(st.mig||[]).includes(LAVMIG);const D=GROUP.tracker||[],DL=GROUP.ledger||[];
- st.tracker.forEach((r,i)=>{const k=Object.keys(OLD_7CB).find(k=>r.item.startsWith(k));if(!k)return;const nw=D.find(x=>x.item===r.item);if(!nw)return;
-  if(r.notes===OLD_7CB[k]&&nw.notes!==r.notes){r.notes=nw.notes;n++;notes.push(`Tracker row ${i+1} “${r.item.split(',')[0]}”: default notes updated to the current text.`)}
-  const free=r.status==='Not booked'&&!r.bookedBy&&!r.conf&&!r.deposit&&!r.depositBy;
-  if(once&&free&&nw.status==='Requested'){r.status='Requested';n++;notes.push(`Tracker row ${i+1} “${r.item.split(',')[0]}” is now Requested (pending): the reservation request went in on 4 Nov 2026. It was still at the default “Not booked”, so nothing you entered changed.`)}});
- st.ledger.forEach((r,i)=>{const o=OLD_7CB_L[r.item];if(o&&r.notes===o){const nw=DL.find(x=>x.item===r.item);if(nw&&nw.notes!==o){r.notes=nw.notes;n++;notes.push(`Ledger line ${i+1} “${r.item}”: default notes updated (amount unchanged, €${r.total}).`)}}});
- st.mig=[...new Set([...(st.mig||[]),LAVMIG])];return n}
-
-/* v3→v4: hut night 3 moved from Lagazuoi to Col Gallina. Rename only an untouched default row; an edited one is left alone with a one-line notice. */
-function migrateN3(st,notes){const newRow=(GROUP.tracker||[]).find(r=>NEW_N3.test(r.item));if(!newRow)return;
- const hasNew=st.tracker.some(r=>/col gallina/i.test(r.item));
- st.tracker.forEach((r,i)=>{if(!/lagazuoi/i.test(r.item)||!/hut night 3/i.test(r.item))return;
-  const untouched=r.item===OLD_LAG.item&&r.status==='Not booked'&&!r.bookedBy&&!r.conf&&!r.deposit&&!r.depositBy&&OLD_LAG.variants.some(x=>x.date===r.date&&x.notes===r.notes);
-  if(untouched&&!hasNew){st.tracker[i]=clone(newRow);notes.push(`Tracker row ${i+1}: the old default “${OLD_LAG.item}” was renamed to “${newRow.item}” (${newRow.date}).`)}
-  else notes.push(`Tracker row ${i+1} “${r.item.slice(0,60)}” was ${untouched?'kept because a Col Gallina row already exists':'edited, so it was left as is'}: hut night 3 is now Rifugio Col Gallina (Sat 14 Aug 2027).`)});
- if(st.ledger.some(r=>/lagazuoi/i.test(r.item)))notes.push('The cost ledger still has a Lagazuoi line; the current default for night 3 is “Rifugio Col Gallina HB”. Check the amounts.')}
-/* group of 8 → 9: rename the item text of untouched default rows (status Not booked, no booker, confirmation or deposit); the row's date and notes are kept.
-   A row with booking details keeps its text and gets a one-line notice. Idempotent: a renamed row no longer matches. Schema stays v4. */
-function migrateItems(st,notes){let n=0;const left=[];
- st.tracker.forEach((r,i)=>{const o=OLD_ITEMS.find(x=>x[0]===r.item);if(!o)return;const nw=(GROUP.tracker||[]).find(x=>o[1].test(x.item));if(!nw||nw.item===r.item)return;
-  const untouched=r.status==='Not booked'&&!r.bookedBy&&!r.conf&&!r.deposit&&!r.depositBy;
-  if(untouched){r.item=nw.item;n++;notes.push(`Tracker row ${i+1}: the old default “${o[0]}” is now “${nw.item}” (the group is now 9).`)}
-  else left.push(`Tracker row ${i+1} “${r.item}” has booking details, so it was left as is: the plan is now for 9. Check the booking.`)});
- notes.push(...left);return n}
-/* group of 8 → 9: Dylan joins only an untouched 8-person default roster (same names in order, no notes, emails blank or the defaults).
-   Ledger lines: an untouched old 8-person default (same item, total and notes, split among all, no payer) becomes the current 9-person default;
-   an untouched current default (van, fuel, tolls, parking) just adds him to its split; any other line keeps its amount and does not include him (notice).
-   Idempotent: a roster with 9 no longer matches. An edited roster is left alone (initGroup shows a one-time notice). Schema stays v4. */
-const hasNinth=st=>st.roster.some(r=>r.name.trim().toLowerCase()===NINTH.toLowerCase());
-function migrateRoster(st,notes){const D=GROUP.roster||[],dy=D.find(r=>r.name===NINTH);if(!dy||D.length!==9)return false;
- if(st.roster.length!==8||!st.roster.every((r,i)=>r.name===D[i].name&&r.note===''&&(r.email===''||r.email===D[i].email)))return false;
- st.roster.push(clone(dy));const lines=[],left=[];
- st.ledger.forEach((r,i)=>{const free=r.split.every(Boolean)&&r.paidBy==='';const o=free&&OLD_LEDGER.find(x=>x[0]===r.item&&x[1]===r.total&&x[2]===r.notes);
-  const nw=o&&(GROUP.ledger||[]).find(x=>o[3].test(x.item)),cur=free&&(GROUP.ledger||[]).some(x=>x.item===r.item&&x.total===r.total&&x.notes===r.notes);
-  if(nw){Object.assign(r,{item:nw.item,total:nw.total,notes:nw.notes});r.split.push(true);lines.push(`Ledger line ${i+1}: “${o[0]}” (€${o[1]}) is now “${nw.item}” (€${nw.total}), split among all 9.`)}
-  else if(cur)r.split.push(true);
-  else{r.split.push(false);left.push(`Ledger line ${i+1} “${r.item||'(no name)'}” was edited or added by you, so its amount is unchanged and ${NINTH} is not in its split. Tick him there if he shares it.`)}});
- notes.push(`Added ${NINTH} as traveler 9 (the group is now 9). The shared van, fuel, tolls and parking lines are now split among all 9.`,...lines,...left);return true}
-/* Remove traveler j: drop their split ticks (their share moves to the others on each line) and clear "booked by" / "deposit paid by" / "paid by"
-   that point to them; later travelers shift down one place. Pure: returns a new state and what changed. */
-function impactOf(st,j){const J=String(j),led=st.ledger;
- return{splits:led.filter(r=>r.split[j]).length,alone:led.filter(r=>r.split[j]&&r.split.filter(Boolean).length===1).map(r=>r.item||'(no name)'),
-  paid:led.filter(r=>r.paidBy===J).map(r=>({item:r.item,total:cents(r.total)})),booked:st.tracker.filter(r=>r.bookedBy===J).length,deposits:st.tracker.filter(r=>r.depositBy===J).length}}
-function removeTraveler(st,j){const s=clone(st),fix=v=>v===''||v==null?'':(+v===j?'':+v>j?String(+v-1):String(+v));
- s.roster.splice(j,1);s.ledger.forEach(r=>{r.split.splice(j,1);r.paidBy=fix(r.paidBy)});s.tracker.forEach(r=>{r.bookedBy=fix(r.bookedBy);r.depositBy=fix(r.depositBy)});return s}
-function addTraveler(st,joinAll){const s=clone(st);s.roster.push({name:'',email:'',note:''});s.ledger.forEach(r=>{r.split.push(joinAll?r.split.every(Boolean):false)});return s}
-Object.assign(window,{groupRemoveTraveler:removeTraveler,groupAddTraveler:addTraveler,groupImpact:impactOf});
-
-/* ---- load / save ---- */
-let recovery=null, loadNotes=[], migratedFrom=null, textMigrated=false, ninthAdded=false;
-function readKey(k){let raw;try{raw=localStorage.getItem(k)}catch(e){return{err:'Browser storage is blocked ('+e.name+').'}}
- if(raw==null)return null;let o;try{o=JSON.parse(raw)}catch(e){return{raw,err:'The saved text is not valid JSON.'}}
- const n=normalize(o,k);return n.state?{raw,state:n.state,notes:n.notes,renamed:n.renamed,added:n.added}:{raw,err:n.errors.slice(0,3).join(' ')+(n.errors.length>3?` (+${n.errors.length-3} more)`:'')}}
-function lastGood(){try{const o=JSON.parse(localStorage.getItem(GOOD)||'null');const n=o&&normalize(o.data);return n&&n.state?{state:n.state,savedAt:o.savedAt}:null}catch(e){return null}}
-function loadG(){const cur=readKey(GKEY);
- if(cur&&cur.state){if(cur.renamed||cur.added){textMigrated=true;ninthAdded=!!cur.added;loadNotes=cur.notes}return cur.state}
- if(cur&&cur.err&&cur.raw!=null){recovery={raw:cur.raw,err:cur.err,good:lastGood()};return clone(GROUP)}
- for(const k of OLDKEYS){const o=readKey(k);if(o&&o.state){loadNotes=o.notes;migratedFrom=k;return o.state}
-  if(o&&o.err&&o.raw!=null){recovery={raw:o.raw,err:`Older Group data (key ${k}) could not be converted: ${o.err}`,good:null};return clone(GROUP)}}
- return clone(GROUP)}
-let G=loadG();
-function status(msg,bad){const t=document.getElementById('gSaved');if(t){t.textContent=msg;t.classList.toggle('g-bad',!!bad)}}
-function saveG(){if(recovery){status('Not saved: choose an option in the red box above first.',true);return false}
- const s=JSON.stringify(G);
- try{localStorage.setItem(GKEY,s);localStorage.setItem(GOOD,JSON.stringify({savedAt:new Date().toISOString(),data:G}))}
- catch(e){status('Could not save in this browser ('+(e.name==='QuotaExceededError'?'storage full':e.name)+'). Export JSON to keep your edits.',true);return false}
- status('Saved in this browser '+new Date().toLocaleTimeString());return true}
-function stashBad(){if(!recovery)return;try{localStorage.setItem(BAD,recovery.raw)}catch(e){}}
-/* replace G with a candidate only if it renders; never keep a state that crashes the tab */
-function applyG(cand,okMsg,action){const prev=G;G=cand;
- try{renderG()}catch(e){G=prev;try{renderG()}catch(_){}showMsg(['This data could not be displayed ('+e.message+'). Nothing was changed.'],true);return false}
- if(recovery){stashBad();recovery=null;renderG()}
- saveG();if(okMsg)showMsg(okMsg,false,action);return true}
-function showMsg(lines,bad,action){const m=document.getElementById('gMsg');if(!m)return;m.innerHTML='';if(!lines||!lines.length){m.hidden=true;return}
- m.hidden=false;m.className='g-msg '+(bad?'g-msg--bad':'g-msg--ok');m.setAttribute('role',bad?'alert':'status');
- const [h,...rest]=lines;m.append(el('p',{},[el('b',{textContent:h})]));if(rest.length)m.append(el('ul',{},rest.map(x=>el('li',{textContent:x}))));
- if(action)m.append(el('div',{className:'gbar'},[el('button',{textContent:action.label,on:{click:action.run}})]))}
 
 const cents=x=>Math.round((parseFloat(x)||0)*100);
 const eur=c=>'€'+(c/100).toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -336,7 +208,10 @@ function settle(s){const n=s.roster.length,shareAll=Array(n).fill(0),share=Array
  return{shareAll,share,paid,net,transfers:tr,unpaid}}
 window.settle=settle;
 function el(tag,props={},kids=[]){const e=document.createElement(tag);for(const k in props){if(k==='on')for(const ev in props.on)e.addEventListener(ev,props.on[ev]);else if(k in e)e[k]=props[k];else e.setAttribute(k,props[k])}kids.forEach(c=>e.append(c));return e}
+
 const nm=i=>(G.roster[i]&&G.roster[i].name)||('Traveler '+(+i+1));
+const TBD='TBD';
+const fmtMoney=v=>v===''||v==null?TBD:eur(cents(v)); // a blank or unreadable amount is shown as TBD, never NaN
 /* initials for chips and avatars: two letters (one-word name: its first two, so Dylan → DY); when two travelers would share
    initials, each gets the first two letters of the first name + last initial (Rowan/Rachel Comstock → ROC/RAC), and if that still
    clashes, its roster number (RC3). Always unique, so a chip is never ambiguous; the full name is in the title and aria-label. */
@@ -344,82 +219,13 @@ function iniOf(n){const w=String(n||'').trim().split(/\s+/).filter(Boolean);retu
 function iniAll(names){const base=names.map(iniOf),cnt=k=>base.filter(x=>x===k).length;
  const long=names.map((n,i)=>{if(base[i]==='?'||cnt(base[i])<2)return base[i];const w=String(n).trim().split(/\s+/);return ([...w[0]].slice(0,2).join('')+(w.length>1?[...w[w.length-1]][0]:'')).toUpperCase()});
  return long.map((x,i)=>x==='?'?x:long.filter(y=>y===x).length>1?base[i]+(i+1):x)}
-function personSel(val,onch,label){const s=el('select',{'aria-label':label,on:{change:e=>{onch(e.target.value);saveG();renderG()}}});s.append(el('option',{value:'',textContent:'—'}));G.roster.forEach((r,i)=>s.append(el('option',{value:String(i),textContent:nm(i)})));s.value=(val===''||val==null)?'':String(val);return s}
-function txt(obj,key,label,opts={}){return el('input',Object.assign({},opts.attrs||{},{value:obj[key]??'','aria-label':label,on:{input:e=>{obj[key]=e.target.value;saveG();if(opts.re)renderSettle()},change:()=>{if(opts.full)renderG()}}}))}
-const SR=t=>el('span',{className:'sr-only',textContent:t});
-function table(head,rows,label){const t=el('table',{className:'gt'});t.append(el('tr',{},head.map(h=>el('th',{scope:'col'},[h===''?SR('Delete'):h]))));rows.forEach(r=>t.append(r));
- return el('div',{className:'gt-scroll',role:'region','aria-label':label+' (scrolls sideways)',tabIndex:0},[t])}
-const rowName=(r,i,what)=>`${what} ${i+1}${r.item?' ('+r.item.slice(0,40)+')':''}`;
-/* The recovery box lives outside #gBody and is built once, so table re-renders (e.g. a change event on blur) never swap its buttons mid-click. */
-function renderRecovery(){let box=document.getElementById('gRec');if(!recovery){if(box)box.remove();return}if(box)return;const R=recovery;
- box=el('div',{id:'gRec',className:'g-msg g-msg--bad',role:'alert'},[el('p',{},[el('b',{textContent:'The Group data saved in this browser could not be read. Nothing has been deleted.'})]),
-  el('p',{className:'small',textContent:'Reason: '+R.err+' Until you choose below, the defaults are shown and edits are not saved.'})]);
- const bar=el('div',{className:'gbar'});
- if(R.good)bar.append(el('button',{textContent:'Restore last good copy (saved '+new Date(R.good.savedAt).toLocaleString()+')',on:{click:()=>applyG(clone(R.good.state),['Restored the last good copy. The damaged data is kept in this browser under '+BAD+'.'])}}));
- bar.append(el('button',{textContent:'Download the damaged data',on:{click:()=>dl('av1_group_damaged_'+new Date().toISOString().slice(0,10)+'.txt',R.raw,'text/plain')}}));
- bar.append(el('button',{textContent:'Start fresh (downloads the damaged data first)',on:{click:()=>{dl('av1_group_damaged_'+new Date().toISOString().slice(0,10)+'.txt',R.raw,'text/plain');applyG(clone(GROUP),['Started fresh from the defaults. The damaged data was downloaded and is also kept under '+BAD+'.'])}}}));
- box.append(bar);const body=document.getElementById('gBody');body.parentNode.insertBefore(box,body)}
-const plural=n=>n+' traveler'+(n===1?'':'s');
-/* the static page text names the roster size and storage key; keep both in step with the data (template text is left as written otherwise) */
-function syncCopy(){const h=document.querySelector('#group h1');if(h&&/^Group manager: \d+ travel/.test(h.textContent))h.textContent='Group manager: '+plural(G.roster.length);
- document.querySelectorAll('#group code').forEach(c=>{if(/^av1-group-v\d+$/.test(c.textContent))c.textContent=GKEY})}
-function askRemove(j){const who=nm(j),x=impactOf(G,j),L=[];
- if(G.roster.length<=1){showMsg(['The roster needs at least one traveler.'],true);return}
- if(x.splits)L.push(`· ${x.splits} ledger line${x.splits>1?'s are':' is'} split with ${who}: their share moves to the others on ${x.splits>1?'each':'that'} line.`);
- if(x.alone.length)L.push(`· ${x.alone.length} line${x.alone.length>1?'s are':' is'} split with ${who} only (${x.alone.join(', ').slice(0,80)}): nobody will share ${x.alone.length>1?'them':'it'} until you tick someone.`);
- if(x.paid.length)L.push(`· ${x.paid.length} line${x.paid.length>1?'s':''} paid by ${who} (${eur(x.paid.reduce((a,p)=>a+p.total,0))}) become “not yet paid”.`);
- if(x.booked||x.deposits)L.push(`· Booking tracker: ${x.booked} “booked by” and ${x.deposits} “deposit paid by” entr${x.booked+x.deposits>1?'ies':'y'} for ${who} are cleared.`);
- if(!confirm(`Remove ${who} (traveler ${j+1}) from the roster?\n\n`+(L.length?'This also changes:\n'+L.join('\n')+'\n\n':`${who} has no splits, payments or bookings.\n\n`)+'Travelers after them move up one place. You can undo right after.'))return;
- const prev=clone(G);if(applyG(removeTraveler(G,j),[`Removed ${who}. The roster now has ${plural(G.roster.length-1)}.`,...L.map(l=>l.slice(2))],{label:'Undo remove',run:()=>applyG(prev,[`Restored ${who}.`])}))document.getElementById('gAddT')?.focus()}
-function askAdd(){if(G.roster.length>=MAXT){showMsg([`The roster is limited to ${MAXT} travelers.`],true);return}
- const all=G.ledger.filter(r=>r.split.every(Boolean)).length,n=G.roster.length+1;
- const join=all>0&&confirm(`Add traveler ${n}.\n\nAlso include them in the ${all} ledger line${all>1?'s':''} currently split among everyone? Totals stay the same; each share gets smaller.\n\nOK = include them · Cancel = leave their split boxes unticked`);
- if(applyG(addTraveler(G,join),[`Added traveler ${n}. Type their name in the roster.`+(all?(join?` They are in the ${all} line${all>1?'s':''} split among everyone.`:' They are not in any ledger split yet.'):'')])){const f=document.querySelector(`.gName[data-i="${n-1}"]`);if(f)f.focus()}}
-function renderG(){const root=document.getElementById('gBody');root.innerHTML='';renderRecovery();syncCopy();const n=G.roster.length;
- // roster
- root.append(el('h2',{textContent:`1. Roster (${plural(n)})`}),el('p',{className:'small',textContent:`Names feed every "booked by" / "paid by" list. Emails are roster data only; this page never sends anything. 1 to ${MAXT} travelers.`}));
- root.append(table(['#','Name','Email','Note',''],G.roster.map((r,i)=>el('tr',{},[el('td',{textContent:i+1}),el('td',{},[txt(r,'name',`Traveler ${i+1} name`,{full:true,attrs:{className:'gName','data-i':i}})]),el('td',{},[txt(r,'email',`Traveler ${i+1} email`,{attrs:{type:'email',placeholder:'(none given)'}})]),el('td',{},[txt(r,'note',`Traveler ${i+1} note`)]),
-  el('td',{},[el('button',{textContent:'✕',title:'Remove traveler','aria-label':`Remove traveler ${i+1} (${nm(i)})`,disabled:n<=1,on:{click:()=>askRemove(i)}})])])),'Roster'));
- root.append(el('button',{id:'gAddT',textContent:'+ Add traveler',disabled:n>=MAXT,on:{click:askAdd}}));
- // tracker
- root.append(el('h2',{textContent:'2. Booking tracker'}),el('p',{className:'small',textContent:'Dates are the plan: hotel near Braies Tue 10 – Wed 11 Aug, hut nights Thu 12 – Sat 14 Aug 2027 (Biella, Ücia Lavarella pending, Col Gallina), walk out Sun 15 Aug (Ferragosto: bus 52 at 14:20 / 16:20 only), Ortisei Sun 15 – Mon 16, Seceda Mon 16, home Tue 17. Status: Not booked / Requested / Confirmed / Paid / Cancelled.'}));
- root.append(table(['Item','Date','Status','Booked by','Confirmation #','Deposit (€)','Deposit paid by','Notes',''],G.tracker.map((r,i)=>{const w=rowName(r,i,'Tracker row');
-  const st=el('select',{className:'gStatus','aria-label':w+': status',on:{change:e=>{r.status=e.target.value;saveG();renderG()}}},STATUSES.map(x=>el('option',{value:x,textContent:x})));st.value=r.status;
-  return el('tr',{className:'st-'+String(r.status).replace(/ /g,'')},[el('td',{},[txt(r,'item',w+': item',{attrs:{className:'wide'}})]),el('td',{},[txt(r,'date',w+': date',{attrs:{className:'mid'}})]),el('td',{},[st]),el('td',{},[personSel(r.bookedBy,v=>r.bookedBy=v,w+': booked by')]),el('td',{},[txt(r,'conf',w+': confirmation number')]),el('td',{},[txt(r,'deposit',w+': deposit in euros',{attrs:{type:'number',step:'0.01',min:'0',className:'num'}})]),el('td',{},[personSel(r.depositBy,v=>r.depositBy=v,w+': deposit paid by')]),el('td',{},[txt(r,'notes',w+': notes',{attrs:{className:'wide'}})]),el('td',{},[el('button',{textContent:'✕',title:'Delete row','aria-label':'Delete '+w,on:{click:()=>{if(confirm('Delete this tracker row?')){G.tracker.splice(i,1);saveG();renderG()}}}})])])}),'Booking tracker'));
- root.append(el('button',{textContent:'+ Add tracker row',on:{click:()=>{G.tracker.push({item:'',date:'',status:'Not booked',bookedBy:'',conf:'',deposit:'',depositBy:'',notes:''});saveG();renderG()}}}));
- // ledger
- root.append(el('h2',{textContent:'3. Cost ledger'}),el('p',{className:'small',textContent:'Defaults are 2026-price ESTIMATES (guide §6). Replace them with real amounts. Untick people to split a line among a subset.'}));
- root.append(table(['Line item','Total (€)','Split among','Per person','Paid by','Notes',''],G.ledger.map((r,i)=>{const w=rowName(r,i,'Ledger line');const pp=el('td',{className:'pp num'});
-  const upd=()=>{const k=r.split.filter(Boolean).length;pp.textContent=k?eur(Math.round(cents(r.total)/k)):'—'};upd();
-  const boxes=el('td',{className:'split'},(IN=>G.roster.map((p,j)=>el('label',{title:nm(j)},[el('input',{type:'checkbox',checked:!!r.split[j],'aria-label':w+': split with '+nm(j),on:{change:e=>{r.split[j]=e.target.checked;saveG();upd();renderSettle()}}}),el('span',{'aria-hidden':'true',textContent:IN[j]})])))(iniAll(G.roster.map(p=>p.name))));
-  const tot=txt(r,'total',w+': total in euros',{re:true,attrs:{type:'number',step:'0.01',min:'0',className:'num gTotal'}});tot.addEventListener('input',upd);
-  return el('tr',{},[el('td',{},[txt(r,'item',w+': line item',{attrs:{className:'wide'}})]),el('td',{},[tot]),boxes,pp,el('td',{},[personSel(r.paidBy,v=>r.paidBy=v,w+': paid by')]),el('td',{},[txt(r,'notes',w+': notes',{attrs:{className:'wide'}})]),el('td',{},[el('button',{textContent:'✕',title:'Delete row','aria-label':'Delete '+w,on:{click:()=>{if(confirm('Delete this ledger line?')){G.ledger.splice(i,1);saveG();renderG()}}}})])])}),'Cost ledger'));
- root.append(el('button',{textContent:'+ Add ledger line',on:{click:()=>{G.ledger.push({item:'',total:'',split:Array(G.roster.length).fill(true),paidBy:'',notes:''});saveG();renderG()}}}));
- root.append(el('h2',{textContent:'4. Settlement: who owes whom'}),el('div',{id:'gSettle'}));renderSettle()}
-function renderSettle(){const box=document.getElementById('gSettle');if(!box)return;box.innerHTML='';const s=settle(G);
- const sum=a=>a.reduce((x,y)=>x+y,0);
- box.append(el('p',{className:'small',textContent:'Balances count only lines that have a "paid by". Positive balance = is owed money.'}));
- const rows=G.roster.map((r,i)=>el('tr',{},[el('td',{textContent:nm(i)}),el('td',{className:'num',textContent:eur(s.shareAll[i])}),el('td',{className:'num',textContent:eur(s.paid[i])}),el('td',{className:'num',textContent:eur(s.share[i])}),el('td',{className:'num '+(s.net[i]>0?'pos':s.net[i]<0?'neg':''),textContent:eur(s.net[i])})]));
- rows.push(el('tr',{className:'tot'},[el('td',{textContent:'Total'}),el('td',{className:'num',textContent:eur(sum(s.shareAll))}),el('td',{className:'num',textContent:eur(sum(s.paid))}),el('td',{className:'num',textContent:eur(sum(s.share))}),el('td',{className:'num',textContent:eur(sum(s.net))})]));
- box.append(table(['Traveler','Share of all lines','Paid','Share of paid lines','Balance'],rows,'Settlement'));
- const tl=el('ol',{id:'gTransfers'});s.transfers.forEach(t=>tl.append(el('li',{textContent:`${nm(t.from)} pays ${nm(t.to)} ${eur(t.amount)}`})));
- box.append(el('h3',{textContent:`Transfers (${s.transfers.length})`}),s.transfers.length?tl:el('p',{textContent:'Nothing to settle yet. Set "paid by" on ledger lines.'}));
- if(s.unpaid.length)box.append(el('p',{className:'small',textContent:'Not yet paid by anyone: '+s.unpaid.map(u=>u.item+' '+eur(u.total)).join(' · ')}))}
 
-// ---- CSV / JSON export ----
-// Cells that a spreadsheet would run as a formula (= + - @ tab CR) get a leading apostrophe; plain numbers like -12.50 are left alone.
+// ---- CSV helpers ----
 const q=v=>{v=v==null?'':String(v);if(/^[=+\-@\t\r]/.test(v)&&!/^[+-]?\d+(\.\d+)?$/.test(v))v="'"+v;return /[",\r\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v};
 const csv=rows=>'\ufeff'+rows.map(r=>r.map(q).join(',')).join('\r\n');
 function dl(name,text,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000)}
-const pn=v=>v===''||v==null?'':nm(+v);
-const TB=b=>b?'TRUE':'FALSE';
-function exportCSV(which){const s=settle(G);
- if(which==='roster')dl('av1_roster.csv',csv([['#','Name','Email','Note'],...G.roster.map((r,i)=>[i+1,r.name,r.email,r.note])]),'text/csv');
- if(which==='tracker')dl('av1_tracker.csv',csv([['Item','Date','Status','Booked by','Confirmation #','Deposit (EUR)','Deposit paid by','Notes'],...G.tracker.map(r=>[r.item,r.date,r.status,pn(r.bookedBy),r.conf,r.deposit,pn(r.depositBy),r.notes])]),'text/csv');
- if(which==='ledger'){const rows=[['Line item','Total (EUR)','Split among','Per person (EUR)','Paid by','Notes',...G.roster.map((r,i)=>'Split: '+nm(i))],...G.ledger.map(r=>{const k=r.split.filter(Boolean).length;return[r.item,r.total,r.split.map((b,i)=>b?nm(i):null).filter(Boolean).join('; '),k?(cents(r.total)/k/100).toFixed(2):'',pn(r.paidBy),r.notes,...r.split.map(TB)]}),[],['Settlement'],['Traveler','Share of all lines','Paid','Share of paid lines','Balance'],...G.roster.map((r,i)=>[nm(i),(s.shareAll[i]/100).toFixed(2),(s.paid[i]/100).toFixed(2),(s.share[i]/100).toFixed(2),(s.net[i]/100).toFixed(2)]),[],['Transfers'],['From','To','Amount (EUR)'],...s.transfers.map(t=>[nm(t.from),nm(t.to),(t.amount/100).toFixed(2)])];dl('av1_ledger.csv',csv(rows),'text/csv')}}
-function exportJSON(){dl('av1_group_'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(Object.assign({v:GVER,version:GVER,app:'av1-group',exportedAt:new Date().toISOString()},clone(G)),null,1),'application/json')}
 
-// ---- Sheet CSV import (File > Download > CSV of the Roster, Bookings & Deposits, Expenses & Splits tabs) ----
+// ---- Sheet CSV parsing (header matching: columns by header text, travelers by name) ----
 function parseCSV(t){t=t.replace(/^\ufeff/,'');const rows=[];let row=[],f='',i=0,qd=false;
  for(;i<t.length;i++){const c=t[i];
   if(qd){if(c==='"'){if(t[i+1]==='"'){f+='"';i++}else qd=false}else f+=c}
@@ -433,17 +239,17 @@ function amount(s){s=String(s??'').replace(/[€\s\u00a0]|EUR/gi,'');if(s==='')r
 function bool(s){s=H(s);if(['true','yes','y','1','x','✓'].includes(s))return true;if(['false','no','n','0',''].includes(s))return false;return null}
 function sheetKind(h){if(h[0]==='traveler')return'balances';if(h.includes('line item')&&h.some(x=>x.startsWith('total')))return'expenses';if(h.includes('item')&&h.includes('status'))return'bookings';if(h.includes('name')&&(h[0]==='#'||h.includes('email')))return'roster';return null}
 const TABN={roster:'Roster',bookings:'Bookings & Deposits',expenses:'Expenses & Splits'};
-/* files: [{name,text}] -> {state, summary[], errors[]}; all-or-nothing */
-function importSheetCSV(files){const errors=[],summary=[],E=m=>{if(errors.length<40)errors.push(m)};const parsed={};
+/* files: [{name,text}], opt {base, lenient} -> {state, summary[], warn[], errors[]}. Lenient: a bad cell (text in an amount, unknown name) is a warning, not a failure. */
+function importSheetCSV(files,opt={}){const errors=[],summary=[],warn=[],E=m=>{if(errors.length<40)errors.push(m)},W=m=>{if(warn.length<40)warn.push(m)};const parsed={};const base=opt.base||G;
  const rows0=(p,col)=>`"${p.raw[col]}"`;
  for(const f of files){const rows=parseCSV(f.text);const hi=rows.findIndex(r=>r.some(c=>c.trim()!==''));if(hi<0){E(`${f.name}: the file is empty.`);continue}
   const h=rows[hi].map(H),kind=sheetKind(h);
-  if(kind==='balances'){E(`${f.name}: this is the Balances tab. It is computed from the other tabs and is never imported.`);continue}
+  if(kind==='balances')continue; // read separately by readBalances()
   if(!kind){E(`${f.name}: not a Roster, Bookings & Deposits or Expenses & Splits export (first row: ${rows[hi].slice(0,4).join(', ')}).`);continue}
   if(parsed[kind]){E(`${f.name}: a second ${TABN[kind]} file was chosen; pick one per tab.`);continue}
   const body=[];for(let i=hi+1;i<rows.length;i++){if(kind==='expenses'&&H(rows[i][0])==='settlement')break;if(rows[i].every(c=>c.trim()===''))continue;body.push({n:i+1,c:rows[i]})}
   parsed[kind]={f:f.name,h,raw:rows[hi],body}}
- const cand=clone(G),oldRoster=G.roster;
+ const cand=clone(base),oldRoster=base.roster;
  if(parsed.roster){const {f,h,body}=parsed.roster,ci=k=>h.indexOf(k),cell=(r,k)=>ci(k)>=0?unq(r.c[ci(k)]):'';
   if(ci('name')<0)E(`${f}: no “Name” column.`);
   else{const rows=body.filter(r=>cell(r,'name')!==''||cell(r,'email')!==''||cell(r,'note')!==''); // a numbered row with no name, email or note is a placeholder
@@ -461,12 +267,12 @@ function importSheetCSV(files){const errors=[],summary=[],E=m=>{if(errors.length
    cand.ledger.forEach((r,i)=>{r.paidBy=re(r.paidBy,`Ledger line ${i+1}`);const sp=Array(NN).fill(false);r.split.forEach((b,j)=>{if(map[j]!==undefined)sp[+map[j]]=b});r.split=sp});
    if(added.length)summary.push(`Note: ${added.join(', ')} ${added.length>1?'are':'is'} not in any ledger split yet (the Expenses & Splits CSV was not chosen).`);
    if(dropped.length)summary.push(`Note: ${dropped.join(', ')} left the roster; their ledger shares moved to the others on each line.`)}}
- const person=(v,where,col)=>{v=unq(v);if(v==='')return'';const k=who.get(H(v));if(k===undefined){E(`${where}: “${col}” = "${v}" is not a name in the roster (${cand.roster.map(r=>r.name).join(', ')}).`);return''}return k};
+ const person=(v,where,col)=>{v=unq(v);if(v==='')return'';const k=who.get(H(v));if(k===undefined){(opt.lenient?W:E)(`${where}: “${col}” = "${v}" is not a name in the roster (${cand.roster.map(r=>r.name).join(', ')}).`);return''}return k};
  if(parsed.bookings){const {f,h,body}=parsed.bookings,need=['item','date','status','booked by','confirmation #','deposit (eur)','deposit paid by','notes'];
   const miss=need.filter(k=>!h.includes(k));if(miss.length)E(`${f}: missing column(s): ${miss.join(', ')}.`);
   else{const g=(r,k)=>unq(r.c[h.indexOf(k)]);cand.tracker=body.map(r=>{const w=`${f} row ${r.n}`;
-   let st=g(r,'status');const S2=STATUSES.find(x=>H(x)===H(st));if(st==='')st='Not booked';else if(!S2)E(`${w}: status "${st}" is not one of ${STATUSES.join(' / ')}.`);else st=S2;
-   const dep=amount(g(r,'deposit (eur)'));if(dep===null)E(`${w}: deposit "${g(r,'deposit (eur)')}" is not an amount.`);
+   let st=g(r,'status');const S2=STATUSES.find(x=>H(x)===H(st));if(st==='')st='Not booked';else if(!S2)(opt.lenient?W:E)(`${w}: status "${st}" is not one of ${STATUSES.join(' / ')}${opt.lenient?'; shown as Not booked':''}.`);else st=S2;
+   const dep=amount(g(r,'deposit (eur)'));if(dep===null)(opt.lenient?W:E)(`${w}: deposit "${g(r,'deposit (eur)')}" is not an amount${opt.lenient?'; shown as blank':''}.`);
    return{item:g(r,'item'),date:g(r,'date'),status:STATUSES.includes(st)?st:'Not booked',bookedBy:person(g(r,'booked by'),w,'Booked by'),conf:g(r,'confirmation #'),deposit:dep||'',depositBy:person(g(r,'deposit paid by'),w,'Deposit paid by'),notes:g(r,'notes')}});
    summary.push(`Bookings & Deposits: ${cand.tracker.length} rows`)}}
  if(parsed.expenses){const {f,h,body}=parsed.expenses,ti=h.findIndex(x=>x.startsWith('total')),need=['line item','paid by','notes'];
@@ -480,34 +286,126 @@ function importSheetCSV(files){const errors=[],summary=[],E=m=>{if(errors.length
      E(`${f}: ${sc.length} “Split:” columns for a roster of ${plural(NN)}.`+(unknown.length?` Not in the roster: ${unknown.join(', ')}.`:'')+(missing.length?` No column for: ${missing.join(', ')}.`:'')+(new Set(byName.filter(x=>x!==undefined)).size<byName.filter(x=>x!==undefined).length?' A name has two columns.':'')+' Each traveler needs exactly one “Split: <name>” column (choose the Roster CSV too if you added someone).')}}
    else if(!h.includes('split among'))E(`${f}: no “Split: <name>” columns (or “Split among”).`);
    const g=(r,k)=>unq(r.c[h.indexOf(k)]);
-   cand.ledger=body.map(r=>{const w=`${f} row ${r.n}`;const tot=amount(r.c[ti]);if(tot===null)E(`${w}: total "${r.c[ti]}" is not an amount.`);
+   cand.ledger=body.map(r=>{const w=`${f} row ${r.n}`;const tot=amount(r.c[ti]);if(tot===null)(opt.lenient?W:E)(`${w}: total "${r.c[ti]}" is not an amount${opt.lenient?'; shown as TBD':''}.`);
     let split=Array(NN).fill(false);
-    if(map)map.forEach(([col,k])=>{const b=bool(r.c[col]);if(b===null)E(`${w}: “${h[col]}” must be TRUE or FALSE (got "${r.c[col]}").`);else split[k]=b});
+    if(map)map.forEach(([col,k])=>{const b=bool(r.c[col]);if(b===null)(opt.lenient?W:E)(`${w}: “${h[col]}” must be TRUE or FALSE (got "${r.c[col]}")${opt.lenient?'; read as not ticked':''}.`);else split[k]=b});
     else String(g(r,'split among')).split(';').map(s=>s.trim()).filter(Boolean).forEach(n=>{const k=who.get(H(n));if(k===undefined)E(`${w}: “Split among” name "${n}" is not in the roster.`);else split[+k]=true});
     return{item:g(r,'line item'),total:tot||'',split,paidBy:person(g(r,'paid by'),w,'Paid by'),notes:g(r,'notes')}});
    summary.push(`Expenses & Splits: ${cand.ledger.length} lines`)}}
- if(errors.length)return{errors};
- const n=normalize(cand);return n.state?{state:n.state,summary}:{errors:n.errors}}
+ if(errors.length)return{errors,warn};
+ const n=normalize(cand);return n.state?{state:n.state,summary,warn}:{errors:n.errors,warn}}
 window.importSheetCSV=importSheetCSV;
 
-function initGroup(){
- document.getElementById('gCsvR').onclick=()=>exportCSV('roster');document.getElementById('gCsvT').onclick=()=>exportCSV('tracker');document.getElementById('gCsvL').onclick=()=>exportCSV('ledger');
- document.getElementById('gJson').onclick=exportJSON;
- document.getElementById('gReset').onclick=()=>{if(confirm('Reset roster, tracker and ledger to the defaults? Your edits in this browser will be lost (export JSON first to keep them).'))applyG(clone(GROUP),['Reset to the defaults.'])};
- document.getElementById('gImport').onchange=e=>{const f=e.target.files[0];e.target.value='';if(!f)return;f.text().then(t=>{let s;
-  try{s=JSON.parse(t)}catch(err){showMsg([`${f.name} was not imported: it is not valid JSON (${err.message}). Nothing was changed.`],true);return}
-  const n=normalize(s,f.name);if(!n.state){showMsg([`${f.name} was not imported. Nothing was changed.`,...n.errors],true);return}
-  applyG(n.state,[`Imported ${f.name}.`,...n.notes])})};
- document.getElementById('gImportCsv').onchange=e=>{const fs=[...e.target.files];e.target.value='';if(!fs.length)return;
-  Promise.all(fs.map(f=>f.text().then(text=>({name:f.name,text})))).then(files=>{const r=importSheetCSV(files);
-   if(!r.state){showMsg(['Sheet CSV not imported. Nothing was changed.',...r.errors],true);return}
-   applyG(r.state,['Imported from the Sheet CSV: '+r.summary.filter(x=>!x.startsWith('Note')).join(' · ')+'.',...r.summary.filter(x=>x.startsWith('Note'))])})};
- renderG();const askNinth=!recovery&&!hasNinth(G)&&(GROUP.roster||[]).some(r=>r.name===NINTH);
- const ninthMsg=`Your saved roster was edited, so it was left as is. Add ${NINTH} with “+ Add traveler”, type “${NINTH}”, then tick him in the ledger lines he shares.`;
- if(migratedFrom){saveG();showMsg([`Moved your earlier Group data from ${migratedFrom} to ${GKEY}. The old copy is left untouched.`,...loadNotes,...(askNinth?[`The group is now 9: ${ninthMsg}`]:[])],false)}
- else if(textMigrated){saveG();showMsg([ninthAdded?`Updated your saved Group data for a group of 9: ${NINTH} is traveler 9. Rows you edited or booked are unchanged.`:'Updated the default booking-tracker text for a group of 9. Rows you edited or booked are unchanged.',...loadNotes,...(askNinth?[`The group is now 9: ${ninthMsg}`]:[])],false)}
- else if(askNinth){let show=false;try{show=localStorage.getItem(GKEY)!=null&&!localStorage.getItem(NINTH_NOTED);if(show)localStorage.setItem(NINTH_NOTED,new Date().toISOString())}catch(e){}
-  if(show)showMsg([`The group is now 9: ${NINTH} is the 9th traveler.`,ninthMsg],false)}}
+/* ---- Balances tab: signed euro amounts per traveler, plus its summary rows ---- */
+function signedCents(s){s=String(s??'').replace(/[€\s\u00a0]|EUR/gi,'');let neg=false;if(/^\(.*\)$/.test(s)){neg=true;s=s.slice(1,-1)}if(/^[-−]/.test(s)){neg=true;s=s.slice(1)}
+ if(s===''||!/^\d{1,3}(,\d{3})*(\.\d+)?$|^\d+(\.\d+)?$/.test(s))return null;const n=Number(s.replace(/,/g,''));return isFinite(n)?Math.round(n*100)*(neg?-1:1):null}
+function readBalances(text,roster){const rows=parseCSV(text).filter(r=>r.some(c=>c.trim()!==''));if(!rows.length||H(rows[0][0])!=='traveler')return null;
+ const head=rows[0].map(c=>c.trim()),idx=new Map(roster.map((r,i)=>[H(r.name),i])),people=[],extra=[];
+ rows.slice(1).forEach(r=>{const name=r[0].trim(),vals=head.slice(1).map((h,k)=>({h,raw:(r[k+1]||'').trim(),c:signedCents(r[k+1])}));
+  if(idx.has(H(name)))people.push({name,i:idx.get(H(name)),vals});else if(name&&name.length<60&&vals.some(v=>v.raw!==''))extra.push({name,vals})});
+ return{head,people,extra}}
+
+/* ---- cache (last good Sheet copy) ---- */
+function readCache(){try{const o=JSON.parse(localStorage.getItem(CKEY)||'null');if(!o||o.v!==CVER)return null;const n=normalize(o.state);return n.state?{state:n.state,balances:o.balances||null,warn:o.warn||[],fetchedAt:o.fetchedAt}:null}catch(e){return null}}
+function writeCache(c){try{localStorage.setItem(CKEY,JSON.stringify({v:CVER,fetchedAt:c.fetchedAt,state:c.state,balances:c.balances,warn:c.warn}));return true}catch(e){return false}}
+
+/* fetchSheet() -> {state, balances, warn, fetchedAt} or throws {kind:'offline'|'unreadable', message}. All four tabs in parallel, one 15 s timeout. */
+async function fetchSheet(){const ac=new AbortController(),tm=setTimeout(()=>ac.abort(),FETCH_MS);
+ try{const texts=await Promise.all(Object.entries(SHEET_TABS).map(async([k,tab])=>{let res;
+   try{res=await fetch(sheetURL(tab),{cache:'no-store',credentials:'omit',signal:ac.signal})}catch(e){throw{kind:'offline',message:e.name==='AbortError'?'the Sheet did not answer within '+FETCH_MS/1000+' s':'no connection to Google Sheets'}}
+   const t=await res.text();if(!res.ok||/^\s*</.test(t))throw{kind:'unreadable',message:`the “${tab}” tab could not be read (HTTP ${res.status}${/^\s*</.test(t)?', not CSV: check the Sheet is shared “anyone with the link can view”':''})`};
+   return[k,t]}));
+  const T=Object.fromEntries(texts);
+  const r=importSheetCSV(['roster','bookings','expenses'].map(k=>({name:SHEET_TABS[k],text:T[k]})),{base:GROUP,lenient:true});
+  if(!r.state)throw{kind:'unreadable',message:(r.errors||[]).slice(0,2).join(' ')||'the Sheet layout was not recognised'};
+  const balances=readBalances(T.balances,r.state.roster),warn=(r.warn||[]).slice();if(!balances)warn.push('The Balances tab was not recognised, so the balances below are calculated on this page.');
+  return{state:r.state,balances,warn,fetchedAt:new Date().toISOString()}}
+ finally{clearTimeout(tm)}}
+window.fetchSheet=fetchSheet;
+
+/* ---- state ---- */
+const cached=readCache();
+let G=cached?cached.state:clone(GROUP), SRC=cached?{from:'cache',...cached}:{from:'built-in',balances:null,warn:[],fetchedAt:null}, LOADING=false, LASTERR=null;
+const when=iso=>{const d=new Date(iso);if(isNaN(d))return'';const today=new Date().toDateString()===d.toDateString();
+ return d.toLocaleTimeString([], {hour:'numeric',minute:'2-digit'})+(today?'':' on '+d.toLocaleDateString([], {day:'numeric',month:'short',year:'numeric'}))};
+function statusLine(){const p=document.getElementById('gStatus');if(!p)return;let t;
+ if(LOADING)t=SRC.fetchedAt?`Checking the Sheet… (showing copy from ${when(SRC.fetchedAt)})`:'Loading from the Sheet… (showing the built-in copy)';
+ else if(LASTERR)t=(LASTERR.kind==='offline'?'Offline':'Sheet not readable')+': '+(SRC.fetchedAt?`showing copy from ${when(SRC.fetchedAt)}`:'showing the built-in copy (may be out of date)')+'.';
+ else if(SRC.from==='sheet')t='Updated from Sheet '+when(SRC.fetchedAt);
+ else t=SRC.fetchedAt?`Showing copy from ${when(SRC.fetchedAt)}`:'Showing the built-in copy';
+ p.textContent=t;p.dataset.state=LOADING?'loading':LASTERR?'error':SRC.from;p.title=LASTERR?'Reason: '+LASTERR.message:'';
+ const b=document.getElementById('gRefresh');if(b){b.disabled=LOADING;b.setAttribute('aria-busy',String(LOADING))}}
+async function refreshSheet(){if(LOADING)return;LOADING=true;statusLine();
+ try{const r=await fetchSheet();LASTERR=null;SRC={from:'sheet',...r};G=r.state;writeCache(r)}
+ catch(e){LASTERR=e&&e.kind?e:{kind:'unreadable',message:String(e&&e.message||e)}}
+ finally{LOADING=false}
+ renderG();statusLine()}
+window.refreshSheet=refreshSheet;
+
+function showMsg(lines,bad){const m=document.getElementById('gMsg');if(!m)return;m.innerHTML='';if(!lines||!lines.length){m.hidden=true;return}
+ m.hidden=false;m.className='g-msg grp-msg '+(bad?'g-msg--bad':'g-msg--ok');m.setAttribute('role',bad?'alert':'status');
+ const [h,...rest]=lines;m.append(el('p',{},[el('b',{textContent:h})]));if(rest.length)m.append(el('ul',{},rest.map(x=>el('li',{textContent:x}))))}
+
+/* ---- render (read-only) ---- */
+const SR=t=>el('span',{className:'sr-only',textContent:t});
+const CHIP={'Not booked':['not-booked','Not booked'],'Requested':['pending','Pending'],'Confirmed':['booked','Booked'],'Paid':['booked','Booked · paid'],'Cancelled':['cancelled','Cancelled']};
+function badge(st){const [k,t]=CHIP[st]||CHIP['Not booked'];const s=el('span',{className:'badge grp-chip',textContent:t,title:'Status in the Sheet: '+st});s.dataset.status=k;return s}
+/* table(head, rows[[cell…]], label, cls): cells are text or Nodes; each td gets data-label (phone card layout) */
+function table(head,rows,label,cls){const t=el('table',{className:'gt '+(cls||'')});
+ const thead=el('thead',{},[el('tr',{},head.map(h=>el('th',{scope:'col',textContent:h})))]),tb=el('tbody');
+ rows.forEach(r=>{const tr=el('tr',r.cls?{className:r.cls}:{});r.cells.forEach((c,k)=>{const td=el('td',c&&c.cls?{className:c.cls}:{});const v=c&&c.v!==undefined?c.v:c;
+  if(v instanceof Node)td.append(v);else td.textContent=v==null||v===''?'—':String(v);if(head[k])td.dataset.label=head[k];tr.append(td)});tb.append(tr)});
+ t.append(thead,tb);return el('div',{className:'gt-scroll',role:'region','aria-label':label+' (scrolls sideways)',tabIndex:0},[t])}
+const section=(key,title,kids)=>{const s=el('section',{className:'grp-section grp-'+key,'aria-labelledby':'grp-h-'+key},[el('h2',{id:'grp-h-'+key,textContent:title}),...kids]);s.dataset.grp=key;return s};
+const pn=v=>v===''||v==null?'':nm(+v);
+const N=c=>({v:c,cls:'num'});
+function renderG(){const root=document.getElementById('gBody');if(!root)return;root.innerHTML='';const n=G.roster.length,s=settle(G);
+ const h=document.querySelector('#group h1');if(h)h.textContent='Group: '+plural(n);
+ root.append(renderSettle(s));
+ // roster
+ root.append(section('roster',`Roster (${plural(n)})`,[table(['#','Name','Email','Note'],G.roster.map((r,i)=>({cells:[i+1,r.name||nm(i),r.email,r.note]})),'Roster','grp-table')]));
+ // tracker
+ const tc={};G.tracker.forEach(r=>{const k=(CHIP[r.status]||CHIP['Not booked'])[1];tc[k]=(tc[k]||0)+1});
+ root.append(section('tracker','Bookings',[el('p',{className:'small grp-summary',textContent:G.tracker.length+' items: '+Object.entries(tc).map(([k,v])=>v+' '+k.toLowerCase()).join(' · ')}),
+  table(['Item','Date','Status','Booked by','Confirmation #','Deposit','Deposit paid by','Notes'],G.tracker.map(r=>({cls:'st-'+String(r.status).replace(/ /g,''),cells:[r.item,r.date,badge(r.status),pn(r.bookedBy),r.conf,N(r.deposit===''?'':fmtMoney(r.deposit)),pn(r.depositBy),r.notes]})),'Bookings','grp-table')]));
+ // ledger
+ const IN=iniAll(G.roster.map(p=>p.name)),known=G.ledger.filter(r=>r.total!==''),tbd=G.ledger.length-known.length;
+ const among=r=>{const who=r.split.map((b,i)=>b?i:-1).filter(i=>i>=0);return who.length===n?`All ${n}`:who.length?who.map(nm).join(', '):'Nobody'};
+ const pp=r=>{const k=r.split.filter(Boolean).length;return r.total===''?TBD:k?eur(Math.round(cents(r.total)/k)):'—'};
+ const total=known.reduce((a,r)=>a+cents(r.total),0);
+ const grid=el('details',{className:'grp-grid'},[el('summary',{textContent:'Who shares each line (split grid)'}),
+  table(['Line item',...G.roster.map((p,j)=>IN[j])],G.ledger.map(r=>({cells:[r.item,...r.split.map((b,j)=>{const x=el('span',{textContent:b?'✓':'–',title:nm(j)+(b?' shares this':' does not share this')});x.setAttribute('aria-label',nm(j)+': '+(b?'yes':'no'));return{v:x,cls:'grp-tick'+(b?' on':'')}})]})),'Split grid','grp-table grp-gridtable')]);
+ root.append(section('ledger','Costs',[el('p',{className:'small grp-summary',textContent:`${G.ledger.length} lines · known total ${eur(total)}`+(tbd?` · ${tbd} line${tbd>1?'s':''} TBD`:'')+' · amounts are estimates until paid.'}),
+  table(['Line item','Total','Split among','Per person','Paid by','Notes'],[...G.ledger.map(r=>({cells:[r.item,N(fmtMoney(r.total)),among(r),N(pp(r)),pn(r.paidBy)||'Not yet paid',r.notes]})),
+   {cls:'tot',cells:['Total',N(eur(total)+(tbd?' + TBD':'')),'','','','']}],'Costs','grp-table'),grid]));
+ showMsg(SRC.warn&&SRC.warn.length?['The Sheet has cells this page could not read; they are shown as TBD or blank. Fix them in the Sheet:',...SRC.warn]:[],false)}
+/* settlement: balances from the Sheet's Balances tab when available; transfers are always computed here from the ledger */
+function renderSettle(s){const sum=a=>a.reduce((x,y)=>x+y,0),B=SRC.balances&&SRC.from!=='built-in'?SRC.balances:null,kids=[];
+ const tl=el('ol',{id:'gTransfers',className:'grp-transfers'});s.transfers.forEach(t=>tl.append(el('li',{textContent:`${nm(t.from)} pays ${nm(t.to)} ${eur(t.amount)}`})));
+ kids.push(el('h3',{textContent:`Transfers (${s.transfers.length})`}),s.transfers.length?tl:el('p',{className:'grp-empty',textContent:'Nothing to settle yet: no line has a “Paid by” in the Sheet.'}));
+ const cls=c=>c==null?'num':'num '+(c>0?'pos':c<0?'neg':'');
+ if(B){const rows=B.people.map(p=>({cells:[p.name,...p.vals.map(v=>({v:v.c==null?(v.raw||'—'):eur(v.c).replace('€-','-€'),cls:cls(/balance/i.test(v.h)?v.c:null)}))]}));
+  B.extra.forEach(x=>rows.push({cls:'tot',cells:[x.name,...x.vals.map(v=>({v:v.c==null?(v.raw||''):(/lines/i.test(x.name)?String(v.c/100):eur(v.c).replace('€-','-€')),cls:'num'}))]}));
+  kids.push(el('p',{className:'small',textContent:'From the Sheet’s Balances tab, as the Sheet calculates it. Positive = is owed money. Transfers above are worked out on this page from lines with a “Paid by”.'}),table(B.head,rows,'Balances','grp-table'));
+  const bi=B.head.findIndex(h=>/^balance$/i.test(h))-1,off=bi<0?[]:B.people.filter(p=>p.vals[bi]&&p.vals[bi].c!=null&&Math.abs(p.vals[bi].c-s.net[p.i])>1).map(p=>p.name);
+  if(off.length)kids.push(el('p',{className:'small g-bad grp-mismatch',textContent:'The Sheet’s Balance differs from this page’s calculation (paid minus share of paid lines) for '+(off.length===G.roster.length?'every traveler':off.join(', '))+'. The transfers above use this page’s calculation. Check the Balance formula and the Paid by and split columns in the Sheet.'}))}
+ else{const rows=G.roster.map((r,i)=>({cells:[nm(i),N(eur(s.shareAll[i])),N(eur(s.paid[i])),N(eur(s.share[i])),{v:eur(s.net[i]),cls:cls(s.net[i])}]}));
+  rows.push({cls:'tot',cells:['Total',N(eur(sum(s.shareAll))),N(eur(sum(s.paid))),N(eur(sum(s.share))),N(eur(sum(s.net)))]});
+  kids.push(el('p',{className:'small',textContent:'Calculated on this page from the costs below (the Sheet’s Balances tab was not loaded). Positive balance = is owed money.'}),table(['Traveler','Share of all lines','Paid','Share of paid lines','Balance'],rows,'Balances','grp-table'))}
+ if(s.unpaid.length)kids.push(el('p',{className:'small',textContent:`Not yet paid by anyone: ${s.unpaid.length} line${s.unpaid.length>1?'s':''}, ${eur(sum(s.unpaid.map(u=>u.total)))}.`}));
+ const sec=section('settle','Who owes whom',kids);sec.id='gSettle';return sec}
+
+/* ---- backup: one CSV with the roster, bookings and costs as currently shown ---- */
+function backupCSV(){const rows=[['Group backup',SRC.from==='sheet'||SRC.from==='cache'?'from the Sheet, '+(SRC.fetchedAt||''):'built-in copy'],[],['Roster'],['#','Name','Email','Note'],...G.roster.map((r,i)=>[i+1,r.name,r.email,r.note]),[],
+ ['Bookings & Deposits'],['Item','Date','Status','Booked by','Confirmation #','Deposit (EUR)','Deposit paid by','Notes'],...G.tracker.map(r=>[r.item,r.date,r.status,pn(r.bookedBy),r.conf,r.deposit,pn(r.depositBy),r.notes]),[],
+ ['Expenses & Splits'],['Line item','Total (EUR)','Paid by','Notes',...G.roster.map((r,i)=>'Split: '+nm(i))],...G.ledger.map(r=>[r.item,r.total,pn(r.paidBy),r.notes,...r.split.map(b=>b?'TRUE':'FALSE')])];
+ dl('av1_group_backup_'+new Date().toISOString().slice(0,10)+'.csv',csv(rows),'text/csv')}
+
+function initGroup(){const b=document.getElementById('gRefresh');if(b)b.addEventListener('click',refreshSheet);
+ const k=document.getElementById('gBackup');if(k)k.addEventListener('click',backupCSV);
+ renderG();statusLine();
+ if(location.protocol==='file:'){LASTERR={kind:'offline',message:'opened from a file'};statusLine();return}
+ setTimeout(refreshSheet,0)}
 initGroup();
 
 
@@ -528,7 +426,7 @@ function hutBadges(){if(typeof G==='undefined'||!G||!Array.isArray(G.tracker))re
   const re=new RegExp('(?<![\\p{L}])(?:Rif(?:ugio|\\.)\\s+)?'+reEsc(name).replace(/\\s+/g,'\\s+')+'(?![\\p{L}])','iu'),hits=G.tracker.filter(r=>re.test(String(r.item||'')));
   const row=hits.find(r=>/hut night/i.test(r.item))||hits[0];
   if(!row){b.textContent='';delete b.dataset.status;b.removeAttribute('title');return}
-  const [k,t]=S[row.status]||['none',String(row.status||'Not booked')];pulse(b,k);b.dataset.status=k;b.textContent=t;b.title=(/^Ücia /.test(name)?'':'Rifugio ')+name+' booking: '+row.status+' (Group → Booking tracker)'})}
+  const [k,t]=S[row.status]||['none',String(row.status||'Not booked')];pulse(b,k);b.dataset.status=k;b.textContent=t;b.title=(/^Ücia /.test(name)?'':'Rifugio ')+name+' booking: '+row.status+' (Group tab, from the Sheet)'})}
 if(typeof renderG==='function'){const _renderG=renderG;renderG=function(){const r=_renderG.apply(this,arguments);hutBadges();return r}}
 hutBadges();
 

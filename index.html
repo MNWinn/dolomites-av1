@@ -11,7 +11,7 @@
 <!-- self-hosted, deferred: run in this order after the page is parsed (Leaflet → Chart.js → app.js) -->
 <script defer src="vendor/leaflet/leaflet.js"></script>
 <script defer src="vendor/chart.umd.min.js"></script>
-<script defer src="app.js?v=2be172be41"></script>
+<script defer src="app.js?v=5e600c908b"></script>
 <link rel="preload" href="fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/fraunces-600-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style id="redesign-css">
@@ -90,25 +90,24 @@ img{max-width:100%}
 :focus-visible{outline:3px solid var(--focus);outline-offset:2px;border-radius:4px}
 button,input,select,textarea{font:inherit;color:inherit}
 /* iOS Safari zooms on focus below 16px: every form control is >= 16px */
-input,select,textarea,.gt input,.gt select{font-size:max(16px,1rem)!important}
+input,select,textarea{font-size:max(16px,1rem)!important}
 [hidden]{display:none!important}
 
 /* views toggled by show(): keep these so the old inline <style> can be deleted */
 #guide,#group{display:none}
 
 /* ---------- 3. Buttons (shared) ---------- */
-.btn,#all,.gbar button,.gbar label.btn,#gBody>button,header nav button{
+.btn,#all,.gbar button,header nav button{
   display:inline-flex;align-items:center;justify-content:center;gap:var(--s-2);
   min-height:var(--tap);padding:0 var(--s-4);border-radius:var(--r-pill);
   font:600 var(--fs-14)/1 var(--font-body);letter-spacing:.01em;cursor:pointer;text-decoration:none;
   border:1px solid var(--line-strong);background:var(--surface);color:var(--ink-900);
   transition:background var(--dur) var(--ease),color var(--dur) var(--ease),border-color var(--dur) var(--ease)}
-.btn:hover,#all:hover,.gbar button:hover,.gbar label.btn:hover,#gBody>button:hover{background:var(--stone-100);color:var(--ink-900)}
+.btn:hover,#all:hover,.gbar button:hover{background:var(--stone-100);color:var(--ink-900)}
 .btn--primary{background:var(--rose-600);border-color:var(--rose-600);color:#fff}
 .btn--primary:hover{background:var(--rose-700);border-color:var(--rose-700);color:#fff}
 .btn--ghost{background:rgba(255,252,246,.12);border-color:rgba(255,252,246,.7);color:#fff;backdrop-filter:blur(4px)}
 .btn--ghost:hover{background:rgba(255,252,246,.24);color:#fff}
-.gbar label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 
 /* ---------- 4. Badges ---------- */
 .badge{display:inline-flex;align-items:center;gap:var(--s-1);min-height:24px;padding:2px var(--s-2);border-radius:var(--r-pill);
@@ -297,39 +296,10 @@ body:has(#app[style*="none"]) .hero{display:none}
 #group .inner{max-width:1200px;margin:0 auto}
 #group h1{font-size:var(--fs-32);margin:0 0 var(--s-2)}
 #group h2{display:flex;align-items:center;gap:var(--s-2)}
-.gbar{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2);margin:var(--s-4) 0 var(--s-6);padding:var(--s-3) var(--s-4);
-  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-1)}
-.gbar>b{font-size:var(--fs-14);margin-right:var(--s-1)}
-.gbar #gReset{border-color:var(--todo-fg);color:var(--todo-fg)}
-.gbar #gReset:hover{background:var(--todo-bg)}
 .gt td{vertical-align:middle}
-.gt input,.gt select{min-height:40px;width:100%;min-width:90px;padding:var(--s-1) var(--s-2);border:1px solid var(--line-strong);border-radius:var(--r-sm);background:var(--surface)}
-.gt input.wide{min-width:220px}.gt input.mid{min-width:170px}.gt input.num{min-width:96px;text-align:right;font-variant-numeric:tabular-nums}
-.gt input:focus-visible,.gt select:focus-visible{outline:3px solid var(--focus);outline-offset:1px}
 .gt td.num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
-.gt td.split{white-space:nowrap;font-size:var(--fs-12)}
-.gt td.split label{display:inline-flex;align-items:center;gap:2px;min-height:32px;margin-right:var(--s-1)}
-.gt td.split input{width:auto;min-width:0;min-height:0;accent-color:var(--ok-fg)}
-.gt td button{min-width:36px;min-height:36px;border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface);color:var(--todo-fg);cursor:pointer}
-.gt td button:hover{background:var(--todo-bg)}
 .pos{color:var(--ok-fg);font-weight:600}.neg{color:var(--todo-fg);font-weight:600}
 .tot td{font-weight:700;background:var(--stone-100)}
-/* tracker rows → status colours (classes come from renderG: 'st-'+status) */
-tr.st-Confirmed td,tr.st-Paid td{background:transparent}
-tr.st-Requested td,tr.st-Cancelled td{background:transparent}
-tr[class^="st-"] td:first-child{box-shadow:inset 4px 0 0 var(--off-fg)}
-tr.st-NotBooked td:first-child{box-shadow:inset 4px 0 0 var(--todo-fg)}
-tr.st-Requested td:first-child{box-shadow:inset 4px 0 0 var(--sun-400)}
-tr.st-Confirmed td:first-child,tr.st-Paid td:first-child{box-shadow:inset 4px 0 0 var(--ok-fg)}
-tr.st-Cancelled td{color:var(--ink-500)}
-.gStatus{font-weight:600;border-radius:var(--r-pill)!important;min-width:132px!important}
-tr.st-NotBooked .gStatus{background:var(--todo-bg);color:var(--todo-fg);border-color:var(--todo-fg)}
-tr.st-Requested .gStatus{background:var(--wait-bg);color:var(--wait-fg);border-color:var(--wait-fg)}
-tr.st-Confirmed .gStatus,tr.st-Paid .gStatus{background:var(--ok-bg);color:var(--ok-fg);border-color:var(--ok-fg)}
-tr.st-Cancelled .gStatus{background:var(--off-bg);color:var(--off-fg);border-color:var(--off-fg)}
-#gBody>button{margin:0 0 var(--s-4)}
-#gSettle h3{margin-top:var(--s-6)}
-#gTransfers{padding-left:var(--s-6)}#gTransfers li{margin:var(--s-1) 0;font-variant-numeric:tabular-nums}
 
 
 /* ---------- 12. Responsive: phone / small tablet ---------- */
@@ -367,13 +337,8 @@ tr.st-Cancelled .gStatus{background:var(--off-bg);color:var(--off-fg);border-col
   #side>p.small:last-child{margin-bottom:var(--s-10)}
   #guide,#group{padding:var(--s-6) var(--s-4) var(--s-12)}
   #guide h1,#group h1{font-size:var(--fs-24)}
-  .gbar{gap:var(--s-2)}
-  .gbar>b{width:100%}
-  .gbar button,.gbar label.btn{flex:1 1 calc(50% - var(--s-2));padding:0 var(--s-2)}
-  .gt input,.gt select,.gt td button{min-height:var(--tap)}
   #hutStatus table{table-layout:auto}
 }
-@media (pointer:coarse){ .gt input,.gt select,.gt td button{min-height:var(--tap)} .gt td.split label{min-height:var(--tap);min-width:32px} }
 
 /* ---------- 13. Motion ---------- */
 @media (prefers-reduced-motion:reduce){
@@ -399,10 +364,6 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 .g-msg p{margin:0 0 var(--s-2)}.g-msg ul{margin:0;padding-left:var(--s-5)}
 .g-msg--bad{background:var(--todo-bg);border-color:var(--todo-fg);color:var(--ink-900)}
 .g-msg--ok{background:var(--ok-bg,#e7f3ec);border-color:var(--ok-fg);color:var(--ink-900)}
-.g-msg .gbar{margin:var(--s-3) 0 0}
-#gSaved.g-bad{color:var(--todo-fg);font-weight:600}
-.sheet-link{margin:var(--s-3) 0 var(--s-4);padding:var(--s-3) var(--s-4);border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface);font-size:var(--fs-14);line-height:1.55}
-.sheet-link a{font-weight:600}
 .gpx-all{font-size:var(--fs-14)}
 .gpx-help{font-size:var(--fs-12)}
 </style>
@@ -1759,13 +1720,14 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <li><strong>[S110]</strong> Rifugio Col Gallina booking screen (bukly), from Matthew, 4 Nov 2026: Room 3, 5 beds × €130 + Room 5, 4 beds × €120 = €1,130 HB for Sat 14 Aug 2027; city tax €1.50 pp/night extra.</li>
 </ul>
 </div></div>
-<div id="group" role="tabpanel" aria-labelledby="bGroup" hidden><div class="inner"><h1 style="margin-top:0">Group manager: 9 travelers</h1>
-<p class="sheet-link"><b>Master copy:</b> the group's <a href="https://docs.google.com/spreadsheets/d/1v78iv99E9392KeWAJmQHmmkLEwJbR21O2HbBT-b72qI/edit" target="_blank" rel="noopener">Google Sheet (opens in a new tab)</a> is the source of truth for roster, bookings, deposits and splits. It is private: ask Matthew for access. When this page and the Sheet disagree, the Sheet wins.<br>
-<span class="small">Fallback: edit here, or bring the Sheet in with <b>Import Sheet CSV</b> (in the Sheet: File › Download › CSV for the Roster, Bookings &amp; Deposits and Expenses &amp; Splits tabs, then pick the files together; Balances is never imported).</span></p>
-<p class="small">Everything here is editable and saved only in this browser (localStorage key <code>av1-group-v4</code>). Export CSV or JSON to share with the group. This page books, pays and contacts no one. Ledger defaults are 2026-price estimates.</p>
-<div class="gbar"><b>Export:</b><button id="gCsvR">Roster CSV</button><button id="gCsvT">Tracker CSV</button><button id="gCsvL">Ledger + settlement CSV</button><button id="gJson">All (JSON)</button>
-<b>Import:</b><label class="btn">Import JSON<input type="file" id="gImport" class="sr-only" accept=".json,application/json"></label><label class="btn">Import Sheet CSV<input type="file" id="gImportCsv" class="sr-only" accept=".csv,text/csv" multiple></label><button id="gReset">Reset to defaults…</button><span class="small" id="gSaved" role="status"></span></div>
+<div id="group" role="tabpanel" aria-labelledby="bGroup" hidden><div class="inner grp">
+<div class="grp-head"><h1>Group: 9 travelers</h1>
+<div class="grp-meta"><p class="grp-status small" id="gStatus" role="status" aria-live="polite">Showing the built-in copy</p>
+<div class="grp-actions gbar"><button type="button" id="gRefresh" class="grp-refresh"><svg class="grp-ico" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 12a8 8 0 1 1-2.34-5.66M20 4v5h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>Refresh<span class="sr-only"> from Sheet</span></button><a class="btn grp-edit" id="gEdit" href="https://docs.google.com/spreadsheets/d/1v78iv99E9392KeWAJmQHmmkLEwJbR21O2HbBT-b72qI/edit" target="_blank" rel="noopener">Edit in Sheet <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a></div></div>
+<p class="small grp-intro">A read-only view of the group's Google Sheet. To change a name, booking or cost, edit the Sheet (ask Matthew for access), then Refresh. The last copy stays available offline. This page books, pays and contacts no one.</p></div>
 <div id="gMsg" hidden></div>
-<div id="gBody"></div></div></div>
+<div id="gBody"></div>
+<details class="grp-backup"><summary>Backup</summary><p class="small">Saves what this tab is showing as one CSV file (roster, bookings, costs).</p><div class="gbar"><button type="button" id="gBackup">Download backup (CSV)</button></div></details>
+</div></div>
 </main>
 </body></html>

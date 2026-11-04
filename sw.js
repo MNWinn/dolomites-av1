@@ -2,8 +2,9 @@
    - Precache (versioned): the page, app.js, self-hosted Leaflet/Chart.js, fonts, hero WebP, GPX, icons.
    - Same-origin GETs: stale-while-revalidate (serve the cached copy, refresh it in the background).
    - Map tiles: only tiles you actually viewed are kept (cache-first, capped at ~300 entries). No bulk/area prefetch (OSM tile policy).
+   - Google Sheets (docs.google.com, the Group tab's live data): network-only, never precached or cached.
    - Old caches are deleted on activate. */
-const VERSION='44dd93e42462', PAGE='index.html', PRECACHE=["index.html", "app.js?v=2be172be41", "vendor/leaflet/leaflet.js", "vendor/leaflet/leaflet.css", "vendor/leaflet/images/layers.png", "vendor/leaflet/images/layers-2x.png", "vendor/chart.umd.min.js", "fonts/fraunces-600-latin.woff2", "fonts/inter-latin-var.woff2", "img/pragser_wildsee_seekofel_von_bucht-480.webp", "img/pragser_wildsee_seekofel_von_bucht-960.webp", "manifest.webmanifest", "icons/favicon.svg", "icons/icon-192.png", "favicon.ico", "upgrades.css", "gpx/av1_day1.gpx", "gpx/av1_day2.gpx", "gpx/av1_day3.gpx", "gpx/av1_day4.gpx", "gpx/av1_all_days.gpx"];
+const VERSION='1573ecc46a10', PAGE='index.html', PRECACHE=["index.html", "app.js?v=5e600c908b", "vendor/leaflet/leaflet.js", "vendor/leaflet/leaflet.css", "vendor/leaflet/images/layers.png", "vendor/leaflet/images/layers-2x.png", "vendor/chart.umd.min.js", "fonts/fraunces-600-latin.woff2", "fonts/inter-latin-var.woff2", "img/pragser_wildsee_seekofel_von_bucht-480.webp", "img/pragser_wildsee_seekofel_von_bucht-960.webp", "manifest.webmanifest", "icons/favicon.svg", "icons/icon-192.png", "favicon.ico", "upgrades.css", "gpx/av1_day1.gpx", "gpx/av1_day2.gpx", "gpx/av1_day3.gpx", "gpx/av1_day4.gpx", "gpx/av1_all_days.gpx"];
 const CACHE='av1-static-'+VERSION, TILES='av1-tiles-v1', MAX_TILES=300;
 const TILE_HOSTS=/(^|\.)tile\.opentopomap\.org$|^tile\.openstreetmap\.org$/;
 self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE).then(c=>c.addAll(PRECACHE.map(u=>new Request(u,{cache:'reload'})))).then(()=>self.skipWaiting()))});
@@ -18,6 +19,7 @@ async function swr(req,key,ev){const c=await caches.open(CACHE);const hit=await 
  if(req.mode==='navigate'){const p=await c.match(PAGE);if(p)return p}
  return new Response('Offline and not cached',{status:503,headers:{'Content-Type':'text/plain'}})}
 self.addEventListener('fetch',e=>{const req=e.request;if(req.method!=='GET')return;const u=new URL(req.url);
+ if(/(^|\.)docs\.google\.com$|(^|\.)googleusercontent\.com$/.test(u.hostname))return; // network-only: the browser fetches it directly, nothing is stored
  if(TILE_HOSTS.test(u.hostname)){e.respondWith(tile(req).catch(()=>new Response('',{status:504})));return}
  if(u.origin!==location.origin)return;
  const scope=new URL(self.registration.scope);

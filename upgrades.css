@@ -285,33 +285,8 @@ header{z-index:1200}
 
 /* ---------- [fix] long source URLs in the Full guide widened the phone layout viewport ---------- */
 #guide a,#guide code{overflow-wrap:anywhere}
-/* group tracker controls: 44px tap targets at every width */
-.gt td button{min-width:44px;min-height:44px}
-.gt select,.gStatus{min-height:44px}
-
-/* Group roster on phones: each traveler becomes a small card (no sideways scroll); 44px targets and 16px inputs kept */
-@media (max-width:600px){
-  .gt-scroll:has(.gName){overflow:visible}
-  .gt:has(.gName){display:block;overflow:visible;border:0;background:none}
-  .gt:has(.gName) tbody{display:block}
-  .gt:has(.gName) tr:first-child{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
-  .gt:has(.gName) tr{display:grid;grid-template-columns:2ch minmax(0,1fr) 44px;grid-template-areas:"n name del" ". email email" ". note note";gap:var(--s-2) var(--s-2);align-items:center;padding:var(--s-3);border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface);margin-bottom:var(--s-2)}
-  .gt:has(.gName) td{display:block;padding:0;border:0;min-width:0}
-  .gt:has(.gName) td:nth-child(1){grid-area:n;font-weight:600;color:var(--ink-600);font-variant-numeric:tabular-nums}
-  .gt:has(.gName) td:nth-child(2){grid-area:name}
-  .gt:has(.gName) td:nth-child(3){grid-area:email}
-  .gt:has(.gName) td:nth-child(4){grid-area:note}
-  .gt:has(.gName) td:nth-child(5){grid-area:del;justify-self:end}
-  .gt:has(.gName) td:nth-child(3)::before{content:"Email";display:block;font-size:var(--fs-12);color:var(--ink-600);margin-bottom:2px}
-  .gt:has(.gName) td:nth-child(4)::before{content:"Note";display:block;font-size:var(--fs-12);color:var(--ink-600);margin-bottom:2px}
-  .gt:has(.gName) input{min-width:0;width:100%;min-height:44px}
-  .gt:has(.gName) td button{width:44px;height:44px}
-}
-/* QA 3 Nov: 44px inputs at every width (were 40px on fine pointers); 12px floor for avatar initials (were 11px; template 11px text raised to 12px too) */
-.gt input,.gt select{min-height:44px}
+/* QA 3 Nov: 12px floor for avatar initials (were 11px; template 11px text raised to 12px too) */
 .avatars span{font-size:12px}
-/* QA 3 Nov: roster table filled only 745 of its 1200px card at 1440 (header band stopped mid-card) */
-@media (min-width:601px){.gt-scroll>.gt:has(.gName){display:table;width:100%}}
 
 /* ---------- [guide+group phone] contents menu, stacked tables, Group cards (JS adds data-label / .stack; without JS tables keep scrolling) ---------- */
 /* Guide contents menu: sticky under the header at every width */
@@ -358,53 +333,127 @@ header{z-index:1200}
   #guide table.stack td:first-child{padding-left:0;font-weight:600}
   #guide table.stack td:first-child::before{float:none;display:block;width:auto;margin:0}
 
-  /* Group tracker, ledger and settlement: one card per row (the roster cards are above) */
-  .gt-scroll:has(.gt td[data-label]){overflow:visible}
-  .gt:has(td[data-label]):not(:has(.gName)){display:block;overflow:visible;border:0;background:none;border-radius:0}
-  .gt:has(td[data-label]):not(:has(.gName)) tbody{display:block}
-  .gt:has(td[data-label]):not(:has(.gName)) tr:first-child{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
-  .gt:has(td[data-label]):not(:has(.gName)) tr:not(:first-child){position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-3) var(--s-2);
-    margin-bottom:var(--s-2);padding:var(--s-3);border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface)}
-  .gt:has(td[data-label]):not(:has(.gName)) td{display:block;min-width:0;padding:0;border:0;background:none;box-shadow:none!important;text-align:left;white-space:normal}
-  .gt:not(:has(.gName)) td[data-label]::before{content:attr(data-label);display:block;margin-bottom:2px;font:400 var(--fs-12)/1.3 var(--font-body);color:var(--ink-600)}
-  .gt:not(:has(.gName)) td input,.gt:not(:has(.gName)) td select{width:100%;min-width:0!important}
-  /* delete button: top-right of the card; the first field leaves room for it */
-  .gt:not(:has(.gName)) td:has(>button){position:absolute;top:var(--s-3);right:var(--s-3)}
-  .gt:not(:has(.gName)) td[data-label]:has(>button)::before{display:none}
-  .gt:not(:has(.gName)) td:has(>button) button{width:var(--tap);height:var(--tap)}
-  .gt:has(.gStatus) td:first-child,.gt:has(.gTotal) td:first-child{grid-column:1/-1;padding-right:calc(var(--tap) + var(--s-2))}
-  .gt:has(.gTotal) tr{grid-auto-flow:row dense}
-  .gt:has(.gStatus) td:nth-child(8),.gt:has(.gTotal) td:is(.split,:nth-child(5),:nth-child(6)){grid-column:1/-1}
-  /* tracker status shows as the card's left edge */
-  .gt tr[class^="st-"]{border-left:6px solid var(--off-fg)!important}
-  .gt tr:is(.st-NotBooked,.st-Notbooked){border-left-color:var(--todo-fg)!important}
-  .gt tr.st-Requested{border-left-color:var(--sun-400)!important}
-  .gt tr:is(.st-Confirmed,.st-Paid){border-left-color:var(--ok-fg)!important}
-  /* ledger split: 44px chips with the traveler's initials */
-  .gt td.split{display:flex!important;flex-wrap:wrap;gap:var(--s-2)}
-  .gt td.split::before{flex-basis:100%;margin:0}
-  .gt td.split label{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:var(--tap);min-height:var(--tap);margin:0;padding:0 var(--s-3);
-    border:1px solid var(--line-strong);border-radius:var(--r-pill);background:var(--surface);font:600 var(--fs-14)/1 var(--font-body);cursor:pointer}
-  .gt td.split label:has(input:checked){background:var(--ok-bg);border-color:var(--ok-fg);color:var(--ok-fg)}
-  .gt td.split label:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:2px}
-  .gt td.split input{width:20px!important;height:20px;margin:0;flex:none}
-  .gt td.pp{align-self:end;min-height:var(--tap);font:600 var(--fs-16)/1.4 var(--font-body)}
-  /* settlement: name + balance on top, the three sums below */
-  #gSettle .gt tr:not(:first-child){grid-template-columns:repeat(3,minmax(0,1fr))}
-  #gSettle .gt td:first-child{grid-column:1/3;align-self:center;font-weight:600}
-  #gSettle .gt td:first-child::before{display:none}
-  #gSettle .gt td:nth-child(5){grid-column:3;grid-row:1;font-weight:600}
-  #gSettle .gt tr.tot{background:var(--stone-100)}
 }
-/* renderG writes "st-Notbooked" for "Not booked"; the redesign's rules only name st-NotBooked */
-tr.st-Notbooked td:first-child{box-shadow:inset 4px 0 0 var(--todo-fg)}
-tr.st-Notbooked .gStatus{background:var(--todo-bg);color:var(--todo-fg);border-color:var(--todo-fg)}
-/* Group number cells and inputs: not the bento's big .num figure */
-.gt .num{margin:0;font:inherit;font-variant-numeric:tabular-nums}
-/* Group action bars: wrapped labels get normal line spacing; recovery choices are one per row */
-@media (max-width:800px){
-  .gbar button,.gbar label.btn{padding:var(--s-2) var(--s-3);line-height:1.25;text-align:center}
-  .g-msg .gbar button{flex-basis:100%}
+/* ---------- [group] Group tab: read-only Sheet view (markup: template #group; rows: group_av1.js renderG) ----------
+   Order: head (title, quiet status + Refresh / Edit in Sheet, intro) -> Who owes whom (headline card) -> Roster -> Bookings -> Costs -> Backup.
+   Phone (<=600px): every table becomes a divided list inside one card; desktop keeps full-width tables. Spec: redesign/group-sheet/ui-spec.md */
+.gt .num{margin:0;font:inherit;font-variant-numeric:tabular-nums}  /* not the bento's big .num figure */
+
+/* head: no toolbar card; status is small muted text, the two actions are quiet ghost links beside/under it */
+.grp-head{margin:0 0 var(--s-6)}
+.grp-head h1{margin:0 0 var(--s-1)}
+.grp-meta{display:flex;flex-wrap:wrap;align-items:center;column-gap:var(--s-3);row-gap:0;margin:0 0 var(--s-2)}
+.grp-status{display:inline-flex;align-items:center;gap:var(--s-2);min-height:var(--tap);margin:0;font-size:var(--fs-14);line-height:1.35;color:var(--ink-600)}
+.grp-status::before{content:"";flex:none;width:8px;height:8px;border-radius:50%;background:var(--line-strong)}
+.grp-status[data-state=sheet]::before{background:var(--ok-fg)}
+.grp-status[data-state=cache]::before,.grp-status[data-state=loading]::before{background:var(--wait-fg)}
+.grp-status[data-state=error]{color:var(--todo-fg);font-weight:600}
+.grp-status[data-state=error]::before{background:var(--todo-fg)}
+.grp .grp-actions.gbar{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-1);margin:0;padding:0;background:none;border:0;box-shadow:none;border-radius:0}
+.grp .grp-actions :is(.grp-refresh,.grp-edit){display:inline-flex;align-items:center;gap:6px;min-height:var(--tap);padding:0 var(--s-3);
+  border:0;border-radius:var(--r-pill);background:transparent;box-shadow:none;color:var(--lake-700);font:600 var(--fs-14)/1 var(--font-body);letter-spacing:0;text-decoration:none;cursor:pointer}
+.grp .grp-actions :is(.grp-refresh,.grp-edit):hover{background:var(--stone-100);color:var(--ink-900);text-decoration:underline;text-underline-offset:.18em}
+.grp .grp-actions :is(.grp-refresh,.grp-edit):focus-visible{outline:3px solid var(--focus);outline-offset:0}
+.grp-ico{width:16px;height:16px;flex:none}
+.grp .grp-refresh:disabled{color:var(--ink-600);background:transparent;text-decoration:none;cursor:progress}
+@media (prefers-reduced-motion:no-preference){
+  .grp-refresh[aria-busy=true] .grp-ico{animation:grp-spin 1s linear infinite}
+  .grp-status[data-state=loading]::before{animation:grp-pulse 1.2s ease-in-out infinite}
+  @keyframes grp-spin{to{transform:rotate(360deg)}}
+  @keyframes grp-pulse{50%{opacity:.35}}
+}
+.grp-intro{max-width:68ch;margin:0;color:var(--ink-600)}
+
+/* sections */
+.grp-section{margin:var(--s-10) 0 0;min-width:0}
+.grp-section>h2{margin:0 0 var(--s-3);font-size:var(--fs-24)}
+.grp-summary{margin:0 0 var(--s-3)}
+#gMsg.g-msg{margin:0 0 var(--s-4)}
+
+/* Who owes whom = the headline card */
+#gSettle{margin-top:0;padding:var(--s-5) var(--s-6) var(--s-4);background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-1)}
+#gSettle h3{margin:0 0 var(--s-2);font:600 var(--fs-12)/1.3 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-600)}
+#gTransfers{margin:0 0 var(--s-4);padding:0;list-style:none;counter-reset:t}
+#gTransfers li{display:flex;align-items:center;gap:var(--s-3);min-height:var(--tap);padding:var(--s-2) 0;border-bottom:1px solid var(--line);font-weight:600;font-variant-numeric:tabular-nums}
+#gTransfers li::before{counter-increment:t;content:counter(t);flex:none;display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:var(--stone-100);color:var(--ink-700);font-size:var(--fs-12)}
+.grp-empty{margin:0 0 var(--s-4);padding:var(--s-3) var(--s-4);border-radius:var(--r-md);background:var(--stone-100);color:var(--ink-700);font-size:var(--fs-14)}
+#gSettle>p.small{margin:0 0 var(--s-2);font-size:var(--fs-12);max-width:80ch}
+#gSettle .gt{border:0;border-top:1px solid var(--line);border-radius:0;background:transparent}
+#gSettle .gt th{background:transparent;border-bottom:1px solid var(--line-strong)}
+.grp-mismatch{margin:var(--s-3) 0;padding:var(--s-2) var(--s-3);border-left:4px solid var(--todo-fg);border-radius:var(--r-sm);background:var(--todo-bg);color:var(--ink-900)!important}
+
+/* tables (desktop/tablet) */
+.grp .gt-scroll{margin:0 0 var(--s-3);border-radius:var(--r-md)}
+.grp .gt-scroll:focus-visible{outline:3px solid var(--focus);outline-offset:2px}
+.grp .gt-scroll>.gt:not(.grp-gridtable){display:table;width:100%}
+.grp .gt td{line-height:1.45}
+.grp .gt td[data-label=Notes],.grp .gt td[data-label=Note]{min-width:24ch;color:var(--ink-700)}
+.grp .gt td[data-label=Item],.grp .gt td[data-label="Line item"]{min-width:18ch;font-weight:600}
+.grp .gt td[data-label=Email]{overflow-wrap:anywhere}
+.grp .gt tr.tot td{font-weight:700;background:var(--stone-100)}
+.grp-chip{white-space:nowrap}
+.grp-tick{text-align:center}.grp-tick.on{color:var(--ok-fg);font-weight:600}
+
+/* disclosures: split grid + backup, quiet text toggles with a 44px target */
+.grp details>summary{display:inline-flex;align-items:center;gap:var(--s-2);min-height:var(--tap);padding:0 var(--s-1);color:var(--lake-700);font:600 var(--fs-14)/1.2 var(--font-body);cursor:pointer;list-style:none;border-radius:var(--r-sm)}
+.grp details>summary::-webkit-details-marker{display:none}
+.grp details>summary::before{content:"";flex:none;width:7px;height:7px;border:solid currentColor;border-width:0 2px 2px 0;transform:rotate(-45deg);transition:transform var(--dur) var(--ease)}
+.grp details[open]>summary::before{transform:rotate(45deg)}
+.grp details>summary:hover{color:var(--ink-900);text-decoration:underline;text-underline-offset:.18em}
+.grp-grid{margin:var(--s-2) 0 0}
+.grp-grid .gt-scroll{overflow-x:auto}
+.grp-backup{margin-top:var(--s-10);padding-top:var(--s-4);border-top:1px solid var(--line)}
+.grp-backup>p{margin:var(--s-1) 0 var(--s-2)}
+.grp-backup .gbar{display:flex;margin:0;padding:0;background:none;border:0;box-shadow:none}
+.grp-backup .gbar button{background:transparent;color:var(--ink-900)}
+.grp-backup .gbar button:hover{background:var(--stone-100)}
+
+/* phone: rows become a divided list inside one card; the split grid keeps its columns and scrolls */
+@media (max-width:600px){
+  .grp-head h1{font-size:var(--fs-24)}
+  .grp .grp-actions.gbar{margin-left:calc(-1 * var(--s-3))}   /* ghost-button text lines up with the page edge */
+  .grp-section>h2{font-size:var(--fs-20)}
+  #gSettle{padding:var(--s-4) var(--s-4) var(--s-2);border-radius:var(--r-md)}
+  .grp .gt-scroll:not(:has(.grp-gridtable)){overflow:visible}
+  .grp .gt-scroll>.gt:not(.grp-gridtable){display:block;width:auto;border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface)}
+  .grp .gt:not(.grp-gridtable) thead{position:absolute;display:block;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+  .grp .gt:not(.grp-gridtable) tbody{display:block}
+  .grp .gt:not(.grp-gridtable) tr{display:grid;grid-template-columns:minmax(0,1fr) auto;column-gap:var(--s-3);row-gap:2px;padding:var(--s-3) var(--s-4);border-bottom:1px solid var(--line)}
+  .grp .gt:not(.grp-gridtable) tr:last-child{border-bottom:0}
+  .grp .gt:not(.grp-gridtable) td{display:block;grid-column:1/-1;min-width:0;padding:0;border:0;background:none;text-align:left;white-space:normal;overflow-wrap:anywhere;font-size:var(--fs-14)}
+  .grp .gt:not(.grp-gridtable) tr.tot{background:var(--stone-100)}
+  .grp .gt:not(.grp-gridtable) tr.tot td{background:none}
+  /* key/value detail lines: label left, value right */
+  .grp .gt:not(.grp-gridtable) td[data-label]:not(:first-child){display:flex;justify-content:space-between;align-items:baseline;gap:var(--s-3);text-align:right}
+  .grp .gt:not(.grp-gridtable) td[data-label]:not(:first-child)::before{content:attr(data-label);flex:none;max-width:55%;text-align:left;font-size:var(--fs-12);color:var(--ink-600)}
+  /* row title (first cell) + one headline value top-right */
+  .grp .gt:not(.grp-gridtable) td:first-child{grid-row:1;grid-column:1;font-size:var(--fs-16);font-weight:600;line-height:1.35;color:var(--ink-900)}
+  .grp :is(.grp-tracker td[data-label=Status],.grp-ledger td[data-label=Total],.grp-settle td[data-label=Balance]){grid-row:1;grid-column:2;align-self:start;font-size:var(--fs-16)!important;font-weight:700}
+  .grp :is(.grp-tracker td[data-label=Status],.grp-ledger td[data-label=Total],.grp-settle td[data-label=Balance])::before{display:none!important}
+  .grp .grp-tracker td[data-label=Status]{font-size:inherit!important}
+  /* long free text: muted block, no label */
+  .grp .gt:not(.grp-gridtable) :is(td[data-label=Notes],td[data-label=Date]){display:block!important;text-align:left!important;color:var(--ink-600)}
+  .grp .gt:not(.grp-gridtable) td[data-label=Notes]{margin-top:var(--s-1);font-size:var(--fs-14);line-height:1.45}
+  .grp .gt:not(.grp-gridtable) :is(td[data-label=Notes],td[data-label=Date])::before{display:none}
+  /* roster: number + name on one line, email and note under the name */
+  .grp-roster .gt tr{grid-template-columns:1.75rem minmax(0,1fr)!important}
+  .grp-roster .gt td:first-child{font-size:var(--fs-14)!important;font-weight:600;color:var(--ink-600)!important;font-variant-numeric:tabular-nums}
+  .grp-roster .gt td[data-label=Name]{grid-row:1;grid-column:2;display:block!important;text-align:left!important;font-size:var(--fs-16);font-weight:600}
+  .grp-roster .gt td[data-label=Name]::before,.grp-roster .gt td[data-label=Email]::before{display:none}
+  .grp-roster .gt :is(td[data-label=Email],td[data-label=Note]){grid-column:2!important;display:block!important;text-align:left!important;color:var(--ink-700)}
+  #gBody .grp-roster .gt td[data-label=Note]::before{content:"Note";display:inline;margin-right:.4em}
+  /* settlement: name + balance on one line, then the other figures flow as one or two small lines (#gSettle beats the generic list rules) */
+  #gSettle .gt tr{display:flex;flex-wrap:wrap;align-items:baseline;column-gap:var(--s-4);row-gap:2px}
+  #gSettle .gt td:first-child{order:0;flex:1 1 calc(100% - 10rem)}
+  #gSettle .gt td[data-label=Balance]{order:1;flex:0 0 auto;margin-left:auto;text-align:right}
+  #gSettle .gt td[data-label]:not(:first-child):not([data-label=Balance]){order:2;display:inline-flex;flex:0 0 auto;gap:4px;font-size:var(--fs-12);color:var(--ink-700);text-align:left}
+  #gSettle .gt td[data-label]:not(:first-child)::before{max-width:none}
+  #gSettle .gt td[data-label="Share of all lines"]::before{content:"Total share"}
+  #gSettle .gt td[data-label="Share of paid lines"]::before{content:"Share of paid"}
+  #gSettle .gt td[data-label^="Deposits fronted"]::before{content:"Deposits"}
+  #gSettle .gt-scroll>.gt{border:0;border-top:1px solid var(--line);border-radius:0;background:transparent}
+  #gSettle .gt tr{padding:var(--s-3) 0}
+  #gSettle .gt tr.tot{padding:var(--s-3) var(--s-2);margin:0 calc(-1 * var(--s-2))}
 }
 
 /* ---------- [arrival] PROPOSED getting-there leg (#arrival, filled by app_av1.js from D.arrival; not a .day card) ---------- */

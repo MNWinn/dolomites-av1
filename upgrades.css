@@ -548,3 +548,14 @@ header{z-index:1200}
 /* ---------- [guide tidy] one trailing source group per table cell / list item; via points in small text ---------- */
 #guide .row-src{font-size:var(--fs-12);color:var(--ink-600);white-space:nowrap;margin-left:.25em}
 #guide small.via{display:block;font-size:var(--fs-12);color:var(--ink-600);line-height:1.4}
+/* Group v3: who owes whom, one row per traveler; plain status chips, no red minus balances */
+.grp-lede{max-width:65ch;margin:0 0 var(--s-3)}
+.owe-list{list-style:none;margin:0 0 var(--s-4);padding:0;display:grid;gap:var(--s-2);grid-template-columns:repeat(auto-fill,minmax(min(100%,17rem),1fr))}
+.owe-row{border:1px solid var(--line,currentColor);border-radius:10px;padding:var(--s-2) var(--s-3);min-width:0}
+.owe-row.is-payer{border-width:2px}
+.owe-top{display:flex;justify-content:space-between;align-items:center;gap:var(--s-2);flex-wrap:wrap}
+.owe-name{font-weight:700;overflow-wrap:anywhere}
+.owe-line{margin:.25rem 0 0;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.owe-later{opacity:.85;font-size:.92em}
+.owe-chip{white-space:nowrap}
+.grp-sub{margin:var(--s-3) 0 var(--s-2);font-size:1rem}

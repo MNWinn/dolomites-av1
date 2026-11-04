@@ -11,7 +11,7 @@
 <!-- self-hosted, deferred: run in this order after the page is parsed (Leaflet → Chart.js → app.js) -->
 <script defer src="vendor/leaflet/leaflet.js"></script>
 <script defer src="vendor/chart.umd.min.js"></script>
-<script defer src="app.js?v=38b35c87fa"></script>
+<script defer src="app.js?v=1bb29954ab"></script>
 <link rel="preload" href="fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/fraunces-600-latin.woff2" as="font" type="font/woff2" crossorigin>
 <style id="redesign-css">
@@ -400,8 +400,8 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </section>
 <section id="bento" aria-label="Trip at a glance"><div class="bento">
 <section class="tile" data-bento="countdown" aria-labelledby="bxCount"><h2 id="bxCount">Countdown</h2>
-<p class="big"><span data-bento-countdown>20 Aug</span><small data-bento-countdown-label>2027 · start at Lago di Braies</small></p>
-<p>Start: <time data-bento-start datetime="2027-08-12T07:00:00+02:00">Thu 12 Aug 2027</time></p></section>
+<p class="big"><span data-bento-countdown>9 Aug</span><small data-bento-countdown-label>2027 · leave the US</small></p>
+<p>Departure: <time data-bento-start data-bento-days="9" data-bento-hike="2027-08-12T07:00:00+02:00" datetime="2027-08-09T00:00:00-04:00">Mon 9 Aug 2027</time> · land Venice Tue 10 · hike Thu 12</p></section>
 <section class="tile" data-bento="route" aria-labelledby="bxRoute"><h2 id="bxRoute">The route</h2><p class="small tile-note">Traced route (estimate): km · climb · top per day. Guide totals are in the header.</p>
 <div class="spark-row" data-bento-sparks aria-busy="true"><span class="spark skel" aria-hidden="true"></span><span class="spark skel" aria-hidden="true"></span><span class="spark skel" aria-hidden="true"></span><span class="spark skel" aria-hidden="true"></span></div>
 <p class="tile-empty" data-bento-empty>Each day's distance and climb profile is on the <a href="#days">day cards</a>.</p></section>
@@ -421,7 +421,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </div></section>
 <div id="app" role="tabpanel" aria-labelledby="bMap"><div id="side">
 <div class="print-only print-head"><b>Alta Via 1 north · day sheets</b><span>12–15 Aug 2027<span data-print-date></span></span></div>
-<div class="banner bn-v2" id="banner"><p class="bn-line"><b>Huts:</b> 1 requested (pending), 2 still to book · <a href="#hutStatus">next steps</a></p><p class="day-flag day-flag--warn"><span aria-hidden="true">⚠️ </span><b>Sun 15 Aug is Ferragosto:</b> bus 52 from Cinque Torri runs only at 14:20 and 16:20 (last chairlift down 17:00; 2026 timetable).</p><p class="bn-line"><b>Hotels</b> (not booked) · free cancellation: Rodes to ≈15 Jul · Trenker to ≈26 Jul</p><details class="g-more"><summary>Plan summary, backup and prices</summary><div><b>Main plan: Alta Via 1 north, 4 days, 3 hut nights, finish at Cinque Torri.</b> Backup: Palaronda (guide §8, <code>palaronda.html</code>).<br><b>⚠️ Deadlines</b><br>1. <b>Ücia Lavarella (Fri 13)</b>: requested 4 Nov 2026; status and price in the hut panel below.<br>2. <b>Rif. Col Gallina (Sat 14)</b>: Room 3 (5 × €130) + 4 beds in Room 5 (× €120) = €1,130, plus city tax €1.50 pp; 50% non-refundable.<br>3. <b>Rif. Biella (Thu 12)</b>: rooms Pelmo (6) + Cima Nove (3); 2 bookings (max 8); 50% non-refundable.<br>4. Hotels: Trenker in Braies (Tue 10–Wed 11) free cancellation to ≈26 Jul; Rodes in Ortisei (Sun 15–Mon 16) to ≈15 Jul.<br>Plan: fly Mon 9 overnight · land VCE ≈08:00 Tue 10, drive to Braies · rest Wed 11 · huts Thu 12–Sat 14 · walk out Sun 15, Ortisei · Seceda Mon 16 · fly home Tue 17. <span class="small">Public calendars checked 3 Nov 2026 (guide §5.1).</span></div></details></div>
+<div class="banner bn-v2" id="banner"><p class="bn-line"><b>Huts:</b> all three booked: Biella, Lavarella, Col Gallina · <a href="#hutStatus">next steps</a></p><p class="day-flag day-flag--warn"><span aria-hidden="true">⚠️ </span><b>Sun 15 Aug is Ferragosto:</b> bus 52 from Cinque Torri runs only at 14:20 and 16:20 (last chairlift down 17:00; 2026 timetable).</p><p class="bn-line"><b>Hotels</b> (not booked) · free cancellation: Rodes to ≈15 Jul · Trenker to ≈26 Jul</p><details class="g-more"><summary>Plan summary, backup and prices</summary><div><b>Main plan: Alta Via 1 north, 4 days, 3 hut nights, finish at Cinque Torri.</b> Backup: Palaronda (guide §8, <code>palaronda.html</code>).<br><b>⚠️ Deadlines</b><br>1. <b>Ücia Lavarella (Fri 13)</b>: <b>booked</b>, R3011/2026, 4-bed + 5-bed dorm, HB, €969; ≈€485 deposit paid (exact TBC), balance at the hut.<br>2. <b>Rif. Col Gallina (Sat 14)</b>: <b>booked</b>, 6AEB870A6CA73, Room 7 ×6 + Room 11 ×3, HB, €1,470; €735 deposit paid, €735 due at check-in; city tax €1.50 pp extra.<br>3. <b>Rif. Biella (Thu 12)</b>: <b>booked</b>, Cima Nove ×6 (R20541190) + Croda Rossa ×3 (R20541212), €855; €427.50 deposit paid, €427.50 due at the hut.<br>4. Hotels: Trenker in Braies (Tue 10–Wed 11) free cancellation to ≈26 Jul; Rodes in Ortisei (Sun 15–Mon 16) to ≈15 Jul.<br>Plan: fly Mon 9 overnight · land VCE ≈08:00 Tue 10, drive to Braies · rest Wed 11 · huts Thu 12–Sat 14 · walk out Sun 15, Ortisei · Seceda Mon 16 · fly home Tue 17. <span class="small">Public calendars checked 3 Nov 2026 (guide §5.1).</span></div></details></div>
 <section class="banner hs-v2" id="hutStatus" aria-labelledby="hsTitle"><h2 id="hsTitle">Hut nights: booked yet?</h2><span class="small">(checked Tue 3 Nov 2026, 18:53–18:58 ET; read-only)</span>
 <details class="g-more hs-key"><summary>What the tags mean</summary><ul class="hs-legend" aria-label="Badge key"><li><span class="badge" data-status="booked">Booked</span></li><li><span class="badge" data-status="pending">Pending</span></li><li><span class="badge" data-status="not-booked">Not booked</span></li><li>= our booking (Group → Booking tracker). Tinted tags = what the hut's site shows.</li></ul></details>
 <div id="hsBody"></div>
@@ -436,13 +436,13 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <div id="guide" role="tabpanel" aria-labelledby="bGuide" hidden><div class="inner" id="guideInner"><h1>MAIN PLAN: Alta Via 1 (north), Lago di Braies → Cinque Torri, 4 days hut to hut, 12–15 Aug 2027 (trip 9–17 Aug)</h1>
 <p class="g-chips"><span>9 adults</span><span>Thu 12 – Sun 15 Aug 2027</span><span>4 days · 3 hut nights</span><span>≈39.1 km · +2,728 / −2,014 m (guide)</span></p>
 
-<p><strong>Status (4 Nov 2026):</strong> only the Ücia Lavarella request is in (<strong>pending</strong>); nothing else is booked, held or paid. Next: book Col Gallina and Biella (§5).</p>
+<p><strong>Status (4 Nov 2026):</strong> <strong>Rif. Biella is booked</strong> (Thu 12: Cima Nove ×6 + Croda Rossa ×3, €855; €427.50 deposit paid, €427.50 due at the hut [S111]). <strong>Rif. Col Gallina is booked</strong> (Sat 14: Room 7 ×6 + Room 11 ×3, HB, €1,470; €735 deposit paid, €735 due at check-in; city tax €1.50 pp extra [S112]). <strong>Ücia Lavarella is booked</strong> (Fri 13: R3011/2026, 4‑bed + 5‑bed dorm, HB, €969; ≈€485 deposit paid, exact figure TBC, balance at the hut [S113]). All three huts are booked. Nothing else is booked, held or paid.</p>
 <blockquote>
 <p><strong>⚠️ Ferragosto, Sun 15 Aug:</strong> bus 52 from Cinque Torri runs <strong>only at 14:20 and 16:20</strong> (2026 Sunday/holiday timetable [S78]); the last chairlift down is 17:00.</p>
 </blockquote>
 <details class="g-more"><summary>Plan history, group size, availability notes and conventions</summary>
 
-<p><strong>Group of 9, all named (the Group tab lists all 9), beds asked for 9 · Plan prepared 2 Nov 2026; dates and huts changed 3 Nov 2026 and again 4 Nov 2026 (plan for 9 adults: fly Mon 9 Aug, Braies Tue 10–Wed 11, hike Thu 12–Sun 15 Aug 2027, night 2 at <strong>Ücia Lavarella</strong> instead of Fanes, Ortisei Sun 15–Mon 16, home Tue 17) · Only the Lavarella reservation request has been submitted (<strong>pending</strong>); nothing else is booked, held or paid.</strong></p>
+<p><strong>Group of 9, all named (the Group tab lists all 9), beds asked for 9 · Plan prepared 2 Nov 2026; dates and huts changed 3 Nov 2026 and again 4 Nov 2026 (plan for 9 adults: fly Mon 9 Aug, Braies Tue 10–Wed 11, hike Thu 12–Sun 15 Aug 2027, night 2 at <strong>Ücia Lavarella</strong> instead of Fanes, Ortisei Sun 15–Mon 16, home Tue 17) · All three huts are booked (Biella, Lavarella, Col Gallina); nothing else is booked, held or paid.</strong></p>
 <p><strong>This is the main hike.</strong> Alta Via 1 north, 3 hut nights (Biella, Ücia Lavarella, Col Gallina), finishing at Cinque Torri on Sun 15 Aug (Ferragosto) with no night at Nuvolau, then 2 nights in Ortisei (Seceda) and home from Venice on Tue 17 Aug. <strong>Lagazuoi is now optional, with no night</strong>: a Day 3 detour on foot or by cable car (§2.2). The Palaronda is the <strong>backup</strong> only (§8 and <code>palaronda.html</code>). Days 1–2 use the figures from Matthew&#39;s hut planner [S91]; Days 3–4 use hut and trail sources [S52][S55][S61][S101][S102].</p>
 <p><strong>Group size: 9 people</strong> (Matthew, 3 Nov 2026; the 9th, Dylan, named 3 Nov 2026). The Group tab roster, the cost ledger, beds and the group cost in §6 are all for <strong>9</strong>.</p>
 <p>Conventions: <strong>[Sn]</strong> = source (list at the end). <strong>EST</strong> = my estimate, with the method stated. <strong>TRACE (EST)</strong> = route traced on OpenStreetMap (AV1 relation 177743 for Days 1–2; OSM trails plus 512 m of the SP24 road near Passo Valparola for Days 3–4) with elevation from OpenTopoData EU‑DEM 25 m, sampled every 40 m, counting climbs/drops of 5 m or more. Prices are <strong>2026</strong> unless stated; 2027 prices are mostly not published. EUR→USD at 1.1216 (ECB, 2 Nov 2026) [S32]. Interactive map: <code>av1.html</code> (this guide is also its &quot;Full guide&quot; tab).</p>
@@ -450,7 +450,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <p><strong>Availability note (Tue 3 Nov 2026, 18:53–18:58 ET, read-only) [S107].</strong> For 9 adults on the new dates: <strong>Biella</strong> showed 38 free places on Thu 12 Aug (€855 HB; max 8 per reservation, so 2 bookings); <strong>Col Gallina</strong> showed 23 shared‑room beds plus private rooms on Sat 14 Aug (per-bed €120–160 HB); <strong>Hotel Trenker</strong> (Braies) fits 9 on Tue 10–Wed 11; <strong>Hotel Rodes</strong> (Ortisei) fits 9 on Sun 15–Mon 16. <strong>Sun 15 Aug is Ferragosto</strong> (Italian national holiday): crowds, lift queues, Sunday buses, holiday traffic (§3.3). Full table: §5.1 Hut booking status and the panel in <code>av1.html</code>.</p>
 </blockquote>
 <blockquote>
-<p><strong>Plan update (Wed 4 Nov 2026, from Matthew) [S108].</strong> Night 2 is <strong>Ücia Lavarella</strong> (a few minutes from Rif. Fanes), not Fanes: 4‑bed dorm + 5‑bed dorm with shower/WC, half board (price and status: §5). Biella rooms: <strong>Pelmo (6) + Cima Nove (3)</strong>, HB. Col Gallina: <strong>Room 3 (5 beds × €130) + 4 beds in Room 5 (× €120)</strong>, HB, <strong>€1,130</strong> (booking screen [S110]; city tax €1.50 pp extra).</p>
+<p><strong>Plan update (Wed 4 Nov 2026, from Matthew) [S108].</strong> Night 2 is <strong>Ücia Lavarella</strong> (a few minutes from Rif. Fanes), not Fanes: 4‑bed dorm + 5‑bed dorm with shower/WC, half board (price and status: §5). Biella: <strong>booked</strong> 4 Nov, <strong>Cima Nove (6) + Croda Rossa (3)</strong> [S111]. Col Gallina: <strong>booked</strong> 4 Nov, private <strong>Room 7 (6) + Room 11 (3)</strong>, HB, <strong>€1,470</strong> (6AEB870A6CA73 [S112]; city tax €1.50 pp extra). The earlier Room 3 + Room 5 plan (€1,130 [S110]) is replaced.</p>
 </blockquote>
 </details>
 
@@ -688,9 +688,9 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tr>
 <tr>
 <td>Price for 9 (LIVE 2027, 3 Nov 2026) <span class="row-src">[S107]</span></td>
-<td><strong>€855</strong> HB (€95 pp); rooms <strong>Pelmo (6) + Cima Nove (3)</strong> <span class="row-src">[S108]</span></td>
-<td>HB (price: §5): 4‑bed dorm + 5‑bed dorm with shower/WC <span class="row-src">[S108]</span></td>
-<td><strong>€1,130: Room 3 (5 beds × €130) + Room 5 (4 beds × €120)</strong> (booking screen). HB per bed; dinner (choice of 3 firsts, 3 mains), bed and breakfast; drinks extra; city tax €1.50 pp/night extra (counted in the hut tourist tax line, §6) <span class="row-src">[S110][S54]</span></td>
+<td><strong>€855 booked</strong> (= €95 pp HB rate); <strong>Cima Nove ×6</strong> (R20541190, €570) + <strong>Croda Rossa ×3</strong> (R20541212, €285) <span class="row-src">[S111][S107]</span></td>
+<td>HB, €969 for 9: 4‑bed dorm €424 + 5‑bed dorm with shower/WC €545 <span class="row-src">[S113]</span></td>
+<td><strong>€1,470 booked</strong>: private <strong>Room 7 ×6</strong> (€900) + <strong>Room 11 ×3</strong> (€570), 6AEB870A6CA73. Half board included; dinner (choice of 3 firsts, 3 mains), bed and breakfast; drinks extra; city tax €1.50 pp/night extra (counted in the hut tourist tax line, §6) <span class="row-src">[S112][S54]</span></td>
 </tr>
 <tr>
 <td>Season</td>
@@ -700,15 +700,15 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tr>
 <tr>
 <td>Booking</td>
-<td>Online, Planyo (2027 open since 1 Nov 2026): <a target="_blank" rel="noopener" href="https://www.planyo.com/booking/Rifugio-Biella">https://www.planyo.com/booking/Rifugio-Biella</a> — <strong>max 8 per reservation, so 2 bookings (e.g. 5 + 4)</strong> <span class="row-src">[S50]</span></td>
-<td>Reservation request <strong>submitted, awaiting confirmation</strong>; <a target="_blank" rel="noopener" href="https://www.lavarella.it">https://www.lavarella.it</a> <span class="row-src">[S108]</span></td>
-<td>Online calendar: <a target="_blank" rel="noopener" href="https://rifugiocolgallina.bukly.com">https://rifugiocolgallina.bukly.com</a></td>
+<td>Online, Planyo (2027 open since 1 Nov 2026): <a target="_blank" rel="noopener" href="https://www.planyo.com/booking/Rifugio-Biella">https://www.planyo.com/booking/Rifugio-Biella</a> — <strong>BOOKED 4 Nov 2026</strong> as 2 bookings: R20541190 + R20541212 <span class="row-src">[S50][S111]</span></td>
+<td><strong>BOOKED 4 Nov 2026</strong>, R3011/2026; <a target="_blank" rel="noopener" href="https://www.lavarella.it">https://www.lavarella.it</a> <span class="row-src">[S113]</span></td>
+<td>Online calendar: <a target="_blank" rel="noopener" href="https://rifugiocolgallina.bukly.com">https://rifugiocolgallina.bukly.com</a> — <strong>BOOKED 4 Nov 2026</strong>: 6AEB870A6CA73 <span class="row-src">[S112]</span></td>
 </tr>
 <tr>
 <td>Deposit / cancellation</td>
-<td><strong>50% deposit, non‑refundable</strong> <span class="row-src">[S50]</span></td>
-<td>Deposit and cancellation: per the hut&#39;s booking conditions; amounts not checked for this request, confirm with the hut&#39;s reply <span class="row-src">[S43]</span></td>
-<td><strong>50% at booking, non‑refundable</strong>; balance after dinner, cash or card (no Amex) <span class="row-src">[S54][S107]</span></td>
+<td><strong>€427.50 deposit paid</strong> (50%, non‑refundable); <strong>€427.50 due at the hut</strong> <span class="row-src">[S50][S111]</span></td>
+<td><strong>≈€485 deposit paid</strong> (non‑refundable; exact figure TBC); <strong>balance due at the hut</strong> <span class="row-src">[S113]</span></td>
+<td><strong>€735 deposit paid</strong> (50%, kept on cancellation); <strong>€735 due at check-in</strong>; cash or card (no Amex) <span class="row-src">[S54][S112][S107]</span></td>
 </tr>
 <tr>
 <td>Notes for 9</td>
@@ -987,7 +987,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 ---
 
 <h2>5. Booking order, deadlines and deposit rules</h2>
-<p>Only the Ücia Lavarella request (row 1) has been submitted; nothing else below has been done. Matthew (or whoever he names in the Group tab) books; I contacted no one. Cancellation dates were counted back from the arrival nights in Python (weekdays checked). Cancellation dates marked ≈ are my day counts from the stated rule.</p>
+<p>The three huts are booked (Lavarella: row 1); nothing else below has been done. Matthew (or whoever he names in the Group tab) books; I contacted no one. Cancellation dates were counted back from the arrival nights in Python (weekdays checked). Cancellation dates marked ≈ are my day counts from the stated rule.</p>
 <table tabindex="0" aria-label="Guide table 12 (scrolls sideways)">
 <thead>
 <tr>
@@ -1002,25 +1002,25 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <tbody><tr>
 <td>1</td>
 <td><strong>Ücia Lavarella</strong>, Fri 13 Aug, 9 × HB</td>
-<td><strong>Request submitted (4 Nov 2026), awaiting confirmation: PENDING</strong> <span class="row-src">[S108]</span></td>
-<td>Reservation request to the hut (lavarella.it)</td>
-<td><strong>€969 HB</strong> for a 4‑bed dorm + 5‑bed dorm with shower/WC. Deposit and cancellation per the hut&#39;s conditions; amounts not checked, confirm with the hut&#39;s reply <span class="row-src">[S108][S43]</span></td>
-<td>Watch for the hut&#39;s confirmation and deposit request</td>
+<td><strong>BOOKED 4 Nov 2026</strong> by Matthew, R3011/2026 <span class="row-src">[S113]</span></td>
+<td>Reservation with the hut (lavarella.it)</td>
+<td><strong>€969 HB</strong>: 4‑bed dorm €424 + 5‑bed dorm with shower/WC €545. <strong>≈€485 deposit paid</strong> (non‑refundable; exact figure TBC); balance due at the hut <span class="row-src">[S113]</span></td>
+<td>Confirm the exact deposit figure from the confirmation</td>
 </tr>
 <tr>
 <td>2</td>
 <td><strong>Rif. Col Gallina</strong>, Sat 14 Aug, 9 × HB</td>
-<td>Now; plan: <strong>Room 3 (5 beds) + 4 beds in Room 5</strong> (beds free Sat 14 on 3 Nov 2026) <span class="row-src">[S108][S107]</span></td>
+<td><strong>BOOKED 4 Nov 2026</strong>: 6AEB870A6CA73, private <strong>Room 7 ×6</strong> (€900) + <strong>Room 11 ×3</strong> (€570), HB included <span class="row-src">[S112]</span></td>
 <td>bukly online calendar <span class="row-src">[S54]</span></td>
-<td><strong>50% at booking, non‑refundable</strong>; €1,130 for 9 (5 × €130 + 4 × €120) + city tax €1.50 pp <span class="row-src">[S54][S107][S110]</span></td>
+<td><strong>€1,470</strong> for 9: <strong>€735 deposit paid</strong> (50%, kept on cancellation); <strong>€735 due at check-in</strong>; city tax €1.50 pp (€13.50) extra <span class="row-src">[S54]</span></td>
 <td>Deposit lost on any cancellation</td>
 </tr>
 <tr>
 <td>3</td>
 <td><strong>Rif. Biella</strong>, Thu 12 Aug, 9 × HB</td>
-<td>Same day — 38 places free on 3 Nov 2026; plan: rooms <strong>Pelmo (6) + Cima Nove (3)</strong> <span class="row-src">[S107][S108]</span></td>
-<td>Planyo online; <strong>max 8 per reservation → 2 bookings</strong> <span class="row-src">[S50]</span></td>
-<td><strong>50% non‑refundable</strong>; €855 for 9 <span class="row-src">[S50]</span></td>
+<td><strong>BOOKED 4 Nov 2026</strong>: <strong>Cima Nove ×6</strong> (R20541190, €570) + <strong>Croda Rossa ×3</strong> (R20541212, €285) <span class="row-src">[S111]</span></td>
+<td>Planyo online; 2 bookings (max 8 per reservation) <span class="row-src">[S50]</span></td>
+<td><strong>€855</strong> for 9: <strong>€427.50 deposit paid</strong> (50%, non‑refundable); <strong>€427.50 due at the hut</strong> <span class="row-src">[S50]</span></td>
 <td>Deposit lost on any cancellation</td>
 </tr>
 <tr>
@@ -1088,11 +1088,11 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>Chairs and cable car: last down 17:00 <span class="row-src">[S66][S67]</span></td>
 </tr>
 </tbody></table>
-<p><strong>Money at risk once 1–3 are booked:</strong> Col Gallina 50% × €1,130 = €565; Biella 50% × €855 = €427.50 → <strong>€992.50 non‑refundable for 9 (≈€110.30 pp)</strong>, plus the Lavarella deposit (amount TBD: set by the hut when it confirms).</p>
+<p><strong>Money at risk now:</strong> Biella €427.50 (<strong>paid</strong>, non‑refundable); Col Gallina €735 (<strong>paid</strong>, kept on cancellation) ; Lavarella ≈€485 (<strong>paid</strong>, non‑refundable, exact TBC) → <strong>≈€1,647.50 non‑refundable for 9 (≈€183.06 pp)</strong>.</p>
 <h3>5.1 Hut booking status (checked Tue 3 Nov 2026, 18:53–18:58 ET for our nights; other rows from earlier checks)</h3>
 <details class="g-more"><summary>Hut status table (same as the Map tab panel)</summary>
 
-<p>Read-only checks of public calendars and pages; nothing was booked or held (the Lavarella request of 4 Nov 2026 was submitted by the group [S108]). <strong>Open for 2027</strong> = the hut takes 2027 bookings now; the August column says whether our night was actually free online. Same data as the &quot;Hut booking status&quot; panel in <code>av1.html</code>.</p>
+<p>Read-only checks of public calendars and pages; nothing was booked or held by me (the three hut bookings of 4 Nov 2026 were made by Matthew [S111][S112][S113]). <strong>Open for 2027</strong> = the hut takes 2027 bookings now; the August column says whether our night was actually free online. Same data as the &quot;Hut booking status&quot; panel in <code>av1.html</code>.</p>
 <table tabindex="0" aria-label="Guide table 13 (scrolls sideways)">
 <thead>
 <tr>
@@ -1114,7 +1114,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>Opened 1 Nov 2026 [S50]</td>
 <td>Planyo online calendar (max 8 per reservation: 2 bookings)</td>
 <td><a target="_blank" rel="noopener" href="https://www.planyo.com/booking/Rifugio-Biella">https://www.planyo.com/booking/Rifugio-Biella</a></td>
-<td>Thu 12 Aug: 38 free places (rooms of 8, 8, 7, 6, 6, 3); €855 HB for 9; plan rooms Pelmo (6) + Cima Nove (3) [S108]; 50% deposit, non-refundable [S107]</td>
+<td>Thu 12 Aug: <b>Booked</b> 4 Nov 2026: Cima Nove ×6 (R20541190, €570) + Croda Rossa ×3 (R20541212, €285) = €855 for 9; €427.50 deposit paid (non-refundable), €427.50 due at the hut [S111]</td>
 <td>S50, S107</td>
 <td>3 Nov 2026 18:53–18:58 ET</td>
 </tr>
@@ -1123,10 +1123,10 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>Night 2 · Fri 13 Aug</td>
 <td><strong>Open for 2027</strong></td>
 <td>Summer 2027 bookable [S93][S108]</td>
-<td>Reservation request (submitted; awaiting confirmation)</td>
+<td>Booked 4 Nov 2026 by Matthew Winn, R3011/2026 [S113]</td>
 <td><a target="_blank" rel="noopener" href="https://www.lavarella.it">https://www.lavarella.it</a></td>
-<td>Fri 13 Aug: 4-bed dorm + 5-bed dorm with shower/WC, HB, €969 for 9. <b>Pending</b>: request submitted, not yet confirmed [S108]</td>
-<td>S43, S108</td>
+<td>Fri 13 Aug: 4-bed dorm + 5-bed dorm with shower/WC, HB, €969 for 9. <b>Booked</b>: R3011/2026 [S113]</td>
+<td>S43, S108, S113</td>
 <td>4 Nov 2026</td>
 </tr>
 <tr>
@@ -1136,7 +1136,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>2027 nights online [S54]</td>
 <td>bukly online calendar</td>
 <td><a target="_blank" rel="noopener" href="https://rifugiocolgallina.bukly.com">https://rifugiocolgallina.bukly.com</a></td>
-<td>Sat 14 Aug: Stanza 5 ×8 (€120), 7 ×6 (€150), 3 ×5 (€130), 10 ×4 (€160) beds HB, plus doubles 6/8 and triple 11; plan: Room 3 (5 beds × €130) + 4 beds in Room 5 (× €120), HB, €1,130 for 9 [S110]; 50% non-refundable [S107]</td>
+<td>Sat 14 Aug: Stanza 5 ×8 (€120), 7 ×6 (€150), 3 ×5 (€130), 10 ×4 (€160) beds HB, plus doubles 6/8 and triple 11; <b>Booked</b> 4 Nov 2026 (6AEB870A6CA73): private Room 7 ×6 (€900) + Room 11 ×3 (€570), HB included, €1,470 for 9; €735 deposit paid, €735 due at check-in; city tax €1.50 pp extra [S112]</td>
 <td>S54, S107, S110</td>
 <td>3 Nov 2026 18:53–18:58 ET</td>
 </tr>
@@ -1229,7 +1229,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>2 Nov 2026</td>
 </tr>
 </tbody></table>
-<p><strong>What this means:</strong> Biella (night 1, Thu 12) is open with 38 places (plan: Pelmo + Cima Nove). Ücia Lavarella (night 2, Fri 13): see row 1 [S108]. Col Gallina (night 3, Sat 14) showed 23 shared‑room beds plus private rooms online. Lagazuoi is not a night: it is only an optional Day 3 detour or cable car. Averau, Scotoni and Cinque Torri were not rechecked for the new dates.</p>
+<p><strong>What this means:</strong> Biella (night 1, Thu 12) is <strong>booked</strong>: Cima Nove (6) + Croda Rossa (3) [S111]. Ücia Lavarella (night 2, Fri 13) is <strong>booked</strong>: 4‑bed + 5‑bed dorm, R3011/2026 [S113]. Col Gallina (night 3, Sat 14) is <strong>booked</strong>: private Room 7 (6) + Room 11 (3) [S112]. Lagazuoi is not a night: it is only an optional Day 3 detour or cable car. Averau, Scotoni and Cinque Torri were not rechecked for the new dates.</p>
 </details>
 
 <h3>5.2 Night 2: Ücia Lavarella instead of Fanes</h3>
@@ -1238,7 +1238,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </ul>
 <hr>
 <h2>6. Cost per person and for the group (live 2027 prices where checked on 3 Nov 2026, plan prices of 4 Nov 2026 [S108], else 2026; flights excluded)</h2>
-<p class="g-chips"><span>€1,169.12 pp (≈$1,311)</span><span>Group €10,522.12</span><span>Range €1,112–1,274 pp</span><span>Flights not included</span></p>
+<p class="g-chips"><span>€1,206.90 pp (≈$1,354)</span><span>Group €10,862.12</span><span>Range €1,150–1,312 pp</span><span>Flights not included</span></p>
 
 <details class="g-more"><summary>Line by line (low / main / high) and what is not included</summary>
 
@@ -1261,25 +1261,25 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>Hotel Trenker live 2027 [S107]: Low B&amp;B €3,192; Main/High HB €3,376.80 for 9; tax €3.50/night (2026 valley rate [S71])</td>
 </tr>
 <tr>
-<td>Rif. Biella HB (Pelmo 6 + Cima Nove 3)</td>
+<td>Rif. Biella (<strong>booked</strong>: Cima Nove 6 + Croda Rossa 3)</td>
 <td>€95.00</td>
 <td><strong>€95.00</strong></td>
 <td>€95.00</td>
-<td>€855 for 9, live 2027 [S107]; rooms per plan [S108]</td>
+<td><strong>Actual</strong> €855 for 9 (€570 + €285) [S111]; €427.50 paid, €427.50 due at the hut. Equals the €95 pp half‑board rate [S107]; the booking details we have do not state the board</td>
 </tr>
 <tr>
-<td>Ücia Lavarella HB (<strong>pending</strong>)</td>
+<td>Ücia Lavarella HB (<strong>booked</strong>)</td>
 <td>€107.67</td>
 <td><strong>€107.67</strong></td>
 <td>€107.67</td>
-<td>€969 for 9: 4‑bed dorm + 5‑bed dorm with shower/WC, request submitted, awaiting confirmation [S108]</td>
+<td>€969 for 9: 4‑bed dorm €424 + 5‑bed dorm with shower/WC €545, booked R3011/2026; ≈€485 deposit paid (exact TBC) [S113]</td>
 </tr>
 <tr>
-<td>Rif. Col Gallina HB</td>
-<td>€125.56</td>
-<td><strong>€125.56</strong></td>
-<td>€125.56</td>
-<td>€1,130 for 9: Room 3 (5 beds × €130) + Room 5 (4 beds × €120), booking screen [S110]; city tax €1.50 is in the hut tax line, not here</td>
+<td>Rif. Col Gallina HB (<strong>booked</strong>: Room 7 ×6 + Room 11 ×3)</td>
+<td>€163.33</td>
+<td><strong>€163.33</strong></td>
+<td>€163.33</td>
+<td><strong>Actual</strong> €1,470 for 9 (€900 + €570), HB included, 6AEB870A6CA73 [S112]; €735 paid, €735 due at check-in; city tax €1.50 is in the hut tax line, not here</td>
 </tr>
 <tr>
 <td>Hut tourist tax</td>
@@ -1346,16 +1346,16 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tr>
 <tr>
 <td><strong>Per person (9 sharing the van)</strong></td>
-<td><strong>€1,112.37</strong></td>
-<td><strong>€1,169.12 (≈$1,311)</strong></td>
-<td><strong>€1,274.33</strong></td>
+<td><strong>€1,150.15</strong></td>
+<td><strong>€1,206.90 (≈$1,354)</strong></td>
+<td><strong>€1,312.11</strong></td>
 <td>Sum of the rows, Seceda TBD excluded (exact; rounded rows can differ by a cent)</td>
 </tr>
 <tr>
 <td><strong>Group of 9</strong></td>
-<td><strong>€10,011</strong></td>
-<td><strong>€10,522.12 (≈$11,802)</strong></td>
-<td><strong>€11,469</strong></td>
+<td><strong>€10,351</strong></td>
+<td><strong>€10,862.12 (≈$12,183)</strong></td>
+<td><strong>€11,809</strong></td>
 <td>× 9, USD at 1.1216 [S32]; the Group tab ledger uses the Main column (Seceda shown as TBD)</td>
 </tr>
 </tbody></table>
@@ -1441,32 +1441,32 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <tbody><tr>
 <td>Rifugio Biella, hut night 1, 9 × HB</td>
 <td>Thu 12 Aug 2027</td>
-<td>Not booked</td>
+<td>Booked</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
-<td>Planyo online, open since 1 Nov 2026; max 8 per reservation, so 2 bookings: rooms Pelmo (6) + Cima Nove (3) [S108]. 50% non-refundable. 38 places free on 3 Nov 2026 [S107].</td>
+<td>Booked 4 Nov 2026 on Planyo, 2 bookings: Cima Nove ×6 (€570) + Croda Rossa ×3 (€285) = €855. €427.50 deposit paid (50%, non-refundable); €427.50 due at the hut [S111].</td>
 </tr>
 <tr>
 <td>Rifugio Col Gallina, hut night 3, 9 × HB</td>
 <td>Sat 14 Aug 2027</td>
-<td>Not booked</td>
+<td>Booked</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
-<td>bukly online (rifugiocolgallina.bukly.com). 50% at booking, non-refundable. Room 3: 5 beds × €130 + Room 5: 4 beds × €120 = €1,130 HB [S110]; city tax €1.50 pp/night extra (in the hut tourist tax line).</td>
+<td>Booked 4 Nov 2026 on bukly, Sat 14 → Sun 15 Aug 2027, private rooms, half board included: Room 7 ×6 (€900) + Room 11 ×3 (€570) = €1,470. €735 deposit paid; €735 due at check-in. City tax €1.50 pp (€13.50 for 9) extra, not included (in the hut tourist tax line) [S112].</td>
 </tr>
 <tr>
 <td>Ücia Lavarella, hut night 2, 9 × HB (4-bed dorm + 5-bed dorm with shower/WC)</td>
 <td>Fri 13 Aug 2027</td>
-<td>Requested</td>
+<td>Booked</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
-<td>Requested 4 Nov 2026: reservation request submitted, awaiting the hut&#39;s confirmation and deposit terms. €969 HB for 9 [S108].</td>
+<td>Booked 4 Nov 2026: 4-bed dorm €424 + 5-bed dorm with shower/WC €545, HB, €969 for 9. Deposit ≈€485 (exact TBC), non-refundable; balance due at the hut [S113].</td>
 </tr>
 <tr>
 <td>Braies hotel, nights of Tue 10 + Wed 11, 9 people (Hotel Trenker)</td>
@@ -1579,21 +1579,21 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <td>€855.00</td>
 <td>€95.00</td>
 <td>—</td>
-<td>€95 × 9, rooms Pelmo (6) + Cima Nove (3), live 2027 [S107].</td>
+<td>Booked actual: Cima Nove ×6 (R20541190, €570) + Croda Rossa ×3 (R20541212, €285) [S111]; = €95 pp, the live HB rate [S107]. Deposit €427.50 paid by Matthew; €427.50 due at the hut.</td>
 </tr>
 <tr>
-<td>Ücia Lavarella HB × 9 (PENDING)</td>
+<td>Ücia Lavarella HB × 9</td>
 <td>€969.00</td>
 <td>€107.67</td>
 <td>—</td>
-<td>4-bed dorm + 5-bed dorm with shower/WC; request submitted, awaiting confirmation [S108].</td>
+<td>Booked R3011/2026: 4-bed dorm €424 + 5-bed dorm with shower/WC €545; deposit ≈€485 paid (exact TBC), balance at the hut [S113].</td>
 </tr>
 <tr>
 <td>Rifugio Col Gallina HB × 9</td>
-<td>€1,130.00</td>
-<td>€125.56</td>
+<td>€1,470.00</td>
+<td>€163.33</td>
 <td>—</td>
-<td>Room 3: 5 beds × €130 + Room 5: 4 beds × €120 = €1,130 HB [S110]. City tax (€1.50 pp/night) is not included here; it is in the hut tourist tax line.</td>
+<td>Booked actual 6AEB870A6CA73: Room 7 ×6 (€900) + Room 11 ×3 (€570), HB included [S112]. Deposit €735 paid by Matthew; €735 due at check-in. City tax (€1.50 pp, €13.50 for 9) is not included here; it is in the hut tourist tax line.</td>
 </tr>
 <tr>
 <td>Hut tourist tax (EST)</td>
@@ -1660,8 +1660,8 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 </tr>
 <tr>
 <td><strong>Total</strong></td>
-<td><strong>€10,522.09</strong></td>
-<td><strong>€1,169.12</strong></td>
+<td><strong>€10,862.09</strong></td>
+<td><strong>€1,206.90</strong></td>
 <td></td>
 <td>flights and TBD items excluded</td>
 </tr>
@@ -1696,7 +1696,7 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <li><strong>Braies hotel for Tue 10–Wed 11:</strong> Trenker priced live [S107]; Pragserhof and Rose 2027 prices not loaded (no checkable engine), and Pragserhof serves <strong>no dinner on Wednesdays</strong> (Wed 11) [S71].</li>
 <li><strong>Van at the hotel</strong> for 4 nights — only matters for option (a).</li>
 <li><strong>Bus 52 Cinque Torri stop time</strong> (not printed) and the <strong>Sunday/Ferragosto timetable on Sun 15 Aug 2027</strong> (2026: 12:20 weekdays/Sat only; season 8 Jun–9 Sep) [S78].</li>
-<li><strong>Ücia Lavarella (night 2, Fri 13) is PENDING:</strong> request submitted 4 Nov 2026, awaiting the hut&#39;s confirmation and deposit terms [S108]. Fallback if refused: Rif. Fanes (sold 13–14 Aug only in 2‑night stays on 3 Nov 2026 [S107]).</li>
+<li><strong>Ücia Lavarella (night 2, Fri 13): answered, booked</strong> 4 Nov 2026, R3011/2026 [S113]. Still open: the exact deposit figure (≈€485) from the confirmation page.</li>
 <li><strong>Col Gallina 2027 prices</strong> read live per bed on 3 Nov 2026 (€120–160) [S107]; bed counts per room come from the bukly calendar.</li>
 <li><strong>Group size 9, all named:</strong> Dylan (named 3 Nov 2026) is traveler 9 in the Group tab, and the ledger splits among all 9. A browser that saved the old 8-person defaults gets him added on its next visit; a browser with an edited roster shows a notice to add him with <strong>+ Add traveler</strong> (saved in this browser only).</li>
 <li><strong>2027 prices</strong> for huts, lifts, buses and the Braies rule are not yet published.</li>
@@ -1822,9 +1822,12 @@ label.btn:focus-within{outline:3px solid var(--focus);outline-offset:2px}
 <li><strong>[S105]</strong> OpenStreetMap nodes 452438203 (Forcella del Lago / Forcela dl Lech, ele 2,486) and 6635588053 (Forcella Averau, ele 2,435), via api.openstreetmap.org, read 3 Nov 2026</li>
 <li><strong>[S106]</strong> OSRM demo router (router.project-osrm.org), driving profile on OpenStreetMap data: Venice Marco Polo terminal (OSM node 2650849490) → Lago di Braies / Hotel Pragserhof / Hotel Rose Villabassa / Pontechiesa Cortina, full route geometry, queried Tue 3 Nov 2026 12:26 ET. Stop locations from OpenStreetMap (Nominatim). Approximate: car speeds, no traffic or stops</li>
 <li><strong>[S107]</strong> Live read-only sweep for the new dates, Tue 3 Nov 2026 18:53–18:58 ET: Biella Planyo feed (Thu 12 Aug 2027); bookingsuedtirol offers API (Fanes 13308 for 13–15 Aug; Trenker 10367, Steinerhof 11691, Edelweiss 10338 for 10–12 Aug; Rodes 12377, Cosmea 12560, Gran Tubla 10984, Villa Emilia 10348, Smidl 12579 for 15–17 Aug); Fanes terms (EN/IT/DE); rifugiocolgallina.bukly.com (Sat 14 Aug); OSRM demo router drive times (VCE → Braies 193 km / 158 min, VCE → Mestre 12 km, Braies → Cortina 47 km, Cortina → Ortisei 65 km / 77 min, Ortisei → VCE 202 km / 185 min). Nothing booked, held or submitted.</li>
-<li><strong>[S108]</strong> Group plan for 9 adults from Matthew, 4 Nov 2026: trip 9–17 Aug 2027; Hotel Trenker 10–11; Biella rooms Pelmo (6) + Cima Nove (3) HB; Ücia Lavarella 4‑bed + 5‑bed dorms with shower/WC HB €969, request submitted, pending; Col Gallina Room 3 (5) + 4 beds in Room 5 HB (price: see [S110]); Hotel Rodes 15–16; Ferragosto bus 52 14:20 and 16:20 only; Seceda Mon 16 via Col Raiser</li>
+<li><strong>[S108]</strong> Group plan for 9 adults from Matthew, 4 Nov 2026: trip 9–17 Aug 2027; Hotel Trenker 10–11; Biella rooms 6 + 3 HB (room names as booked: [S111]); Ücia Lavarella 4‑bed + 5‑bed dorms with shower/WC HB €969 (booked 4 Nov: [S113]); Col Gallina HB (rooms as booked: [S112]); Hotel Rodes 15–16; Ferragosto bus 52 14:20 and 16:20 only; Seceda Mon 16 via Col Raiser</li>
 <li><strong>[S109]</strong> südtirolmobil timetable, line 350 Gröden – Waidbruck – Bozen / Val Gardena – Ponte Gardena – Bolzano (valid from 14 Dec 2025), stops Ortisei Piazza S. Antonio and S. Cristina Municipio/Dosses: <a target="_blank" rel="noopener" href="https://www.suedtirolmobil.info/fileadmin/pdf/2026/350_20251214.pdf">https://www.suedtirolmobil.info/fileadmin/pdf/2026/350_20251214.pdf</a> (checked 4 Nov 2026; the summer 2027 timetable is not out yet).</li>
-<li><strong>[S110]</strong> Rifugio Col Gallina booking screen (bukly), from Matthew, 4 Nov 2026: Room 3, 5 beds × €130 + Room 5, 4 beds × €120 = €1,130 HB for Sat 14 Aug 2027; city tax €1.50 pp/night extra.</li>
+<li><strong>[S111]</strong> Rifugio Biella booking, from Matthew via Jess, 4 Nov 2026: Thu 12 Aug 2027, both confirmed: Cima Nove ×6, R20541190, €570 (€285 deposit paid); Croda Rossa ×3, R20541212, €285 (€142.50 deposit paid). Total €855; €427.50 paid, €427.50 due at the hut.</li>
+<li><strong>[S112]</strong> Rifugio Col Gallina booking, from Matthew via Jess, 4 Nov 2026: Sat 14 → Sun 15 Aug 2027, confirmed, booking 6AEB870A6CA73, private rooms: Room 7 ×6, €900 HB; Room 11 ×3, €570 HB. Total €1,470; €735 paid (deposit), €735 due at check-in. City tax €1.50 pp (€13.50 for 9) extra, not included.</li>
+<li><strong>[S113]</strong> Ücia Lavarella booking, from Matthew via Jess, 4 Nov 2026: Fri 13 → Sat 14 Aug 2027, reservation R3011/2026, 9 people, half board: 4 in the dorm €424; 5 in the dorm with shower/WC €545. Total €969. Deposit ≈€485 (exact figure TBC; confirmation page not seen), non‑refundable; balance due at the hut.</li>
+<li><strong>[S110]</strong> (superseded by [S112]: old plan, not booked) Rifugio Col Gallina booking screen (bukly), from Matthew, 4 Nov 2026: Room 3, 5 beds × €130 + Room 5, 4 beds × €120 = €1,130 HB for Sat 14 Aug 2027; city tax €1.50 pp/night extra.</li>
 </ul>
 </details>
 </div></div>

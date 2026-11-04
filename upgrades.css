@@ -559,3 +559,233 @@ header{z-index:1200}
 .owe-later{opacity:.85;font-size:.92em}
 .owe-chip{white-space:nowrap}
 .grp-sub{margin:var(--s-3) 0 var(--s-2);font-size:1rem}
+
+/* ===================== Full guide v2 ===================== */
+/* =====================================================================
+   Full guide v2 — shipped styles (from redesign/guide-v2/mock/guide-v2.css).
+   Builds on template_av1.html tokens + upgrades.css. New tokens: see ../tokens.json.
+   Prefix gv- = new component. Existing classes reused: .badge*, .day-stats, .day-flag--warn,
+   .g-more, .row-src, .eyebrow, .btn, .sr-only.
+   ===================================================================== */
+:root{
+  --stage-line-1:var(--stage-1);--stage-line-2:var(--stage-2);--stage-line-3:var(--stage-3);--stage-line-4:#c4661a;
+  --gv-toc-h:60px;--gv-ico:20px;--gv-prof-h:96px;--gv-prof-fill:.16;
+}
+/* Sun: stage 4 darkened from --stage-4 #d9731a (2.62:1 on --stone-100) to #c4661a. Night: stage colours as lines/stripes need >=3:1 on --surface #15212b and --stone-50 #0d151c */
+html[data-mode="night"]{--stage-line-1:#e86b84;--stage-line-2:#4cae78;--stage-line-3:#8aa2e6;--stage-line-4:#e0843a;--gv-prof-fill:.22}
+
+html{scroll-padding-top:calc(var(--header-h) + var(--gv-toc-h) + var(--s-3))}
+#guideInner :is(h2,h3),.gv-day{scroll-margin-top:0}  /* superseded by the guide-v2 review fixes below */
+.gv-ico{width:var(--gv-ico);height:var(--gv-ico);flex:none;color:var(--lake-700)}
+.gv-ico--s{width:16px;height:16px}
+.gv-lbl{margin-right:var(--s-1);font:600 var(--fs-12)/1.2 var(--font-body);letter-spacing:.08em;text-transform:uppercase;color:var(--ink-600)}
+.gv-ref{font-size:var(--fs-12);color:var(--ink-600);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.gv-tag{display:inline-block;padding:1px var(--s-2);border-radius:var(--r-pill);background:var(--stone-100);color:var(--ink-600);
+  font:600 var(--fs-12)/1.4 var(--font-body);letter-spacing:.06em;text-transform:uppercase;vertical-align:1px}
+#guide .gv-lead,#guide .gv-sub,#guide .gv-note{font-size:var(--fs-14);color:var(--ink-700);margin:var(--s-2) 0}
+#guide .gv-note{font-size:var(--fs-12);color:var(--ink-600)}
+
+/* ---------- top ---------- */
+.gv-eyebrow{margin-bottom:var(--s-2)}
+#guide h1.gv-h1{font-size:clamp(1.625rem,6.4vw,var(--fs-32));line-height:1.15;margin:0 0 var(--s-4)}
+.gv-glance{padding:var(--s-4);background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg);box-shadow:var(--shadow-1)}
+#guide .gv-when{display:grid;gap:var(--s-2);margin:0;padding:0;list-style:none}
+#guide .gv-when li{display:flex;gap:var(--s-3);align-items:flex-start;margin:0;font-size:var(--fs-14);line-height:1.45}
+.gv-when b{font-size:var(--fs-16)}
+.gv-route{display:flex;gap:3px;height:8px;margin:var(--s-4) 0 var(--s-2)}
+.gv-seg{flex:var(--w) 1 0;min-width:8px;background:var(--c);border-radius:4px}
+#guide .gv-route-names{margin:0;font-size:var(--fs-14);font-weight:600;color:var(--ink-900);line-height:1.45}
+#guide .gv-total{margin:var(--s-1) 0 var(--s-3);font-size:var(--fs-14);color:var(--ink-700)}
+.gv-total b{color:var(--ink-900)}
+#guide .gv-dchips,#guide .gv-hchips{display:grid;gap:var(--s-2);margin:0;padding:0;list-style:none}
+#guide .gv-dchips{grid-template-columns:repeat(2,minmax(0,1fr))}
+#guide .gv-dchips li,#guide .gv-hchips li{margin:0}
+.gv-dchip{display:flex;flex-direction:column;gap:2px;min-height:var(--tap);height:100%;padding:var(--s-2) var(--s-3);
+  border:1px solid var(--line);border-top:4px solid var(--day);border-radius:var(--r-md);background:var(--stone-50);
+  color:var(--ink-900);text-decoration:none;line-height:1.3;transition:background var(--dur) var(--ease),border-color var(--dur) var(--ease)}
+.gv-dchip:hover{background:var(--stone-100);border-color:var(--line-strong);border-top-color:var(--day);color:var(--ink-900)}
+.gv-dchip-k{font:600 var(--fs-12)/1.2 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-600)}
+.gv-dchip b{font-size:var(--fs-14)}
+.gv-dchip-s{font-size:var(--fs-12);color:var(--ink-700)}
+#guide .gv-mini{margin:var(--s-4) 0 var(--s-2);font:600 var(--fs-12)/1.2 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:var(--ink-600)}
+.gv-hchip{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:var(--s-3);min-height:56px;padding:var(--s-2) var(--s-3);
+  border:1px solid var(--line);border-radius:var(--r-md);background:var(--stone-50);color:var(--ink-900);text-decoration:none;line-height:1.3;
+  transition:background var(--dur) var(--ease),border-color var(--dur) var(--ease)}
+.gv-hchip:hover{background:var(--stone-100);border-color:var(--line-strong);color:var(--ink-900)}
+.gv-hchip .gv-ico{color:var(--ok-fg)}
+.gv-hchip--todo .gv-ico{color:var(--todo-fg)}
+.gv-hchip-t{display:flex;flex-direction:column;min-width:0}
+.gv-hchip-k{font:600 var(--fs-12)/1.2 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-600)}
+.gv-hchip b{font-size:var(--fs-14)}
+.gv-warn{display:flex;gap:var(--s-3);margin:var(--s-4) 0 var(--s-2);padding:var(--s-3) var(--s-4);background:var(--wait-bg);border-left:4px solid var(--sun-400);border-radius:var(--r-md)}
+.gv-warn .gv-ico{color:var(--wait-fg);margin-top:2px}
+#guide .gv-warn p{margin:0;font-size:var(--fs-14);line-height:1.5}
+.gv-glance>.g-more{margin-bottom:0}
+@media (min-width:640px){
+  #guide .gv-dchips{grid-template-columns:repeat(4,minmax(0,1fr))}
+  #guide .gv-hchips{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+/* ---------- sticky chip TOC (replaces the "Contents" dropdown) ---------- */
+.gv-toc{position:sticky;top:var(--header-h);z-index:900;margin:var(--s-4) 0 0;padding:var(--s-2) 0;background:var(--stone-50)}
+#guide .gv-toc ul{display:flex;gap:var(--s-2);margin:0;padding:0 0 2px;list-style:none;overflow-x:auto;overscroll-behavior-x:contain;scrollbar-width:none;
+  -webkit-mask-image:linear-gradient(90deg,#000 88%,transparent);mask-image:linear-gradient(90deg,#000 88%,transparent)}
+.gv-toc ul::-webkit-scrollbar{display:none}
+#guide .gv-toc li{margin:0;flex:none}
+#guide .gv-toc li:last-child{padding-right:var(--s-8)}
+.gv-toc a{display:inline-flex;align-items:center;min-height:var(--tap);padding:0 var(--s-4);border:1px solid var(--line-strong);border-radius:var(--r-pill);
+  background:var(--surface);color:var(--ink-900);font:600 var(--fs-14)/1 var(--font-body);white-space:nowrap;text-decoration:none;overflow-wrap:normal;
+  transition:background var(--dur) var(--ease),color var(--dur) var(--ease)}
+.gv-toc a:hover{background:var(--stone-100);color:var(--ink-900)}
+.gv-toc a[aria-current="true"]{background:var(--ink-900);border-color:var(--ink-900);color:var(--stone-50)}
+.gv-toc a:focus-visible{outline-offset:-1px;box-shadow:0 0 0 2px var(--surface) inset}
+
+/* ---------- §1 timeline ---------- */
+#guide .gv-timeline{margin:var(--s-4) 0;padding:0;list-style:none;border-top:1px solid var(--line)}
+#guide .gv-tl{display:grid;grid-template-columns:48px 24px minmax(0,1fr);gap:var(--s-3);align-items:start;margin:0;padding:var(--s-3) 0;border-bottom:1px solid var(--line)}
+.gv-tl-date{display:flex;flex-direction:column;align-items:center;padding:2px 0;border-radius:var(--r-sm);font:600 var(--fs-12)/1.1 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-600)}
+.gv-tl-date b{font:600 var(--fs-20)/1.1 var(--font-display);letter-spacing:0;color:var(--ink-900)}
+.gv-tl--hike .gv-tl-date{box-shadow:inset 4px 0 0 var(--day);background:var(--surface)}
+.gv-tl-ico{width:24px;height:24px;margin-top:4px}
+.gv-tl--hike .gv-tl-ico{color:var(--day)}
+.gv-tl-body{display:flex;flex-direction:column;font-size:var(--fs-14);line-height:1.45;color:var(--ink-700)}
+.gv-tl-body>b{font-size:var(--fs-16);color:var(--ink-900)}
+.gv-tl-night{display:flex;align-items:center;gap:6px;margin-top:2px;font-size:var(--fs-12);color:var(--ink-600)}
+.gv-tl-night .gv-ico{color:var(--ink-600)}
+
+/* ---------- §2 day cards ---------- */
+.gv-days{display:grid;gap:var(--s-4);margin:var(--s-4) 0 var(--s-6)}
+.gv-day{padding:var(--s-4) var(--s-4) var(--s-2) var(--s-5);background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--day);border-radius:var(--r-lg);box-shadow:var(--shadow-1)}
+.gv-day-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:var(--s-2)}
+#guide .gv-day-eyebrow{margin:0;font:600 var(--fs-12)/1.2 var(--font-body);letter-spacing:.12em;text-transform:uppercase;color:var(--rose-700)}
+.gv-daynum{display:inline-block;margin-right:var(--s-1);padding:2px var(--s-2);border-radius:var(--r-pill);background:var(--surface);color:var(--ink-900);box-shadow:inset 0 0 0 2px var(--day);letter-spacing:.06em}
+#guide h3.gv-day-title{margin:var(--s-2) 0 2px;font-size:var(--fs-20);line-height:1.25}
+.gv-arrow{color:var(--ink-600)}
+#guide .gv-via{margin:0 0 var(--s-3);font-size:var(--fs-14);color:var(--ink-600);line-height:1.4}
+.gv-statbox{margin:0 0 var(--s-3);padding:var(--s-3);background:var(--stone-50);border-radius:var(--r-md)}
+.gv-stats.day-stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--s-3) var(--s-4);margin:0;padding:0;background:none}
+.gv-stats dd{font-size:var(--fs-20)}
+#guide .gv-statbox .est-note{margin:var(--s-3) 0 0;line-height:1.4;font-size:var(--fs-12);color:var(--ink-700)}
+.gv-prof{margin:var(--s-2) 0 var(--s-3)}
+.gv-prof-plot{position:relative;height:var(--gv-prof-h);margin-top:28px;border-bottom:1px solid var(--line-strong)}
+.gv-prof-plot svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible}
+.gv-prof-area{fill:var(--day);fill-opacity:var(--gv-prof-fill)}
+.gv-prof-line{fill:none;stroke:var(--day);stroke-width:2.5;stroke-linejoin:round}
+.gv-pdot{position:absolute;left:var(--x);top:var(--y);width:10px;height:10px;margin:-5px 0 0 -5px;border-radius:50%;background:var(--surface);border:2.5px solid var(--day)}
+.gv-pl{position:absolute;left:var(--x);top:var(--y);transform:translate(-50%,calc(-100% - 8px));padding:0 4px;border-radius:4px;
+  background:var(--surface);font-size:var(--fs-12);line-height:1.3;white-space:nowrap;color:var(--ink-700)}
+.gv-pl b{color:var(--ink-900);font-weight:600}
+.gv-pl--l{transform:translate(-12px,calc(-100% - 8px))}
+.gv-pl--r{transform:translate(calc(-100% + 12px),calc(-100% - 8px))}
+.gv-pl--pt{transform:translate(-50%,10px);background:transparent}
+.gv-pl--pt.gv-pl--l{transform:translate(-12px,10px)}
+.gv-pl--pt.gv-pl--r{transform:translate(calc(-100% + 12px),10px)}
+.gv-prof-ends{display:flex;justify-content:space-between;gap:var(--s-3);margin-top:var(--s-1)}
+.gv-prof-ends .gv-pl{position:static;transform:none;padding:0;white-space:normal}
+.gv-pl--end{text-align:right}
+.gv-prof figcaption{margin-top:2px;font-size:var(--fs-12);color:var(--ink-600);line-height:1.4}
+#guide .gv-logi{display:grid;gap:var(--s-2);margin:0 0 var(--s-3);padding:0;list-style:none}
+#guide .gv-logi li{display:flex;gap:var(--s-3);align-items:flex-start;margin:0;font-size:var(--fs-14);line-height:1.45}
+.gv-logi li .gv-ico{margin-top:0}
+.gv-sleep>span{display:flex;flex-wrap:wrap;align-items:center;gap:2px var(--s-2)}
+.gv-sleep .gv-ico{color:var(--ok-fg)}
+.gv-sleep:has(.badge--not-booked) .gv-ico{color:var(--todo-fg)}
+.gv-flag{display:flex;gap:var(--s-2);align-items:flex-start}
+.gv-flag .gv-ico{color:currentColor}
+.gv-day .g-more{margin:0 0 var(--s-2)}
+#guide .gv-kv{margin:var(--s-2) 0;padding:0;list-style:none;font-size:var(--fs-14)}
+.gv-kv span{display:block;font:600 var(--fs-12)/1.3 var(--font-body);letter-spacing:.06em;text-transform:uppercase;color:var(--ink-600)}
+#guide .gv-est{font-size:var(--fs-14);color:var(--wait-fg)}
+
+/* ---------- §3/§4 rows, recommendation ---------- */
+.gv-row{display:grid;grid-template-columns:40px minmax(0,1fr);gap:var(--s-3);padding:var(--s-3) 0;border-bottom:1px solid var(--line)}
+.gv-row-ico{display:grid;place-items:center;width:40px;height:40px;border-radius:12px;background:var(--stone-100)}
+#guide .gv-row h3{margin:var(--s-2) 0 var(--s-1);font-size:var(--fs-18);line-height:1.3}
+#guide .gv-row p{margin:0 0 var(--s-2)}
+.gv-row .g-more{margin-bottom:0}
+.gv-reco{margin:var(--s-4) 0;padding:var(--s-4);background:var(--surface);border:1px solid var(--line);border-left:6px solid var(--ok-fg);border-radius:var(--r-lg)}
+#guide .gv-reco-k{display:flex;align-items:center;gap:var(--s-2);margin:0;font:600 var(--fs-12)/1.2 var(--font-body);letter-spacing:.1em;text-transform:uppercase;color:var(--ok-fg)}
+.gv-reco-k .gv-ico{color:currentColor}
+#guide .gv-reco h3{margin:var(--s-2) 0 var(--s-3);font-size:var(--fs-18);line-height:1.3}
+#guide .gv-steps{display:grid;gap:var(--s-2);margin:0;padding:0;list-style:none}
+#guide .gv-steps li{display:grid;grid-template-columns:52px 20px minmax(0,1fr);gap:var(--s-2);align-items:start;margin:0;font-size:var(--fs-14);line-height:1.45}
+.gv-step-d{font:600 var(--fs-12)/1.6 var(--font-body);letter-spacing:.04em;text-transform:uppercase;color:var(--ink-600)}
+#guide .gv-chips{display:flex;flex-wrap:wrap;gap:var(--s-2);margin:var(--s-3) 0;padding:0;list-style:none}
+#guide .gv-chips li{margin:0;padding:var(--s-1) var(--s-3);border-radius:var(--r-pill);background:var(--stone-100);font-size:var(--fs-14);font-weight:600;color:var(--ink-900)}
+
+/* ---------- §5 checklist ---------- */
+#guide .gv-legend{display:flex;flex-wrap:wrap;gap:var(--s-4);margin:var(--s-2) 0;font-size:var(--fs-12);color:var(--ink-600)}
+.gv-legend>span{display:inline-flex;align-items:center;gap:6px}
+.gv-legend .gv-dot{width:12px;height:12px;margin:0}
+#guide .gv-check{margin:var(--s-2) 0 var(--s-4);padding:0;list-style:none;background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg)}
+#guide .gv-ck{display:grid;grid-template-columns:20px 18px minmax(0,1fr);gap:var(--s-2) var(--s-3);margin:0;padding:var(--s-3) var(--s-4);border-bottom:1px solid var(--line)}
+#guide .gv-ck:last-child{border-bottom:0}
+.gv-dot{display:inline-grid;place-items:center;width:20px;height:20px;margin-top:1px;border-radius:50%;box-sizing:border-box}
+.gv-dot--ok{background:var(--ok-fg);color:var(--surface)}
+.gv-dot--ok .gv-ico{color:currentColor;stroke-width:3;width:14px;height:14px}
+.gv-dot--todo{border:2px solid var(--todo-fg)}
+.gv-dot--off{border:2px dashed var(--off-fg)}
+.gv-ck-n{font:600 var(--fs-14)/1.6 var(--font-display);color:var(--ink-600);font-variant-numeric:tabular-nums}
+.gv-ck-t{display:flex;flex-direction:column;font-size:var(--fs-14);line-height:1.45;color:var(--ink-700)}
+.gv-ck-t>b{font-size:var(--fs-16);color:var(--ink-900)}
+.gv-ck-dl{display:flex;align-items:center;gap:6px;font-weight:600;color:var(--todo-fg)}
+.gv-ck-dl .gv-ico{color:currentColor}
+.gv-ck--done .gv-ck-dl,.gv-ck--day .gv-ck-dl{color:var(--ink-600)}
+.gv-stat{display:flex;gap:var(--s-3);align-items:center;margin:0 0 var(--s-3);padding:var(--s-3) var(--s-4);background:var(--todo-bg);border-radius:var(--r-md);color:var(--todo-fg)}
+.gv-stat .gv-ico{color:currentColor;width:24px;height:24px}
+#guide .gv-stat p{margin:0;color:var(--todo-fg);font-size:var(--fs-14)}
+.gv-stat b{font:600 var(--fs-20)/1.2 var(--font-display)}
+
+/* ---------- §6 cost ---------- */
+.gv-big{display:flex;flex-wrap:wrap;align-items:center;gap:var(--s-2) var(--s-6);margin:var(--s-3) 0}
+#guide .gv-big p{margin:0}
+.gv-big p b{display:block;font:600 2.5rem/1 var(--font-display);color:var(--ink-900)}
+.gv-big p span{font-size:var(--fs-14);color:var(--ink-600)}
+#guide table.gv-cost{display:table;width:100%;table-layout:auto}
+#guide .gv-cost th[scope=row]{position:static;background:none;color:var(--ink-900);font:600 var(--fs-14)/1.35 var(--font-body);letter-spacing:0;text-transform:none;white-space:normal}
+#guide .gv-cost th[scope=row] .gv-ico{vertical-align:-3px;margin-right:6px}
+#guide .gv-cost th small{display:block;font-weight:400;font-size:var(--fs-12);color:var(--ink-600)}
+#guide .gv-cost td{vertical-align:middle}
+#guide .gv-cost .gv-num{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums;font-weight:600}
+.gv-bar-c{width:38%}
+.gv-bar{display:block;height:10px;width:var(--w);min-width:4px;border-radius:5px;background:var(--lake-700)}
+
+/* ---------- §7/§8 cards ---------- */
+.gv-card{margin:var(--s-3) 0;padding:var(--s-4);background:var(--surface);border:1px solid var(--line);border-radius:var(--r-lg)}
+.gv-card--row{display:flex;gap:var(--s-3);align-items:flex-start}
+.gv-card--row .gv-ico{width:24px;height:24px;margin-top:2px}
+.gv-card--muted{background:var(--stone-100)}
+#guide .gv-card p{margin:0 0 var(--s-2)}
+#guide .gv-card p:last-child{margin-bottom:0}
+
+/* ---------- desktop ---------- */
+@media (min-width:1000px){
+  #guide .inner{max-width:760px}
+}
+
+/* ---------- print: every <details> prints open (JS beforeprint opens them too). The guide itself is still hidden in print by the rule above (open question for Matthew) ---------- */
+@media print{
+  .gv-toc{display:none!important}
+  details::details-content{content-visibility:visible!important;block-size:auto!important}
+  details>summary::before{display:none!important}
+  .gv-day,.gv-tl,.gv-ck,.gv-hchip,.gv-dchip{break-inside:avoid}
+  .gv-glance,.gv-day,.gv-reco,.gv-check{box-shadow:none}
+}
+/* markdown <hr> between sections is redundant with the h2 rule */
+#guideInner>hr{display:none}
+#guide .gv-cost thead th{font-size:var(--fs-12)}
+.gv-dchip-s>span{white-space:nowrap}
+
+/* ===================== Guide v2 review fixes (UI Specialist, 4 Nov 2026) ===================== */
+/* 1. jump targets land below header + sticky chip bar (--gv-toc-h is measured live by app_av1.js); the page-level padding is
+      dropped on the Guide tab so it does not add on top */
+html:has(#guide:not([hidden])){scroll-padding-top:0}
+#guide .gv-day,#guideInner :is(h2,h3),#guide [id]{scroll-margin-top:calc(var(--header-h) + var(--gv-toc-h) + 12px)}
+/* 2. phone (bottom tab bar visible): no back-to-top on the Guide tab, so it can never sit on a <summary>; the chip bar is the way back up */
+@media (max-width:800px){body:has(#guide:not([hidden])) .to-top{display:none!important}}
+/* 3. hotel pills: pending amber (same as the status dot), not the error red */
+#guide .gv-hchip .badge--pending{background:var(--pending);color:#15212b}
+/* 4. mini day-card stat line: 13px+, wraps only between stats */
+#guide .gv-dchip-s{font-size:.8125rem;line-height:1.35}
+#guide .gv-dchip-s>span{white-space:nowrap}
+@media (min-width:1440px){#guide .gv-glance{max-width:72rem}}

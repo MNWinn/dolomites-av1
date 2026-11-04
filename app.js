@@ -598,29 +598,23 @@ function labelCells(t){const hr=[...t.rows].find(r=>r.querySelector('th'));if(!h
  [...t.rows].forEach(r=>{if(r!==hr)[...r.cells].forEach((c,i)=>{if(hs[i]&&c.dataset.label!==hs[i])c.dataset.label=hs[i]})});return hs}
 {const gb=$1('#gBody');if(gb){const lab=()=>$all('table.gt',gb).forEach(labelCells);lab();new MutationObserver(lab).observe(gb,{childList:true,subtree:true})}}
 /* a jump target inside a closed <details> (guide 'more' boxes, day cards, hut rows) is opened first */
-addEventListener('beforeprint',()=>document.querySelectorAll('details.day-more,details.hs-more,details.g-more,details.hs-key,details.arr-more').forEach(d=>d.open=true));
+let shutP=[];addEventListener('beforeprint',()=>{shutP=[...document.querySelectorAll('details.day-more:not([open]),details.hs-more:not([open]),details.hs-key:not([open]),details.arr-more:not([open]),#guideInner details:not([open])')];shutP.forEach(d=>d.open=true)});
+addEventListener('afterprint',()=>{shutP.forEach(d=>d.open=false);shutP=[]});
 function openTo(t){for(let d=t.closest('details');d;d=d.parentElement&&d.parentElement.closest('details'))d.open=true}
-document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a||a.hash.length<2)return;const t=document.getElementById(decodeURIComponent(a.hash.slice(1)));if(t)openTo(t)},true);
-/* Guide: sticky "Contents" menu built from the h2/h3 headings; shows the section in view. The URL hash stays #guide (it selects the tab). */
+document.addEventListener('click',e=>{const a=e.target.closest&&e.target.closest('a[href^="#"]');if(!a||a.hash.length<2)return;
+ if(a.dataset.tab){const b=$1('#'+a.dataset.tab);if(b){e.preventDefault();b.click();scrollTo({top:0})}return}
+ const t=document.getElementById(decodeURIComponent(a.hash.slice(1)));if(!t)return;openTo(t);
+ /* guide jumps (chip TOC, day/hut chips, checklist): scroll under the sticky header + TOC, focus the target, keep #guide as the tab hash */
+ if(a.closest('#guideInner')&&t.closest('#guideInner')){e.preventDefault();t.scrollIntoView({block:'start',behavior:reduceMotion?'auto':'smooth'});if(!t.hasAttribute('tabindex'))t.tabIndex=-1;t.focus({preventScroll:true})}},true);
+/* Guide v2: the chip TOC (nav.gv-toc, built from the h2s by build_av1.py) marks the section in view; the chip strip scrolls sideways only */
 {const gi=$1('#guideInner'),gp=$1('#guide');if(gi&&gp){
- /* 2-column tables (e.g. timetables whose header row is data) stay tables; long column names go above the value */
- $all('table',gi).forEach(t=>{const hs=labelCells(t);if(hs.length<3)return;t.classList.add('stack');if(hs.some(h=>h.length>20))t.classList.add('stack-top')});
- const hd=$all('h2,h3',gi),slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);
- hd.forEach((h,i)=>{if(!h.id)h.id='g'+i+'-'+slug(h.textContent);h.tabIndex=-1});
- const cur=el('span',{className:'g-toc-cur'}),sum=el('summary',{},[el('span',{className:'g-toc-lbl',textContent:'Contents'}),cur]);
- const links=hd.map(h=>el('a',{href:'#'+h.id,textContent:h.textContent,className:h.tagName==='H3'?'sub':''}));
- const list=el('ul',{},[el('li',{},[el('a',{href:'#guide',className:'top',textContent:'Top of the guide'})]),...links.map(a=>el('li',{},[a]))]);
- const det=el('details',{},[sum,list]),nav=el('nav',{className:'g-toc','aria-label':'Guide contents'},[det]);
- const h1=$1('h1',gi);if(h1)h1.after(nav);else gi.prepend(nav);
- let k=-1,raf=0;
- const upd=()=>{raf=0;if(gp.hidden)return;const y=nav.getBoundingClientRect().bottom+24;
-  let n=-1;for(let i=0;i<hd.length;i++){if(hd[i].getBoundingClientRect().top<=y)n=i;else break}
-  if(n===k)return;if(k>=0)links[k].removeAttribute('aria-current');k=n;cur.textContent=n<0?'':hd[n].textContent;if(n>=0)links[n].setAttribute('aria-current','true')};
- addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(upd)},{passive:true});
- new MutationObserver(()=>requestAnimationFrame(upd)).observe(gp,{attributes:true,attributeFilter:['hidden']});upd();
- det.addEventListener('toggle',()=>{if(det.open&&k>=0)list.scrollTop=Math.max(0,links[k].parentNode.offsetTop-list.clientHeight/3)});
- det.addEventListener('click',e=>{const a=e.target.closest('a');if(!a)return;e.preventDefault();det.open=false;const b=reduceMotion?'auto':'smooth';
-  if(a.classList.contains('top')){scrollTo({top:0,behavior:b});sum.focus({preventScroll:true});return}
-  const t=document.getElementById(a.hash.slice(1));if(t){openTo(t);t.scrollIntoView({block:'start',behavior:b});t.focus({preventScroll:true})}});
- det.addEventListener('keydown',e=>{if(e.key==='Escape'&&det.open){det.open=false;sum.focus()}});
- document.addEventListener('click',e=>{if(det.open&&!nav.contains(e.target))det.open=false})}}
+ /* 2-column tables (e.g. timetables whose header row is data) stay tables; long column names go above the value; the compact cost table never stacks */
+ $all('table:not(.gv-cost)',gi).forEach(t=>{const hs=labelCells(t);if(hs.length<3)return;t.classList.add('stack');if(hs.some(h=>h.length>20))t.classList.add('stack-top')});
+ const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'').slice(0,40);
+ $all('h2,h3',gi).forEach((h,i)=>{if(!h.id)h.id='g'+i+'-'+slug(h.textContent);h.tabIndex=-1});
+ const toc=$1('.gv-toc',gi),ul=toc&&$1('ul',toc),links=toc?$all('a',toc):[],secs=links.map(a=>document.getElementById(a.hash.slice(1)));let k=-1,raf=0;
+ if(toc&&'ResizeObserver' in window)new ResizeObserver(()=>{const h=toc.offsetHeight;if(h)document.documentElement.style.setProperty('--gv-toc-h',h+'px')}).observe(toc);
+ const upd=()=>{raf=0;if(gp.hidden||!toc)return;const y=toc.getBoundingClientRect().bottom+24;let n=-1;secs.forEach((s,i)=>{if(s&&s.getBoundingClientRect().top<=y)n=i});
+  if(n===k)return;if(k>=0)links[k].removeAttribute('aria-current');k=n;if(n<0)return;links[n].setAttribute('aria-current','true');
+  const li=links[n].parentNode;ul.scrollTo({left:Math.max(0,li.offsetLeft-ul.clientWidth/3),behavior:reduceMotion?'auto':'smooth'})};
+ if(toc){addEventListener('scroll',()=>{if(!raf)raf=requestAnimationFrame(upd)},{passive:true});new MutationObserver(()=>requestAnimationFrame(upd)).observe(gp,{attributes:true,attributeFilter:['hidden']});upd()}}}

@@ -1053,3 +1053,23 @@ body:has(#group:not([hidden])) .to-top{left:12px;right:auto}
 @media(max-width:800px){#side .bento{grid-template-columns:repeat(2,minmax(0,1fr));grid-template-areas:"count wx" "route route" "book book"}}
 @media(max-width:420px){#side .bento{grid-template-columns:minmax(0,1fr);grid-template-areas:"count" "route" "book" "wx"}}
 @media(max-width:800px){#bento{flex:1 1 100%;width:100%;grid-column:1/-1;min-width:0;box-sizing:border-box}}
+
+/* ---------- [uniform] desktop: one 1200px container; peer cards share one width and one height (Matthew, 4 Nov) ---------- */
+@media screen and (min-width:801px){
+  .hero-body{max-width:1200px}
+  .glance{max-width:none;margin-left:max(var(--s-6),calc((100% - 1200px)/2 + var(--s-6)));margin-right:max(var(--s-6),calc((100% - 1200px)/2 + var(--s-6)))}
+  #app{max-width:1200px;margin:0 auto}
+  #main{padding-right:var(--s-6)}
+  /* bento tiles sat 24px inside the day cards, hut bar and GPX button: same edges now */
+  #side>#bento{padding:0;margin-top:var(--s-4)}
+  #side .bento{grid-template-columns:minmax(0,1fr);grid-template-areas:"count" "route" "book" "wx";align-items:stretch}
+  #side>.gpx-all .btn-gpx{display:flex;justify-content:center;width:100%}
+  /* the four day cards: every row as tall as the tallest, content stretched, never clipped; an open "details" does not stretch its siblings */
+  #days:not(:has(.day-more[open])){grid-auto-rows:1fr;align-items:stretch}
+  #days .day{height:100%;display:flex;flex-direction:column}
+  #days .day>.day-actions{margin-top:auto;padding-top:var(--s-2)}
+  /* route sparklines: the 2x2 cards share a height and their charts line up at the bottom */
+  .spark-row{grid-auto-rows:1fr}
+  .spark{gap:var(--s-1)}
+  .spark svg{margin-top:auto}
+}
